@@ -13,3 +13,11 @@ def package_create(context, data_dict):
 
     # Return some dict (doesn't make sense yet)
     return data_dict
+
+
+def package_delete(context, data_dict):
+    return
+
+
+def package_update(context, data_dict):
+    return data_dict

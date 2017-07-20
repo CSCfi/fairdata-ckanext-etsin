@@ -20,4 +20,6 @@ class EtsinPlugin(plugins.SingletonPlugin):
         """ Register actions. """
         return {
             'package_create': actions.package_create,
+            'package_delete': actions.package_delete,
+            'package_update': actions.package_update,
         }
