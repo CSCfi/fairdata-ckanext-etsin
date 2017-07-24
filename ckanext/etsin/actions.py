@@ -18,7 +18,12 @@ def package_create(context, data_dict):
 
     # Check with Metax if we should be creating or updating and do that
     # TODO: We may need to catch an error here
-    _create_or_update(data_dict)
+    data_dict = _create_or_update(data_dict)
+
+    # Strip Metax data_dict to CKAN data_dict
+    data_dict = _strip_data_dict(data_dict)
+
+    # Copy and paste package creation from CKAN's original package_create
 
     return data_dict
 
@@ -38,7 +43,9 @@ def package_delete(context, data_dict):
         # Also, we may need to catch an error
         delete_package_via_metax_api(data_dict)
 
-    return True
+    # Copy and paste package deletion from CKAN's original package_delete
+
+    return data_dict
 
 
 def package_update(context, data_dict):
@@ -51,7 +58,12 @@ def package_update(context, data_dict):
 
     # Check with Metax if we should be creating or updating and do that
     # TODO: We may need to catch an error here
-    _create_or_update(data_dict)
+    data_dict = _create_or_update(data_dict)
+
+    # Strip Metax data_dict to CKAN data_dict
+    data_dict = _strip_data_dict(data_dict)
+
+    # Copy and paste package updating from CKAN's original package_update
 
     return data_dict
 
@@ -60,18 +72,31 @@ def _create_or_update(data_dict):
 
     # Ask Metax if this dataset exists
     # TODO: This is the function that will be created in CSCETSIN-22
+    # At this point I don't know if it returns True/False, ID or something else
     if ask_metax_whether_package_exists(data_dict['id']):
         # Metax says the package exists
         # TODO: This is the function that will be created in CSCETSIN-20
         # Also, we may need to catch an error
-        update_package_via_metax_api(data_dict)
+        id = update_package_via_metax_api(data_dict)
 
     else:
         # Metax says the package doesn't exist
         # TODO: This is the function that will be created in CSCETSIN-19
         # Also, we may need to catch an error
-        create_package_via_metax_api(data_dict)
+        id = create_package_via_metax_api(data_dict)
 
+    data_dict['metax-id'] = id
+
+    return data_dict
+
+
+# TODO: This function should have its own file
+def _strip_data_dict(data_dict):
+
+    # Remove all fields not required in CKAN schema
+    # Metax id field is our only extra field
+
+    return data_dict
 
 # TODO: These functions should not be implemented here.
 # I'm only defining them for placeholding purposes.
