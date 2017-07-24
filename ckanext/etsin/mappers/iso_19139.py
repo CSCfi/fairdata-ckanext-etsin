@@ -1,22 +1,22 @@
 '''
-Map dicts to Metax values
+Map ISO 19139 dicts to Metax values
 '''
 
 # For development use
 import logging
 log = logging.getLogger(__name__)
 
-# TODO this is not a good name
-# Actually I'm not even sure what format this is mapping - 
-# this is just a demo using whatever values some Syke packages seem to have
-def spatial(self, context, data_dict):
+# Overwrites ckanext-spatial's get_package_dict
+# TODO: Not yet implemented
+def iso_19139_mapper(self, context, data_dict):
 
     package_dict = data_dict['package_dict']
 
     log.info("Greetings from within the spatial mapper. Here's the dict I'm working with:")
     log.info(package_dict)
 
-    # Let's assume that Metax expects a key named "metax-title"
+    # Let's assume that Metax expects a key named "metax-title".
+    # We can edit values given by ckanext-spatial's default get_package_dict
     package_dict['metax-title'] = package_dict['title']
     package_dict.pop('title', None)
 
