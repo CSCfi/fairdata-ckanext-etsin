@@ -2,6 +2,7 @@
 Action overrides
 '''
 
+import ckanext.etsin.metax_api as metax_api
 import ckanext.etsin.refine
 
 # For development use
@@ -32,11 +33,10 @@ def package_delete(context, data_dict):
     # changes package if, we need to refine here, too.
 
     # TODO: This is the function that will be created in CSCETSIN-22
-    if ask_metax_whether_package_exists(data_dict['id']):
+    if metax_api.ask_metax_whether_package_exists(data_dict['id']):
         # Metax says the package exists
-        # TODO: This is the function that will be created in CSCETSIN-21
-        # Also, we may need to catch an error
-        delete_package_via_metax_api(data_dict)
+        # TODO: we may need to catch an error
+        metax_api.delete_dataset(data_dict['metax-id'])
 
     return True
 
@@ -60,30 +60,13 @@ def _create_or_update(data_dict):
 
     # Ask Metax if this dataset exists
     # TODO: This is the function that will be created in CSCETSIN-22
-    if ask_metax_whether_package_exists(data_dict['id']):
+    if metax_api.ask_metax_whether_package_exists(data_dict['id']):
         # Metax says the package exists
-        # TODO: This is the function that will be created in CSCETSIN-20
-        # Also, we may need to catch an error
-        update_package_via_metax_api(data_dict)
+        # TODO: may need to catch an error
+        metax_api.replace_dataset(data_dict['metax-id'], data_dict)
 
     else:
         # Metax says the package doesn't exist
-        # TODO: This is the function that will be created in CSCETSIN-19
-        # Also, we may need to catch an error
-        create_package_via_metax_api(data_dict)
+        # TODO: may need to catch an error
+        metax_api.create_dataset(data_dict)
 
-
-# TODO: These functions should not be implemented here.
-# I'm only defining them for placeholding purposes.
-# All these functions must log all the API calls we make and all the responses.
-def ask_metax_whether_package_exists(id):
-    pass
-
-def create_package_via_metax_api(data_dict):
-    pass
-
-def update_package_via_metax_api(data_dict):
-    pass
-
-def delete_package_via_metax_api(data_dict):
-    pass
