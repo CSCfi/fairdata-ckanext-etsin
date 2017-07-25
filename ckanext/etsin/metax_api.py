@@ -12,6 +12,9 @@ requests_log.setLevel(logging.DEBUG)
 requests_log.propagate = True
 
 
+# TODO: All these functions must log all the API calls we make and all the responses.
+
+
 def create_dataset(dataset_dict):
     """ Create a dataset in MetaX.
     Returns:
@@ -44,3 +47,8 @@ def delete_dataset(id):
     r = requests.delete('https://metax-test.csc.fi/rest/datasets/{id}'.format(id=id),
                      verify=False)
     r.raise_for_status()
+
+
+# TODO: Implement. Also, come up with a better name.
+def ask_metax_whether_package_exists(id):
+    pass
