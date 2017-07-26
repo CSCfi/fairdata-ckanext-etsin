@@ -1,29 +1,11 @@
 """Basic tests for checking that metax_api.py works"""
 import ckanext.etsin.metax_api as api
-import json
-import time
 import unittest
 from unittest import TestCase
 from requests.exceptions import HTTPError
 
 from mock import Mock, patch
 from nose.tools import ok_, eq_
-
-
-def _get_fixture(filename):
-    import os
-    return os.path.join(os.path.dirname(__file__), "..", "test_fixtures", filename)
-
-
-def _get_json_as_dict(filename):
-    with open(_get_fixture(filename)) as file:
-        dict = json.loads(''.join(file.readlines()))
-    return dict
-
-
-def _create_identifier_ending():
-    ''' Helper for making unique identifiers '''
-    return str(int(time.time()))
 
 
 class TestMetaxAPI(TestCase):
@@ -53,19 +35,22 @@ class TestMetaxAPI(TestCase):
             ok_(mock_delete.called)
             ok_(mock_delete.return_value.raise_for_status.called)
 
+
 if __name__ == '__main__':
-    # unittest.main()
+    unittest.main()
 
     # Temporary tests for some stuff
-    print('Posting valid dict')
-    valid_dict = _get_json_as_dict('minimum_valid_edited.json')
-    valid_dict['identifier'] += _create_identifier_ending()
-    id = api.create_dataset(valid_dict)
-    print ('id: {}'.format(id))
+    # from helpers import _get_json_as_dict, _create_identifier_ending
 
-    print('Updating the dict')
-    valid_dict['versionNotes'] += 'edit'
-    api.replace_dataset(id, valid_dict)
+    # print('Posting valid dict')
+    # valid_dict = _get_json_as_dict('minimum_valid_edited.json')
+    # valid_dict['identifier'] += _create_identifier_ending()
+    # id = api.create_dataset(valid_dict)
+    # print ('id: {}'.format(id))
 
-    print('Deleting the dict')
-    api.delete_dataset(id)
+    # print('Updating the dict')
+    # valid_dict['versionNotes'] += 'edit'
+    # api.replace_dataset(id, valid_dict)
+
+    # print('Deleting the dict')
+    # api.delete_dataset(id)
