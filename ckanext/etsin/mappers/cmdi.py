@@ -8,6 +8,8 @@ log = logging.getLogger(__name__)
 
 # Maps Component MetaData Infrastructure to Metax
 # TODO: Not yet implemented
+
+
 def cmdi_mapper(self, context, data_dict):
 
     package_dict = data_dict['package_dict']
