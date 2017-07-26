@@ -2,7 +2,9 @@
 Action overrides
 '''
 
-import ckanext.etsin.refine
+import ckanext.etsin.metax_api as metax_api
+
+from ckanext.etsin.refine import refine
 
 # For development use
 import logging
