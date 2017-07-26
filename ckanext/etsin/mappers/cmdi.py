@@ -11,6 +11,7 @@ log = logging.getLogger(__name__)
 # Maps Component MetaData Infrastructure to Metax
 # TODO: Not yet implemented
 
+
 def convert_language(language):
     return language     # TODO: copy from kata utils
 
@@ -35,37 +36,33 @@ class CmdiMetaxMapper:
         return [unicode(text).strip() for text in root.xpath(query, namespaces=cls.namespaces)]
 
     def map(self, xml):
+        """ Convert given XML into MetaX format.
+        :param xml: xml element (lxml)
+        :return: dictionary
+        """
         cmd = first(xml.xpath('//oai:record/oai:metadata/cmd:CMD',
                               namespaces=self.namespaces))
         if cmd is None:
             raise CmdiReaderException(
                 "Unexpected XML format: No CMD -element found")
 
-        resource_info = cmd.xpath(
-            "//cmd:Components/cmd:resourceInfo", namespaces=self.namespaces)[0]
-        if resource_info is None:
-            raise CmdiReaderException(
-                "Unexpected XML format: No resourceInfo -element found")
-
-        metadata_identifiers = self._text_xpath(
-            cmd, "//cmd:identificationInfo/cmd:identifier/text()")
-
         languages = self._text_xpath(
             cmd, "//cmd:corpusInfo/cmd:corpusMediaType/cmd:corpusTextInfo/cmd:languageInfo/cmd:languageId/text()")
+        language_list = [{'title': lang, 'identifier': 'todo'} for lang in languages]
 
-        # convert the descriptions to a JSON string of type {"fin":"kuvaus", "eng","desc"}
-        description = []
+        description_list = []
         for desc in xml.xpath("//cmd:identificationInfo/cmd:description", namespaces=self.namespaces):
             lang = convert_language(
                 desc.get('{http://www.w3.org/XML/1998/namespace}lang', 'undefined').strip())
-            description.append({lang: unicode(desc.text).strip()})
+            description_list.append({lang: unicode(desc.text).strip()})
 
-        # convert the titles to a JSON string of type {"fin":"otsikko", "eng","title"}
-        title = []
+        title_list = []
         for title in xml.xpath('//cmd:identificationInfo/cmd:resourceName', namespaces=self.namespaces):
             lang = convert_language(
                 title.get('{http://www.w3.org/XML/1998/namespace}lang', 'undefined').strip())
-            title.append({lang: title.text.strip()})
+            title_list.append({lang: title.text.strip()})
+
+        modified = first(self._text_xpath(resource_info, "//cmd:metadataInfo/cmd:metadataLastDateUpdated/text()")) or ""
 
         metax_dict = {
             # TODO: "etsin" or such (doesn't exist yet in metax)
@@ -73,17 +70,17 @@ class CmdiMetaxMapper:
             # TODO: "etsin" or such (doesn't exist yet in metax)
             "dataset_catalog": "1",
             "research_dataset": {
-                "creator": "metadatacreator?",
-                "modified": "lastdateupdate",
-                "title": title,
-                "files": [],    # ?
-                "curator": [],  # ?
-                "ready_status": "",     # ?
+                "creator": "todo",
+                "modified": modified,
+                "title": title_list,
+                "files": [],
+                "curator": [],
+                "ready_status": "",
                 "urn_identifier": "",
                 "total_byte_size": 0,
-                "description": description,
+                "description": description_list,
                 "version_notes": [""],
-                "language": [],
+                "language": language_list,
                 "preferred_identifier": ""
             },
             "identifier": "header.id or idinfo.id",
