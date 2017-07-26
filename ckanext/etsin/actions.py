@@ -3,7 +3,8 @@ Action overrides
 '''
 
 import ckanext.etsin.metax_api as metax_api
-import ckanext.etsin.refine
+
+from ckanext.etsin.refine import refine
 
 # For development use
 import logging
