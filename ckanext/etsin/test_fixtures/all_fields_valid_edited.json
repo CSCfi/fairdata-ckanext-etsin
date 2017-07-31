@@ -1,7 +1,38 @@
 {
     "contract": "1",
     "dataset_catalog": "1",
-    "research_dataset": {"creator":[{"name":"Teppo Testaaja"}],"modified":"2014-01-17T08:19:58Z","title":[{"en":"Wonderful Title"}],"files":[{"title":"File metadata title 0","identifier":"pid:urn:1"},{"title":"File metadata title 1","identifier":"pid:urn:2"}],"curator":[{"name":"Default Owner","identifier":"id:of:curator:default"}],"ready_status":"Unfinished","urn_identifier":"pid:urn:cr1","total_byte_size":12345,"description":[{"en":"A descriptive description describing the contents of this dataset. Must be descriptive."}],"version_notes":["This version contains changes to x and y."],"language":[{"title":"en","identifier":"http://lang.ident.ifier/en"}],"preferred_identifier":"pid:urn:preferred:dataset1"},
+    "research_dataset": {
+        "creator": [{
+            "name": "Teppo Testaaja"
+        }],
+        "modified": "2014-01-17T08:19:58Z",
+        "title": [{
+            "en": "Wonderful Title"
+        }],
+        "files": [{
+            "title": "File metadata title 0",
+            "identifier": "pid:urn:1"
+        }, {
+            "title": "File metadata title 1",
+            "identifier": "pid:urn:2"
+        }],
+        "curator": [{
+            "name": "Default Owner",
+            "identifier": "id:of:curator:default"
+        }],
+        "ready_status": "Unfinished",
+        "urn_identifier": "pid:urn:cr1",
+        "total_byte_size": 12345,
+        "description": [{
+            "en": "A descriptive description describing the contents of this dataset. Must be descriptive."
+        }],
+        "version_notes": ["This version contains changes to x and y."],
+        "language": [{
+            "title": "en",
+            "identifier": "http://lang.ident.ifier/en"
+        }],
+        "preferred_identifier": "pid:urn:preferred:dataset1"
+    },
     "identifier": "http://urn.fi/urn:nbn:fi:csc-kata",
     "dataset_catalog_id": null,
     "dataset_json": {
@@ -24,8 +55,7 @@
             "en": "A descriptive description describing the contents of this dataset. Must be descriptive."
         }],
         "bibliographicCitation": "Bibliographic citation",
-        "otherIdentifier": [
-            {
+        "otherIdentifier": [{
                 "notation": "literalvalueoftheidentifier",
                 "localIdentifierType": "Local identifier type defines use of the identifier in given context",
                 "creator": {
@@ -136,8 +166,7 @@
                 "homepage": "https://www.csc.fi"
             }
         }],
-        "contributor": [
-            {
+        "contributor": [{
                 "identifier": ["contributorid"],
                 "name": "Kalle Kontribuuttaja",
                 "email": "kalle.kontribuuttaaja@csc.fi",
@@ -190,7 +219,7 @@
                 ],
                 "homepage": "https://www.rahoittavaorganisaatio.fi"
             }],
-            "sourceOrganization" : [{
+            "sourceOrganization": [{
                 "identifier": ["identifieroforganization"],
                 "name": "Mysterious Organization",
                 "email": "info@csc.fi",
@@ -224,7 +253,7 @@
                 "identifier": "http://uri.of.concept/scheme"
             }]
         }],
-        "language":[{
+        "language": [{
             "title": ["en"],
             "identifier": "http://lang.ident.ifier/en"
         }],
@@ -284,7 +313,7 @@
             "description": [{
                 "en": "A descriptive description describing the contents of this dataset. Must be descriptive."
             }],
-            "creator":  [{
+            "creator": [{
                 "identifier": ["jarskiidentifier"],
                 "name": "Jarski",
                 "email": "jarski@csc.fi",
@@ -293,7 +322,7 @@
                 ],
                 "homepage": "https://www.csc.fi"
             }],
-            "language":[{
+            "language": [{
                 "title": ["en"],
                 "identifier": "http://lang.ident.ifier/en"
             }],
@@ -325,7 +354,7 @@
                 "title": [{
                     "en": "A name given to the document, which may be e.g. a landing page"
                 }],
-                "description" : [{
+                "description": [{
                     "en": "Description of the link. For example to be used as hover text."
                 }]
             },
@@ -334,7 +363,7 @@
                 "title": [{
                     "en": "A name given to the document, which would be an actual downloadable file"
                 }],
-                "description" : [{
+                "description": [{
                     "en": "Description of the link. For example to be used as hover text."
                 }]
             },
