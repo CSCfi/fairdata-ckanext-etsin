@@ -15,11 +15,6 @@ Requirements
 Running the Tests
 -----------------
 
-To run the tests, do::
+To run the tests, one directory level above this project, do::
 
-    nosetests --nologcapture --with-pylons=test.ini
-
-To run the tests and produce a coverage report, first make sure you have
-coverage installed in your virtualenv (``pip install coverage``) then run::
-
-    nosetests --nologcapture --with-pylons=test.ini --with-coverage --cover-package=ckanext.etsin --cover-inclusive --cover-erase --cover-tests
+    ckanext-etsin/run_nose_tests.sh
