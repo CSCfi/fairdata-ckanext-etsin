@@ -19,16 +19,16 @@ class CmdiMetaxMapper:
         :param xml: xml element (lxml)
         :return: dictionary
         """
-        helper = CmdiParseHelper(xml)
+        cmdi = CmdiParseHelper(xml)
 
-        languages = helper.parse_languages()
+        languages = cmdi.parse_languages()
         language_list = [{'title': lang, 'identifier': 'todo'} for lang in languages]
 
-        description_list = helper.parse_descriptions()
-        title_list = helper.parse_titles()
-        modified = helper.parse_modified() or ""
+        description_list = cmdi.parse_descriptions()
+        title_list = cmdi.parse_titles()
+        modified = cmdi.parse_modified() or ""
 
-        temporal_coverage = helper.parse_temporal_coverage() or ""
+        temporal_coverage = cmdi.parse_temporal_coverage() or ""
         temporal_coverage_begin = ""
         temporal_coverage_end = ""
         if temporal_coverage:
@@ -37,17 +37,14 @@ class CmdiMetaxMapper:
                 temporal_coverage_begin = split[0]
                 temporal_coverage_end = split[1]
 
-        # things to add/use:
+        # things to add:
         # contacts
         # agents
         # identifier? (not used before) (identificationinfo//identifier)
 
-        creator = {
-            "identifier": "",
-            "name": "",
-            "email": "",
-            "phone": ""
-        }
+        creators = cmdi.parse_creators()
+        owners = cmdi.parse_owners()
+        curators = cmdi.parse_curators()
 
         metax_dict = {
             # TODO: "etsin" or such (doesn't exist yet in metax)
@@ -55,18 +52,18 @@ class CmdiMetaxMapper:
             # TODO: "etsin" or such (doesn't exist yet in metax)
             "dataset_catalog": "1",
             "research_dataset": {
-                "creator": creator,
+                "creator": creators,
                 "modified": modified,
                 "title": title_list,
-                "files": [],
-                "curator": [],
+                "files": ["todo"],
+                "curator": curators,
                 "ready_status": "todo",
                 "urn_identifier": "todo",
                 "total_byte_size": 0,
                 "description": description_list,
-                "version_notes": [""],
+                "version_notes": ["todo"],
                 "language": language_list,
-                "preferred_identifier": "",
+                "preferred_identifier": "todo",
                 "provenance": [{
                     "temporal": [{
                         "startDate": [
@@ -79,10 +76,8 @@ class CmdiMetaxMapper:
                 }]
             },
             "identifier": "todo",
-            "modified": "",
-            "versionNotes": [
-                ""
-            ],
+            "modified": "todo",
+            "versionNotes": ["todo"],
             # Pass original information to refiner
             "context": xml
         }

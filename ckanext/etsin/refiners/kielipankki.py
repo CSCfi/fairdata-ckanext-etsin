@@ -97,19 +97,17 @@ def kielipankki_refiner(data_dict):
                 access_application_URL = 'https://lbr.csc.fi/web/guest/catalogue?domain=LBR&target=basket&resource=' + \
                     sliced_pid[1]
 
-    # Initialize fields that may not have existed
-    package_dict.setdefault('remoteResources', {})
-    package_dict.setdefault('accessRights', {})
-
     # Refine the data
-    package_dict['remoteResources'] = {
+    package_dict.setdefault('remoteResources', {})
+    package_dict['remoteResources'].update({
         "accessURL": {
             "identifier": "todo"    # TODO: access_request_URL or access_application_URL?
         },
         "downloadURL": {
             "identifier": direct_download_URL
         }
-    }
+    })
+#    package_dict.setdefault('accessRights', {})
 #    package_dict['accessRights'] = {
 #        "available": [
 #

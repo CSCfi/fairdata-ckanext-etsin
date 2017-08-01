@@ -13,11 +13,6 @@ class TestCmdiMapper(TestCase):
         data_dict = {'package_dict': {}}
 
         metax_dict = cmdi_mapper(context, data_dict)['metax_dict']
-        # from pprint import pprint
-        # import IPython
-        # IPython.embed()
-        # pprint(metax_dict)
-
 
 if __name__ == '__main__':
     unittest.main()
