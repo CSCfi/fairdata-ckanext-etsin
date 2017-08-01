@@ -1,6 +1,7 @@
 import os
 import json
 import time
+from lxml import etree
 
 
 def _get_fixture(filename):
@@ -10,6 +11,10 @@ def _get_fixture(filename):
 def _get_file_as_string(filename):
     with open(_get_fixture(filename)) as file:
         return ''.join(file.readlines())
+
+
+def _get_file_as_lxml(filename):
+    return etree.fromstring(_get_file_as_string(filename))
 
 
 def _get_json_as_dict(filename):
