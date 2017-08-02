@@ -39,6 +39,7 @@ class CmdiMetaxMapper:
                 temporal_coverage_end = split[1]
 
         creators = cmdi.parse_creators()
+        distributors = cmdi.parse_distributors()
         owners = cmdi.parse_owners()
         curators = cmdi.parse_curators()
 
@@ -49,6 +50,8 @@ class CmdiMetaxMapper:
             "dataset_catalog": "1",
             "research_dataset": {
                 "creator": creators,
+                # TODO: Note: not sure of the location/name of the distributors field
+                "distributor": distributors,
                 "modified": modified,
                 "title": title_list,
                 "files": ["todo"],

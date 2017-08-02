@@ -79,6 +79,11 @@ class CmdiParseHelper:
 
     @classmethod
     def _get_person_as_agent(cls, person):
+        """ Converts a person dictionary to MetaX agent format.
+
+        :param person: dictionary produced by the _get_persons method
+        :return: dictionary in the MetaX agent format
+        """
         return {
             "identifier": "todo",
             "name": u"{} {}".format(person['given_name'], person['surname']),
@@ -89,6 +94,11 @@ class CmdiParseHelper:
 
     @classmethod
     def _get_organization_as_agent(cls, organization):
+        """ Converts an organization dictionary to MetaX agent format.
+
+        :param organization: dictionary produced by the _get_organizations method
+        :return: dictionary in the MetaX agent format
+        """
         return {
             "identifier": "todo",
             "name": organization['name'],
@@ -144,11 +154,19 @@ class CmdiParseHelper:
         return first(self._text_xpath(
             self.resource_info, "//cmd:distributionInfo/cmd:licenceInfo/cmd:licence/text()"))
 
+    def parse_distributors(self):
+        """ Get a list of the distribution right holders (people or organizations) as agents. """
+        return [
+            self._get_person_as_agent(person) for person in self._get_persons(self.resource_info, "//cmd:distributionInfo/cmd:licenceInfo/cmd:distributionRightsHolderPerson")
+        ].extend([
+            self._get_organization_as_agent(organization) for organization in self._get_organizations(self.resource_info, "//cmd:distributionInfo/cmd:licenceInfo/cmd:distributionRightsHolderOrganization")
+        ])
+
     def parse_creators(self):
         return []   # TODO
 
     def parse_owners(self):
-        """ Get a list of the owners as agents. Owners may be people or organizations. """
+        """ Get a list of the owners (people or organizations) as agents. """
         creator_persons = self._get_persons(
             self.resource_info, "//cmd:distributionInfo/cmd:iprHolderPerson")
         creator_organizations = self._get_organizations(
@@ -160,7 +178,7 @@ class CmdiParseHelper:
         ])
 
     def parse_curators(self):
-        """ Get the curators (contacts) as agents. Curators may be people or organizations """
+        """ Get the curators (contacts) as agents. Curators may be people or organizations. """
         contact_persons = self._get_persons(
             self.resource_info, "//cmd:contactPerson")
         return [self._get_person_as_agent(person) for person in contact_persons]
