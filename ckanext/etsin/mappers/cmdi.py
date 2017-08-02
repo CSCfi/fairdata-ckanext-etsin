@@ -22,7 +22,8 @@ class CmdiMetaxMapper:
         cmdi = CmdiParseHelper(xml)
 
         languages = cmdi.parse_languages()
-        language_list = [{'title': lang, 'identifier': 'todo'} for lang in languages]
+        language_list = [{'title': lang, 'identifier': 'todo'}
+                         for lang in languages]
 
         description_list = cmdi.parse_descriptions()
         title_list = cmdi.parse_titles()
@@ -36,11 +37,6 @@ class CmdiMetaxMapper:
             if len(split) == 2:
                 temporal_coverage_begin = split[0]
                 temporal_coverage_end = split[1]
-
-        # things to add:
-        # contacts
-        # agents
-        # identifier? (not used before) (identificationinfo//identifier)
 
         creators = cmdi.parse_creators()
         owners = cmdi.parse_owners()

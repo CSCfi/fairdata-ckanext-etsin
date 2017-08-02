@@ -78,6 +78,24 @@ class CmdiParseHelper:
                 for person in root.xpath(xpath, namespaces=cls.namespaces)]
 
     @classmethod
+    def _get_person_as_agent(cls, person):
+        return {
+            "identifier": "todo",
+            "name": u"{} {}".format(person['given_name'], person['surname']),
+            "email": person['email'],
+            "phone": "todo",
+            "isPartOf": person['organization']
+        }
+
+    @classmethod
+    def _get_organization_as_agent(cls, organization):
+        return {
+            "identifier": "todo",
+            "name": organization['name'],
+            "email": organization['email'],
+        }
+
+    @classmethod
     def convert_language(cls, language):
         return language     # TODO: copy from kata utils
 
@@ -127,29 +145,22 @@ class CmdiParseHelper:
             self.resource_info, "//cmd:distributionInfo/cmd:licenceInfo/cmd:licence/text()"))
 
     def parse_creators(self):
-        """ Get a list of the creators as agents. Creators may be people or organizations. """
+        return []   # TODO
+
+    def parse_owners(self):
+        """ Get a list of the owners as agents. Owners may be people or organizations. """
         creator_persons = self._get_persons(
             self.resource_info, "//cmd:distributionInfo/cmd:iprHolderPerson")
         creator_organizations = self._get_organizations(
             self.resource_info, "//cmd:distributionInfo/cmd:iprHolderOrganization")
-        return [{
-            "identifier": "todo",
-            "name": owner['name'],
-            "email": owner['email'],
-            "phone": owner['phone'],
-            "isPartOf": owner['organization']
-        }
-            for person in creator_persons
-        ].extend([{
-            "identifier": organization['url'],
-            "name": organization['name'],
-            "email": organization['email']
-        }
-            for organization in creator_organizations
+        return [
+            self._get_person_as_agent(person) for person in creator_persons
+        ].extend([
+            self._get_organization_as_agent(organization) for organization in creator_organizations
         ])
 
-    def parse_owners(self):
-        return []   # TODO
-
     def parse_curators(self):
-        return []   # TODO
+        """ Get the curators (contacts) as agents. Curators may be people or organizations """
+        contact_persons = self._get_persons(
+            self.resource_info, "//cmd:contactPerson")
+        return [self._get_person_as_agent(person) for person in contact_persons]
