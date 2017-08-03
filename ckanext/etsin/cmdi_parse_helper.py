@@ -1,4 +1,5 @@
 from functionally import first
+from pylons import config
 
 
 class CmdiReaderException(Exception):
@@ -10,7 +11,11 @@ class CmdiParseHelper:
     namespaces = {'oai': "http://www.openarchives.org/OAI/2.0/",
                   'cmd': "http://www.clarin.eu/cmd/"}
 
-    def __init__(self, xml):
+    def __init__(self, xml, provider=None):
+        """ Initialize the helper for parsing the given xml.
+
+        :param xml: an lxml object, representing a CMDI record
+        """
         cmd = first(xml.xpath('//oai:record/oai:metadata/cmd:CMD',
                               namespaces=CmdiParseHelper.namespaces))
         if cmd is None:
@@ -26,6 +31,7 @@ class CmdiParseHelper:
         self.xml = xml
         self.cmd = cmd
         self.resource_info = resource_info
+        self.provider = provider or config.get('ckan.site_url')
 
     @staticmethod
     def _strip_first(elements):
@@ -77,8 +83,8 @@ class CmdiParseHelper:
                  'organization': first(cls._get_organizations(person, "cmd:personInfo/cmd:affiliation"))}
                 for person in root.xpath(xpath, namespaces=cls.namespaces)]
 
-    @classmethod
-    def _get_person_as_agent(cls, person):
+    @staticmethod
+    def _get_person_as_agent(person):
         """ Converts a person dictionary to MetaX agent format.
 
         :param person: dictionary produced by the _get_persons method
@@ -92,8 +98,8 @@ class CmdiParseHelper:
             "isPartOf": person['organization']
         }
 
-    @classmethod
-    def _get_organization_as_agent(cls, organization):
+    @staticmethod
+    def _get_organization_as_agent(organization):
         """ Converts an organization dictionary to MetaX agent format.
 
         :param organization: dictionary produced by the _get_organizations method
@@ -182,3 +188,8 @@ class CmdiParseHelper:
         contact_persons = self._get_persons(
             self.resource_info, "//cmd:contactPerson")
         return [self._get_person_as_agent(person) for person in contact_persons]
+
+    def parse_metadata_identifiers(self):
+        """ Get the metadata identifiers. """
+        return self._text_xpath(
+            self.cmd, "//cmd:identificationInfo/cmd:identifier/text()")

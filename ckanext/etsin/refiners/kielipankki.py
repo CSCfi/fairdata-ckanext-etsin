@@ -76,12 +76,20 @@ def kielipankki_refiner(data_dict):
 
     # Read lxml object passed in from CMDI mapper
     xml = data_dict['context']['xml']
-    helper = CmdiParseHelper(xml)
+    cmdi = CmdiParseHelper(xml)
 
     license_identifier = KielipankkiRefiner._language_bank_license_enhancement(
-        helper.parse_licence() or 'notspecified')
+        cmdi.parse_licence() or 'notspecified')
     availability = KielipankkiRefiner._language_bank_availability_from_license(
         license_identifier)
+
+    # TODO: find a place in metax data model to put pids/primary_pid
+    pids = []
+    primary_pid = None
+    for pid in [KielipankkiRefiner._language_bank_urn_pid_enhancement(metadata_pid) for metadata_pid in cmdi.parse_metadata_identifiers()]:
+        if 'urn' in pid and not primary_pid:
+            pids.append(dict(id=pid, provider=cmdi.provider, type='primary'))
+            primary_pid = pid
 
     direct_download_URL = ''
     access_request_URL = ''
