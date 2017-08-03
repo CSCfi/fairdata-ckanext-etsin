@@ -1,5 +1,6 @@
 from functionally import first
 from pylons import config
+import ckanext.etsin.utils
 
 
 class CmdiReaderException(Exception):
@@ -111,10 +112,6 @@ class CmdiParseHelper:
             "email": organization['email'],
         }
 
-    @classmethod
-    def convert_language(cls, language):
-        return language     # TODO: copy from kata utils
-
     def parse_languages(self):
         """ Find languages as defined in language info
 
@@ -130,7 +127,7 @@ class CmdiParseHelper:
         """
         description_list = []
         for desc in self.xml.xpath("//cmd:identificationInfo/cmd:description", namespaces=CmdiParseHelper.namespaces):
-            lang = self.convert_language(
+            lang = utils.convert_language(
                 desc.get('{http://www.w3.org/XML/1998/namespace}lang', 'undefined').strip())
             description_list.append({lang: unicode(desc.text).strip()})
         return description_list
