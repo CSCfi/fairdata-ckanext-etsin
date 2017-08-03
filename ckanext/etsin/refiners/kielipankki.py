@@ -106,8 +106,10 @@ def kielipankki_refiner(data_dict):
                     sliced_pid[1]
 
     # Refine the data
-    package_dict.setdefault('remoteResources', {})
-    package_dict['remoteResources'].update({
+    package_dict.setdefault('remoteResources', [])
+    # TODO: We don't know yet if we should add a new object or edit one
+    # that mapper might create
+    package_dict['remoteResources'].append({
         "accessURL": {
             "identifier": "todo"    # TODO: access_request_URL or access_application_URL?
         },
@@ -115,6 +117,12 @@ def kielipankki_refiner(data_dict):
             "identifier": direct_download_URL
         }
     })
+    package_dict.setdefault('otherIdentifier', [])
+    package_dict['otherIdentifier'].extend([{
+        # TODO: Use provider and type if possible
+        "notation": pid['id'],
+        "localIdentifierType": "todo"
+    } for pid in pids if pid['type'] != 'primary'])
 #    package_dict.setdefault('accessRights', {})
 #    package_dict['accessRights'] = {
 #        "available": [

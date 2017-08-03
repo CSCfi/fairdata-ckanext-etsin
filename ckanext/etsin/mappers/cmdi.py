@@ -9,7 +9,6 @@ import logging
 log = logging.getLogger(__name__)
 
 # Maps Component MetaData Infrastructure to Metax
-# TODO: Not yet implemented
 
 
 class CmdiMetaxMapper:
