@@ -84,8 +84,8 @@ class CmdiParseHelper:
                  'organization': first(cls._get_organizations(person, "cmd:personInfo/cmd:affiliation"))}
                 for person in root.xpath(xpath, namespaces=cls.namespaces)]
 
-    @staticmethod
-    def _get_person_as_agent(person):
+    @classmethod
+    def _get_person_as_agent(cls, person):
         """ Converts a person dictionary to MetaX agent format.
 
         :param person: dictionary produced by the _get_persons method
@@ -96,7 +96,7 @@ class CmdiParseHelper:
             "name": u"{} {}".format(person['given_name'], person['surname']),
             "email": person['email'],
             "phone": "todo",
-            "isPartOf": person['organization']
+            "isPartOf": cls._get_organization_as_agent(person['organization'])
         }
 
     @staticmethod
