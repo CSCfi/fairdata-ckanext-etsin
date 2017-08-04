@@ -1,6 +1,6 @@
 from functionally import first
 from pylons import config
-import ckanext.etsin.utils
+import ckanext.etsin.utils as utils
 
 
 class CmdiReaderException(Exception):
@@ -139,7 +139,7 @@ class CmdiParseHelper:
         """
         title_list = []
         for title in self.xml.xpath('//cmd:identificationInfo/cmd:resourceName', namespaces=CmdiParseHelper.namespaces):
-            lang = self.convert_language(
+            lang = utils.convert_language(
                 title.get('{http://www.w3.org/XML/1998/namespace}lang', 'undefined').strip())
             title_list.append({lang: title.text.strip()})
         return title_list
@@ -190,3 +190,4 @@ class CmdiParseHelper:
         """ Get the metadata identifiers. """
         return self._text_xpath(
             self.cmd, "//cmd:identificationInfo/cmd:identifier/text()")
+
