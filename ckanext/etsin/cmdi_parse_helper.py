@@ -157,13 +157,14 @@ class CmdiParseHelper:
         return first(self._text_xpath(
             self.resource_info, "//cmd:distributionInfo/cmd:licenceInfo/cmd:licence/text()"))
 
-    def parse_distributors(self):
-        """ Get a list of the distribution right holders (people or organizations) as agents. """
-        return [
-            self._get_person_as_agent(person) for person in self._get_persons(self.resource_info, "//cmd:distributionInfo/cmd:licenceInfo/cmd:distributionRightsHolderPerson")
-        ].extend([
-            self._get_organization_as_agent(organization) for organization in self._get_organizations(self.resource_info, "//cmd:distributionInfo/cmd:licenceInfo/cmd:distributionRightsHolderOrganization")
-        ])
+    def parse_distributor(self):
+        """ Get the distribution rights holder (person) as an agent.
+
+        If there are multiple distributors, choose the first one.
+        """
+        distributor_persons = self._get_persons(
+            self.resource_info, "//cmd:distributionInfo/cmd:licenceInfo/cmd:distributionRightsHolderPerson")
+        return self._get_person_as_agent(distributor_persons[0]) if distributor_persons else None
 
     def parse_creators(self):
         return []   # TODO
@@ -184,10 +185,17 @@ class CmdiParseHelper:
         """ Get the curators (contacts) as agents. Curators may be people or organizations. """
         contact_persons = self._get_persons(
             self.resource_info, "//cmd:contactPerson")
-        return [self._get_person_as_agent(person) for person in contact_persons]
+        contact_orgs = self._get_organizations(
+            self.resource_info, "//cmd:distributionInfo/cmd:licenceInfo/cmd:distributionRightsHolderOrganization")
+        return [
+            self._get_person_as_agent(person)
+            for person in contact_persons
+        ].extend([
+            self._get_organization_as_agent(organization)
+            for organization in contact_orgs
+        ])
 
     def parse_metadata_identifiers(self):
         """ Get the metadata identifiers. """
         return self._text_xpath(
             self.cmd, "//cmd:identificationInfo/cmd:identifier/text()")
-
