@@ -16,6 +16,10 @@ class DatasetCatalogMetaxAPIService:
     METAX_DATASET_CATALOG_API_EXISTS_URL = METAX_DATASET_CATALOG_API_POST_URL + "/{id}/exists"
 
     def create_or_update_dataset_catalogs(self, update_if_exists, input_file_path):
+        '''
+        Return identifier for placing into metax dataset
+        '''
+
         try:
             catalog = self._get_data_catalogs_from_file(input_file_path)
         except IOError:
@@ -54,6 +58,8 @@ class DatasetCatalogMetaxAPIService:
                 return
         elif not update_if_exists and dataset_exists:
             pprint.pprint("Skipping dataset catalog..")
+
+        return c_identifier
 
     def _do_put_request(self, url, data):
         return self._handle_request_response(requests.put(url, json=data))
