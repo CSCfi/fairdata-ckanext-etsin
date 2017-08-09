@@ -84,14 +84,17 @@ class CmdiMetaxMapper:
 
 
 def cmdi_mapper(context, data_dict):
+    """ Maps a CMDI record in xml format into a MetaX format dict. """
 
     package_dict = data_dict['package_dict']
 
-    # TODO: figure out where xml comes from
-    xml_string = context['xml']
+    xml_string = context.pop('xml')
     xml = etree.fromstring(xml_string)
 
     metax_dict = CmdiMetaxMapper().map(xml)
     package_dict['metax_dict'] = metax_dict
+
+    # Store reference to the lxml object for refiners' use
+    context['lxml'] = xml
 
     return package_dict

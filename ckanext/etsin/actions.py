@@ -77,7 +77,6 @@ from ckan.logic.validators import (
     empty_if_not_sysadmin,
     package_id_does_not_exist,
 )
-from ckanext.etsin.tests.helpers import _get_file_as_lxml
 
 # For development use
 import logging
@@ -92,16 +91,13 @@ def package_create(context, data_dict):
     '''
 
     # Refine data_dict based on organization it belongs to
-    #data_dict = refine(data_dict)
+    data_dict = refine(context, data_dict)
 
     # Check with Metax if we should be creating or updating and do that
     # TODO: We may need to catch an error here
-    from mappers.cmdi import cmdi_mapper
-    data_dict = 
-
     data_dict['id'] = unicode(uuid.uuid4())     # TEMP for package create
     metax_id = unicode(uuid.uuid4())            # TEMP
-    # metax_id = _create_or_update(data_dict)
+    metax_id = _create_or_update(data_dict)
 
     # Strip Metax data_dict to CKAN data_dict
     id = unicode(uuid.uuid4())
