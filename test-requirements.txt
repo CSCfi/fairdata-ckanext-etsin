@@ -2,3 +2,5 @@ mock
 flake8
 nosexcover
 nose
+mock
+functionally

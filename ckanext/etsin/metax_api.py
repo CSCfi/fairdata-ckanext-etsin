@@ -25,10 +25,13 @@ def create_dataset(dataset_dict):
                         'Content-Type': 'application/json',
                         'Accept': 'application/json'
                     },
-                    json=dataset_dict,
-                    verify=False)
-    r.raise_for_status()
-    return r.json()['identifier']
+                    json=dataset_dict)
+    try:
+        r.raise_for_status()
+    except HTTPError:
+        log.info('Failed to create dataset, response: {}'.format(r.json()))
+        raise
+    return r.json()['id']
 
 
 def replace_dataset(id, dataset_dict):
@@ -37,15 +40,13 @@ def replace_dataset(id, dataset_dict):
                     headers={
                         'Content-Type': 'application/json',
                     },
-                    json=dataset_dict,
-                    verify=False)
+                    json=dataset_dict)
     r.raise_for_status()
 
 
 def delete_dataset(id):
     """ Delete a dataset from MetaX """
-    r = requests.delete('https://metax-test.csc.fi/rest/datasets/{id}'.format(id=id),
-                     verify=False)
+    r = requests.delete('https://metax-test.csc.fi/rest/datasets/{id}'.format(id=id))
     r.raise_for_status()
 
 
