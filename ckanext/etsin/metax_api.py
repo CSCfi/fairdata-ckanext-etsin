@@ -3,15 +3,14 @@ import requests
 import sys
 from pprint import pprint
 
-# Setup http logging for debug purposes
 import logging
-# logging.basicConfig()
-# logging.getLogger().setLevel(logging.DEBUG)
+log = logging.getLogger(__name__)
+
+# # Uncomment to setup http logging for debug purposes (note: will log requests
+# # made from other files as well)
 # requests_log = logging.getLogger("requests.packages.urllib3")
 # requests_log.setLevel(logging.DEBUG)
 # requests_log.propagate = True
-
-log = logging.getLogger(__name__)
 
 # TODO: All these functions must log all the API calls we make and all the responses.
 
@@ -26,8 +25,7 @@ def create_dataset(dataset_dict):
                         'Content-Type': 'application/json',
                         'Accept': 'application/json'
                     },
-                    json=dataset_dict,
-                    verify=False)
+                    json=dataset_dict)
     try:
         r.raise_for_status()
     except HTTPError:
@@ -42,15 +40,13 @@ def replace_dataset(id, dataset_dict):
                     headers={
                         'Content-Type': 'application/json',
                     },
-                    json=dataset_dict,
-                    verify=False)
+                    json=dataset_dict)
     r.raise_for_status()
 
 
 def delete_dataset(id):
     """ Delete a dataset from MetaX """
-    r = requests.delete('https://metax-test.csc.fi/rest/datasets/{id}'.format(id=id),
-                     verify=False)
+    r = requests.delete('https://metax-test.csc.fi/rest/datasets/{id}'.format(id=id))
     r.raise_for_status()
 
 
