@@ -76,8 +76,6 @@ class CmdiMetaxMapper:
             "identifier": "todo",
             "modified": "todo",
             "versionNotes": ["todo"],
-            # Pass original information to refiner
-            "context": xml
         }
 
         return metax_dict

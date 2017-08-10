@@ -89,20 +89,19 @@ def package_create(context, data_dict):
 
     :returns: package dictionary that was saved to CKAN db.
     '''
+    # Get the package_id for the dict
+    package_id = data_dict.pop('id')
 
     # Refine data_dict based on organization it belongs to
     data_dict = refine(context, data_dict)
 
-    # Check with Metax if we should be creating or updating and do that
-    # TODO: We may need to catch an error here
-    data_dict['id'] = unicode(uuid.uuid4())     # TEMP for package create
-    metax_id = unicode(uuid.uuid4())            # TEMP
-    metax_id = _create_or_update(data_dict)
+    # Create or update the dataset in MetaX
+    metax_id = 321            # TEMP
+    # metax_id = _create_or_update(data_dict)
 
     # Strip Metax data_dict to CKAN data_dict
-    id = unicode(uuid.uuid4())
     data_dict = {
-        'id': id,
+        'id': package_id,
         'name': metax_id
     }
     context['schema'] = {
@@ -110,11 +109,12 @@ def package_create(context, data_dict):
         'name': [not_empty, unicode, name_validator, package_name_validator]
     }
 
-    # Copy and paste package creation from CKAN's original package_create
-    log.info("Creating package: {}".format(data_dict))
-    ckan.logic.action.create.package_create(context, data_dict)
+    # Create the stripped package in our CKAN database
+    print "Creating package: {}".format(data_dict)
+    package_dict = ckan.logic.action.create.package_create(context, data_dict)
+    print "Created package:", package_dict
 
-    return data_dict
+    return package_dict
 
 
 def package_delete(context, data_dict):

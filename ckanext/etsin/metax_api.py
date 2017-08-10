@@ -1,7 +1,8 @@
 import json
-import requests
 import sys
 from pprint import pprint
+import requests
+from requests import HTTPError
 
 # Setup http logging for debug purposes
 import logging
@@ -27,7 +28,7 @@ def create_dataset(dataset_dict):
                         'Accept': 'application/json'
                     },
                     json=dataset_dict,
-                    verify=False)
+                    verify=True)
     try:
         r.raise_for_status()
     except HTTPError:
@@ -43,14 +44,14 @@ def replace_dataset(id, dataset_dict):
                         'Content-Type': 'application/json',
                     },
                     json=dataset_dict,
-                    verify=False)
+                    verify=True)
     r.raise_for_status()
 
 
 def delete_dataset(id):
     """ Delete a dataset from MetaX """
     r = requests.delete('https://metax-test.csc.fi/rest/datasets/{id}'.format(id=id),
-                     verify=False)
+                     verify=True)
     r.raise_for_status()
 
 

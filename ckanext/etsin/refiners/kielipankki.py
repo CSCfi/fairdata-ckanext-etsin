@@ -7,9 +7,6 @@ from ckanext.etsin.cmdi_parse_helper import CmdiParseHelper
 import logging
 log = logging.getLogger(__name__)
 
-# Refines Kielipankki data_dict
-# TODO: Not yet implemented
-
 
 class KielipankkiRefiner():
 
@@ -67,6 +64,11 @@ class KielipankkiRefiner():
 
 
 def kielipankki_refiner(context, data_dict):
+    """ Refines the given MetaX data dict in a Kielipankki-specific way
+
+    :param context: Dictionary with an lxml-field
+    :param data_dict: Dataset dictionary in MetaX format
+    """
 
     package_dict = data_dict
 
@@ -107,8 +109,6 @@ def kielipankki_refiner(context, data_dict):
 
     # Refine the data
     package_dict.setdefault('remoteResources', [])
-    # TODO: We don't know yet if we should add a new object or edit one
-    # that mapper might create
     package_dict['remoteResources'].append({
         "accessURL": {
             "identifier": "todo"    # TODO: access_request_URL or access_application_URL?

@@ -14,18 +14,20 @@ class TestRefine(TestCase):
 
     def testRefineKielipankki(self):
         with patch('ckanext.etsin.refiners.kielipankki.kielipankki_refiner') as mock_refiner:
+            context = {}
             data_dict = {
                 'organization': 'kielipankki'
             }
-            refine(data_dict)
+            refine(context, data_dict)
             ok_(mock_refiner.called)
 
     def testRefineSyke(self):
         with patch('ckanext.etsin.refiners.syke.syke_refiner') as mock_refiner:
+            context = {}
             data_dict = {
                 'organization': 'syke'
             }
-            refine(data_dict)
+            refine(context, data_dict)
             ok_(mock_refiner.called)
 
 
@@ -36,12 +38,8 @@ class TestKielipankkiRefiner(TestCase):
         xml = helpers._get_file_as_lxml(
             'kielipankki_cmdi/cmdi_record_example.xml')
         metax_dict = {}
-        metax_dict.update({
-            'context': {
-                'xml': xml
-            }
-        })
-        refined_dict = kielipankki_refiner(metax_dict)
+        context = {'lxml': xml}
+        refined_dict = kielipankki_refiner(context, metax_dict)
 
         # Check that refined fields exist
         ok_('remoteResources' in refined_dict)

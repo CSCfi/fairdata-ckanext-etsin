@@ -1,5 +1,6 @@
 import ckanext.etsin.actions as actions
 from ckanext.etsin.mappers.cmdi import cmdi_mapper
+from ckan import model
 
 import unittest
 from unittest import TestCase
@@ -12,16 +13,22 @@ class TestActions(TestCase):
     """ Tests for actions.py """
 
     def testPackageCreate(self):
-        """ Test package creation with real data.
+        """ Test action package_create with real data.
 
-        This is not really a unit test since we actually use other functions.
+        Note: we use cmdi_mapper, so this is not a true unit test.
         """
-        with patch('ckan.logic.action.create.package_create') as mock_create:
+        # with patch('ckan.logic.action.create.package_create') as mock_create:
+        if True:
             # Create the MetaX data dict
             xml_string = helpers._get_file_as_string(
                 'kielipankki_cmdi/cmdi_record_example.xml')
-            context = {'xml': xml_string}
-            data_dict = {'package_dict': {}}
+            context = {
+                'xml': xml_string,
+                'model': model,
+                'session': model.Session,
+                'user': "test"
+            }
+            data_dict = {'package_dict': {'id': 123}}
             data_dict = cmdi_mapper(context, data_dict)
 
             # TEMP: so that refiner does not get confused
@@ -32,6 +39,7 @@ class TestActions(TestCase):
 
             # Check that package creation was attempted
             ok_(mock_create.called)
+
 
 if __name__ == '__main__':
     unittest.main()
