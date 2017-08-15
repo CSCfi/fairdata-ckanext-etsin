@@ -19,7 +19,7 @@ log = logging.getLogger(__name__)
 
 def create_dataset(dataset_dict):
     """ Create a dataset in MetaX.
-    Returns:
+    :return: MetaX-id of the created dataset
         The identifier of the newly created dataset
     """
     r = requests.post('https://metax-test.csc.fi/rest/datasets/',
@@ -27,8 +27,7 @@ def create_dataset(dataset_dict):
                         'Content-Type': 'application/json',
                         'Accept': 'application/json'
                     },
-                    json=dataset_dict,
-                    verify=True)
+                    json=dataset_dict)
     try:
         r.raise_for_status()
     except HTTPError:
@@ -43,18 +42,24 @@ def replace_dataset(id, dataset_dict):
                     headers={
                         'Content-Type': 'application/json',
                     },
-                    json=dataset_dict,
-                    verify=True)
+                    json=dataset_dict)
     r.raise_for_status()
 
 
 def delete_dataset(id):
     """ Delete a dataset from MetaX """
-    r = requests.delete('https://metax-test.csc.fi/rest/datasets/{id}'.format(id=id),
-                     verify=True)
+    r = requests.delete('https://metax-test.csc.fi/rest/datasets/{id}'.format(id=id))
     r.raise_for_status()
 
 
-# TODO: Implement. Also, come up with a better name.
-def ask_metax_whether_package_exists(id):
-    pass
+def get_metax_id(preferred_id):
+    """ Retrieve the MetaX-id of a dataset. None if dataset is not in MetaX. 
+    
+    :param preferred_id: Preferred identifier of the dataset (specified by source).
+    :return: metax-id of the dataset. If the dataset is not in metax, returns None.
+    """
+    r = requests.get('https://metax-test.csc.fi/rest/datasets/{id}/exists' \
+        .format(id=preferred_id))
+    return 123 # Temp: current endpoint returns true/false, instead of id/null
+    # return r.json()
+

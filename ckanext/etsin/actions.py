@@ -77,6 +77,7 @@ from ckan.logic.validators import (
     empty_if_not_sysadmin,
     package_id_does_not_exist,
 )
+from requests import HTTPError
 
 # For development use
 import logging
@@ -84,11 +85,22 @@ log = logging.getLogger(__name__)
 
 
 def package_create(context, data_dict):
-    '''
+    """
     Refines data_dict. Calls Metax API to create new dataset.
 
     :returns: package dictionary that was saved to CKAN db.
-    '''
+    """
+
+    # Debug code
+    from ckanext.etsin.tests.helpers import _get_file_as_string
+    data_dict['id'] = 12345
+    context['xml'] = _get_file_as_string('kielipankki_cmdi/cmdi_record_example.xml')
+    from ckanext.etsin.mappers.cmdi import cmdi_mapper
+    data_dict['package_dict'] = {}
+    cmdi_mapper(context, data_dict)
+    data_dict['organization'] = 'kielipankki'
+    data_dict['preferred_identifier'] = 321
+
     # Get the package_id for the dict
     package_id = data_dict.pop('id')
 
@@ -96,31 +108,35 @@ def package_create(context, data_dict):
     data_dict = refine(context, data_dict)
 
     # Create or update the dataset in MetaX
-    metax_id = 321            # TEMP
-    # metax_id = _create_or_update(data_dict)
+    try:
+        metax_id = _create_or_update(data_dict)
+    except HTTPError:
+        log.info("Failed to create or update package to MetaX: {}".format(data_dict))
+        return False
 
-    # Strip Metax data_dict to CKAN data_dict
-    data_dict = {
+    # Strip Metax data_dict to CKAN package_dict
+    package_dict = {
         'id': package_id,
         'name': metax_id
     }
     context['schema'] = {
-        'id': [],
+        'id': [ignore_missing],
         'name': [not_empty, unicode, name_validator, package_name_validator]
     }
 
-    # Create the stripped package in our CKAN database
-    print "Creating package: {}".format(data_dict)
-    package_dict = ckan.logic.action.create.package_create(context, data_dict)
+    # Create the package in our CKAN database
+    print "Creating package: {}".format(package_dict)
+    package_dict = ckan.logic.action.create.package_create(
+        context, package_dict)
     print "Created package:", package_dict
 
     return package_dict
 
 
 def package_delete(context, data_dict):
-    '''
+    """
     Calls Metax API to delete a dataset.
-    '''
+    """
 
     # TODO: Do we need to refine data_dict here? If there is any refiner that
     # changes package if, we need to refine here, too.
@@ -137,9 +153,9 @@ def package_delete(context, data_dict):
 
 
 def package_update(context, data_dict):
-    '''
+    """
     Refines data_dict. Calls Metax API to update an existing dataset.
-    '''
+    """
 
     # Refine data_dict based on organization it belongs to
     #data_dict = refine(data_dict)
@@ -152,42 +168,24 @@ def package_update(context, data_dict):
     #data_dict = _strip_data_dict(data_dict)
 
     # Copy and paste package updating from CKAN's original package_update
-    ckan.logic.action.update.package_update(context, data_dict)
+    # ckan.logic.action.update.package_update(context, data_dict)
 
     return data_dict
 
 
 def _create_or_update(data_dict):
-
-    # Ask Metax if this dataset exists
-    # TODO: This is the function that will be created in CSCETSIN-22
-    # At this point I don't know if it returns True/False, ID or something else
-    if metax_api.ask_metax_whether_package_exists(data_dict['id']):
+    """ Adds dataset to MetaX, or updates it if it already exists if necessary. """
+    dataset_id = data_dict['preferred_identifier']
+    metax_id = metax_api.get_metax_id(dataset_id)
+    if metax_id is not None:
         # Metax says the package exists
         # TODO: may need to catch an error
-        metax_id = metax_api.replace_dataset(data_dict['metax-id'], data_dict)
+        metax_id = metax_api.replace_dataset(metax_id, data_dict)
 
     else:
         # Metax says the package doesn't exist
         # TODO: may need to catch an error
         metax_id = metax_api.create_dataset(data_dict)
 
-    return id
+    return metax_id
 
-
-def _strip_data_dict(data_dict, id):
-    """ Turn the metax-formated dict into our CKAN format.
-
-    :param data_dict: dictionary in MetaX format
-    :param id: id to use on the returned dictionary
-    :returns: dict that can be saved to CKAN db, with MetaX id in the name field
-    """
-
-    # Remove all fields not required in CKAN schema
-    # Use metax id for name field, and generated id as id
-    stripped_dict = {
-        'name': data_dict['id'],
-        'id': id
-    }
-
-    return stripped_dict
