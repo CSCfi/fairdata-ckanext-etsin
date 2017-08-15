@@ -13,8 +13,6 @@ log = logging.getLogger(__name__)
 # requests_log.setLevel(logging.DEBUG)
 # requests_log.propagate = True
 
-# TODO: All these functions must log all the API calls we make and all the responses.
-
 
 def json_or_none(request):
     request_json = ""
@@ -52,7 +50,7 @@ def replace_dataset(metax_id, dataset_dict):
     """ Replace existing dataset in MetaX with a new version. """
     r = requests.put('https://metax-test.csc.fi/rest/datasets/{id}'.format(id=metax_id),
                      headers={
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
     },
         json=dataset_dict)
     try:
@@ -75,7 +73,7 @@ def delete_dataset(metax_id):
             id=metax_id, error=repr(e), json=json_or_none(r)))
         raise
     log.debug('Deleted dataset {id}, response: ({code}) {json}'.format(
-        id=metax_id, code=r.status_code, json=r.json()))
+        id=metax_id, code=r.status_code, json=json_or_none(r)))
     r.raise_for_status()
 
 
@@ -95,15 +93,3 @@ def check_dataset_exists(preferred_id):
     log.debug('Checked dataset existance: ({code}) {json}'.format(
         code=r.status_code, json=r.json()))
     return r.json()
-
-# def get_metax_id(preferred_id):
-#     """ Retrieve the MetaX-id of a dataset. None if dataset is not in MetaX.
-#
-#     :param preferred_id: Preferred identifier of the dataset (specified by source).
-#     :return: metax-id of the dataset. If the dataset is not in metax, returns None.
-#     """
-#     r = requests.get('https://metax-test.csc.fi/rest/datasets/{id}/exists'
-#         .format(id=preferred_id))
-#     return 123  # Temp: current endpoint returns true/false, instead of id/null
-#     # return r.json()
-#
