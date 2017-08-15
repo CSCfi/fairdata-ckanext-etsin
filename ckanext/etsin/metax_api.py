@@ -4,15 +4,14 @@ from pprint import pprint
 import requests
 from requests import HTTPError
 
-# Setup http logging for debug purposes
 import logging
-# logging.basicConfig()
-# logging.getLogger().setLevel(logging.DEBUG)
+log = logging.getLogger(__name__)
+
+# # Uncomment to setup http logging for debug purposes (note: will log requests
+# # made from other files as well)
 # requests_log = logging.getLogger("requests.packages.urllib3")
 # requests_log.setLevel(logging.DEBUG)
 # requests_log.propagate = True
-
-log = logging.getLogger(__name__)
 
 # TODO: All these functions must log all the API calls we make and all the responses.
 

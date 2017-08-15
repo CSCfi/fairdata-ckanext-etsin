@@ -39,18 +39,3 @@ class TestMetaxAPI(TestCase):
 if __name__ == '__main__':
     unittest.main()
 
-    # Temporary tests for some stuff
-    # from helpers import _get_json_as_dict, _create_identifier_ending
-
-    # print('Posting valid dict')
-    # valid_dict = _get_json_as_dict('minimum_valid_edited.json')
-    # valid_dict['identifier'] += _create_identifier_ending()
-    # id = api.create_dataset(valid_dict)
-    # print ('id: {}'.format(id))
-
-    # print('Updating the dict')
-    # valid_dict['versionNotes'] += 'edit'
-    # api.replace_dataset(id, valid_dict)
-
-    # print('Deleting the dict')
-    # api.delete_dataset(id)
