@@ -8,6 +8,11 @@ import logging
 log = logging.getLogger(__name__)
 
 
+class KielipankkiRefinerException(Exception):
+    """ Reader exception is thrown on unexpected data or error. """
+    pass
+
+
 class KielipankkiRefiner():
 
     LICENSE_CLARIN_PUB = "CLARIN_PUB"
@@ -72,10 +77,6 @@ def kielipankki_refiner(context, data_dict):
 
     package_dict = data_dict
 
-    # Things that should be added:
-    # availability
-    # pids
-
     # Read lxml object passed in from CMDI mapper
     xml = context['lxml']
     cmdi = CmdiParseHelper(xml)
@@ -85,13 +86,14 @@ def kielipankki_refiner(context, data_dict):
     availability = KielipankkiRefiner._language_bank_availability_from_license(
         license_identifier)
 
-    # TODO: find a place in metax data model to put pids/primary_pid
     pids = []
     primary_pid = None
     for pid in [KielipankkiRefiner._language_bank_urn_pid_enhancement(metadata_pid) for metadata_pid in cmdi.parse_metadata_identifiers()]:
         if 'urn' in pid and not primary_pid:
-            pids.append(dict(id=pid, provider=cmdi.provider, type='primary'))
+            pids.append({id: pid, provider: cmdi.provider, type: 'primary'})
             primary_pid = pid
+    if primary_pid is None:
+        raise KielipankkiRefinerException("Could not find primary pid in the metadata")
 
     direct_download_URL = ''
     access_request_URL = ''
@@ -108,6 +110,7 @@ def kielipankki_refiner(context, data_dict):
                     sliced_pid[1]
 
     # Refine the data
+    package_dict['preferred_identifier'] = primary_pid
     package_dict.setdefault('remoteResources', [])
     package_dict['remoteResources'].append({
         "accessURL": {
@@ -119,7 +122,6 @@ def kielipankki_refiner(context, data_dict):
     })
     package_dict.setdefault('otherIdentifier', [])
     package_dict['otherIdentifier'].extend([{
-        # TODO: Use provider and type if possible
         "notation": pid['id'],
         "localIdentifierType": "todo"
     } for pid in pids if pid['type'] != 'primary'])
