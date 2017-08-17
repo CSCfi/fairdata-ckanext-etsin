@@ -3,6 +3,7 @@ Map CMDI based dicts to Metax values
 '''
 from lxml import etree
 from ckanext.etsin.cmdi_parse_helper import CmdiParseHelper
+from ckanext.etsin.cmdi_parse_helper import CmdiParseException
 
 # For development use
 import logging
@@ -13,7 +14,8 @@ log = logging.getLogger(__name__)
 
 class CmdiMetaxMapper:
 
-    def map(self, xml):
+    @staticmethod
+    def map(xml):
         """ Convert given XML into MetaX format.
         :param xml: xml element (lxml)
         :return: dictionary
@@ -49,7 +51,6 @@ class CmdiMetaxMapper:
             "dataset_catalog": "1",
             "research_dataset": {
                 "creator": creators,
-                # TODO: Note: not sure of the location/name of the distributors field
                 "distributor": distributor,
                 "modified": modified,
                 "title": title_list,
@@ -61,7 +62,6 @@ class CmdiMetaxMapper:
                 "description": description_list,
                 "version_notes": ["todo"],
                 "language": language_list,
-                "preferred_identifier": "todo",
                 "provenance": [{
                     "temporal": [{
                         "startDate": [
@@ -72,26 +72,23 @@ class CmdiMetaxMapper:
                         ]
                     }]
                 }]
-            },
-            "identifier": "todo",
-            "modified": "todo",
-            "versionNotes": ["todo"],
-            # Pass original information to refiner
-            "context": xml
+            }
         }
 
         return metax_dict
 
 
 def cmdi_mapper(context, data_dict):
+    """ Maps a CMDI record in xml format into a MetaX format dict. """
 
     package_dict = data_dict['package_dict']
 
-    # TODO: figure out where xml comes from
-    xml_string = context['xml']
+    xml_string = context.pop('xml')
     xml = etree.fromstring(xml_string)
-
-    metax_dict = CmdiMetaxMapper().map(xml)
+    metax_dict = CmdiMetaxMapper.map(xml)
     package_dict['metax_dict'] = metax_dict
+
+    # Store reference to the lxml object for refiners' use
+    context['lxml'] = xml
 
     return package_dict

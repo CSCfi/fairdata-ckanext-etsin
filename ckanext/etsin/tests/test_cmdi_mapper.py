@@ -14,5 +14,11 @@ class TestCmdiMapper(TestCase):
 
         metax_dict = cmdi_mapper(context, data_dict)['metax_dict']
 
+        # TODO: validate fields (or at least check existence)
+        # Right now we're basically just checking that it does
+        # not throw an error with the input
+
 if __name__ == '__main__':
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
     unittest.main()

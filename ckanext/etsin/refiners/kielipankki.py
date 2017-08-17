@@ -7,8 +7,10 @@ from ckanext.etsin.cmdi_parse_helper import CmdiParseHelper
 import logging
 log = logging.getLogger(__name__)
 
-# Refines Kielipankki data_dict
-# TODO: Not yet implemented
+
+class KielipankkiRefinerException(Exception):
+    """ Reader exception is thrown on unexpected data or error. """
+    pass
 
 
 class KielipankkiRefiner():
@@ -66,16 +68,17 @@ class KielipankkiRefiner():
         return output
 
 
-def kielipankki_refiner(data_dict):
+def kielipankki_refiner(context, data_dict):
+    """ Refines the given MetaX data dict in a Kielipankki-specific way
+
+    :param context: Dictionary with an lxml-field
+    :param data_dict: Dataset dictionary in MetaX format
+    """
 
     package_dict = data_dict
 
-    # Things that should be added:
-    # availability
-    # pids
-
     # Read lxml object passed in from CMDI mapper
-    xml = data_dict['context']['xml']
+    xml = context['lxml']
     cmdi = CmdiParseHelper(xml)
 
     license_identifier = KielipankkiRefiner._language_bank_license_enhancement(
@@ -83,13 +86,14 @@ def kielipankki_refiner(data_dict):
     availability = KielipankkiRefiner._language_bank_availability_from_license(
         license_identifier)
 
-    # TODO: find a place in metax data model to put pids/primary_pid
     pids = []
     primary_pid = None
     for pid in [KielipankkiRefiner._language_bank_urn_pid_enhancement(metadata_pid) for metadata_pid in cmdi.parse_metadata_identifiers()]:
         if 'urn' in pid and not primary_pid:
             pids.append(dict(id=pid, provider=cmdi.provider, type='primary'))
             primary_pid = pid
+    if primary_pid is None:
+        raise KielipankkiRefinerException("Could not find primary pid in the metadata")
 
     direct_download_URL = ''
     access_request_URL = ''
@@ -106,9 +110,8 @@ def kielipankki_refiner(data_dict):
                     sliced_pid[1]
 
     # Refine the data
+    package_dict['preferred_identifier'] = primary_pid
     package_dict.setdefault('remoteResources', [])
-    # TODO: We don't know yet if we should add a new object or edit one
-    # that mapper might create
     package_dict['remoteResources'].append({
         "accessURL": {
             "identifier": "todo"    # TODO: access_request_URL or access_application_URL?
@@ -119,7 +122,6 @@ def kielipankki_refiner(data_dict):
     })
     package_dict.setdefault('otherIdentifier', [])
     package_dict['otherIdentifier'].extend([{
-        # TODO: Use provider and type if possible
         "notation": pid['id'],
         "localIdentifierType": "todo"
     } for pid in pids if pid['type'] != 'primary'])

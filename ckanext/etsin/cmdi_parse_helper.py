@@ -3,7 +3,7 @@ from pylons import config
 import ckanext.etsin.utils as utils
 
 
-class CmdiReaderException(Exception):
+class CmdiParseException(Exception):
     """ Reader exception is thrown on unexpected data or error. """
     pass
 
@@ -20,13 +20,13 @@ class CmdiParseHelper:
         cmd = first(xml.xpath('//oai:record/oai:metadata/cmd:CMD',
                               namespaces=CmdiParseHelper.namespaces))
         if cmd is None:
-            raise CmdiReaderException(
+            raise CmdiParseException(
                 "Unexpected XML format: No CMD -element found")
 
         resource_info = cmd.xpath(
             "//cmd:Components/cmd:resourceInfo", namespaces=CmdiParseHelper.namespaces)[0]
         if resource_info is None:
-            raise CmdiReaderException(
+            raise CmdiParseException(
                 "Unexpected XML format: No resourceInfo -element found")
 
         self.xml = xml

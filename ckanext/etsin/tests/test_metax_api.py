@@ -13,11 +13,12 @@ class TestMetaxAPI(TestCase):
         ''' Test that create_dataset returns identifier on successful get request '''
         with patch('requests.post') as mock_post:
             mock_post.return_value = Mock()
-            mock_post.return_value.json.return_value = {'id': '123'}
-            r = api.create_dataset({})
+            mock_post.return_value.json.return_value = {
+                'research_dataset': {'urn_identifier': '123'}}
+            id = api.create_dataset({})
             ok_(mock_post.called)
             ok_(mock_post.return_value.raise_for_status.called)
-            eq_(r, '123')
+            eq_(id, '123')
 
     def testReplaceDataset(self):
         ''' Test that replace_dataset does a put request and checks for http errors '''
@@ -35,7 +36,16 @@ class TestMetaxAPI(TestCase):
             ok_(mock_delete.called)
             ok_(mock_delete.return_value.raise_for_status.called)
 
+    def testCheckDatasetExists(self):
+        ''' Test that check_dataset_exists does a get request and checks for http errors '''
+        with patch('requests.get') as mock_get:
+            mock_get.return_value = Mock()
+            mock_get.return_value.json.return_value = True
+            result = api.check_dataset_exists('123')
+            ok_(mock_get.called)
+            ok_(mock_get.return_value.raise_for_status.called)
+            eq_(result, True)
+
 
 if __name__ == '__main__':
     unittest.main()
-
