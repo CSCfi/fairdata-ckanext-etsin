@@ -1,6 +1,6 @@
 {
-    "contract": "1",
-    "dataset_catalog": "1",
+    "contract": "optional:contract:identifier1",
+    "dataset_catalog": "pid:urn:catalog1",
     "research_dataset": {
         "creator": [{
             "name": "Teppo Testaaja"

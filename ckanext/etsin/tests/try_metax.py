@@ -18,6 +18,8 @@ if __name__ == '__main__':
     print "Posting dataset {} with identifier {}".format(filename, dataset['research_dataset']['urn_identifier'])
     id = api.create_dataset(dataset)
     print "Dataset was posted and it was assigned id {}".format(id)
+    print "Checking if MetaX knows it exists"
+    print api.check_dataset_exists(dataset['research_dataset']['preferred_identifier'])
     print "Replacing dataset (with same dataset)"
     api.replace_dataset(id, dataset)
     print "Deleting the dataset from MetaX"

@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 # requests_log.propagate = True
 
 
-def json_or_none(request):
+def json_or_empty(request):
     request_json = ""
     try:
         request_json = request.json()
@@ -35,11 +35,10 @@ def create_dataset(dataset_dict):
                       },
                       json=dataset_dict)
     try:
-        log.debug(r.json())
         r.raise_for_status()
     except HTTPError as e:
         log.debug('Failed to create dataset: \ndataset={dataset}, \nerror={error}, \njson={json}'.format(
-            dataset=dataset_dict, error=repr(e), json=json_or_none(r)))
+            dataset=dataset_dict, error=repr(e), json=json_or_empty(r)))
         raise
     log.debug('Dataset created, response: ({code}) {json}'.format(
         code=r.status_code, json=r.json()))
@@ -57,7 +56,7 @@ def replace_dataset(metax_id, dataset_dict):
         r.raise_for_status()
     except HTTPError as e:
         log.debug('Failed to replace dataset {id}: \ndataset={dataset}, \nerror={error}, \njson={json}'.format(
-            dataset=dataset_dict, id=metax_id, error=repr(e), json=json_or_none(r)))
+            dataset=dataset_dict, id=metax_id, error=repr(e), json=json_or_empty(r)))
         raise
     log.debug('Replaced dataset {id}'.format(id=metax_id))
 
@@ -70,10 +69,10 @@ def delete_dataset(metax_id):
         r.raise_for_status()
     except HTTPError as e:
         log.debug('Failed to delete dataset {id}: \nerror={error}, \njson={json}'.format(
-            id=metax_id, error=repr(e), json=json_or_none(r)))
+            id=metax_id, error=repr(e), json=json_or_empty(r)))
         raise
     log.debug('Deleted dataset {id}, response: ({code}) {json}'.format(
-        id=metax_id, code=r.status_code, json=json_or_none(r)))
+        id=metax_id, code=r.status_code, json=json_or_empty(r)))
     r.raise_for_status()
 
 
@@ -83,12 +82,12 @@ def check_dataset_exists(preferred_id):
     :return: True/False
     """
     r = requests.get(
-        'https://metax-test.csc.fi/rest/datasets/{id}/exists'.format(id=metax_id))
+        'https://metax-test.csc.fi/rest/datasets/{id}/exists'.format(id=preferred_id))
     try:
         r.raise_for_status()
     except HTTPError as e:
         log.debug('Failed to check dataset {id} existance in metax: error={error}, json={json}'.format(
-            id=preferred_id, error=repr(e), json=json_or_none(r)))
+            id=preferred_id, error=repr(e), json=json_or_empty(r)))
         raise
     log.debug('Checked dataset existance: ({code}) {json}'.format(
         code=r.status_code, json=r.json()))
