@@ -54,6 +54,7 @@ def package_create(context, data_dict):
         'id': package_id,
         'name': metax_id
     }
+    context['schema'] = package_schema
 
     # Create the package in our CKAN database
     print "Creating package: {}".format(package_dict)
