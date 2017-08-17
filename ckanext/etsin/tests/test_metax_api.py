@@ -13,7 +13,7 @@ class TestMetaxAPI(TestCase):
         ''' Test that create_dataset returns identifier on successful get request '''
         with patch('requests.post') as mock_post:
             mock_post.return_value = Mock()
-            mock_post.return_value.json.return_value = {'id': '123'}
+            mock_post.return_value.json.return_value = {'research_dataset': {'urn_identifier': '123'}}
             r = api.create_dataset({})
             ok_(mock_post.called)
             ok_(mock_post.return_value.raise_for_status.called)

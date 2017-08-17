@@ -14,7 +14,8 @@ log = logging.getLogger(__name__)
 
 class CmdiMetaxMapper:
 
-    def map(self, xml):
+    @staticmethod
+    def map(xml):
         """ Convert given XML into MetaX format.
         :param xml: xml element (lxml)
         :return: dictionary
@@ -84,6 +85,7 @@ def cmdi_mapper(context, data_dict):
 
     xml_string = context.pop('xml')
     xml = etree.fromstring(xml_string)
+    metax_dict = CmdiMetaxMapper.map(xml)
     package_dict['metax_dict'] = metax_dict
 
     # Store reference to the lxml object for refiners' use

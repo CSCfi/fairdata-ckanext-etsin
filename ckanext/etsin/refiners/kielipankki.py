@@ -90,7 +90,7 @@ def kielipankki_refiner(context, data_dict):
     primary_pid = None
     for pid in [KielipankkiRefiner._language_bank_urn_pid_enhancement(metadata_pid) for metadata_pid in cmdi.parse_metadata_identifiers()]:
         if 'urn' in pid and not primary_pid:
-            pids.append({id: pid, provider: cmdi.provider, type: 'primary'})
+            pids.append(dict(id=pid, provider=cmdi.provider, type='primary'))
             primary_pid = pid
     if primary_pid is None:
         raise KielipankkiRefinerException("Could not find primary pid in the metadata")

@@ -19,4 +19,6 @@ class TestCmdiMapper(TestCase):
         # not throw an error with the input
 
 if __name__ == '__main__':
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
     unittest.main()
