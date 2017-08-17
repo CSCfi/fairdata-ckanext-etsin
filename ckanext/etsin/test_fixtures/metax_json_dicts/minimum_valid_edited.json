@@ -1,0 +1,36 @@
+{
+    "contract": "optional:contract:identifier1",
+    "dataset_catalog": "pid:urn:catalog1",
+    "research_dataset": {
+        "creator": [{
+            "name": "Teppo Testaaja"
+        }],
+        "modified": "2014-01-17T08:19:58Z",
+        "title": [{
+            "en": "Wonderful Title"
+        }],
+        "files": [{
+            "title": "File metadata title 0",
+            "identifier": "pid:urn:1"
+        }, {
+            "title": "File metadata title 1",
+            "identifier": "pid:urn:2"
+        }],
+        "curator": [{
+            "name": "Default Owner",
+            "identifier": "id:of:curator:default"
+        }],
+        "ready_status": "Unfinished",
+        "urn_identifier": "pid:urn:cr1",
+        "total_byte_size": 12345,
+        "description": [{
+            "en": "A descriptive description describing the contents of this dataset. Must be descriptive."
+        }],
+        "version_notes": ["This version contains changes to x and y."],
+        "language": [{
+            "title": "en",
+            "identifier": "http://lexvo.org/id/iso639-3/eng"
+        }],
+        "preferred_identifier": "pid:urn:preferred:dataset1"
+    }
+}
