@@ -9,73 +9,13 @@ import ckan.logic.action.create
 import ckan.logic.action.update
 import uuid
 
-# TEMP
 from ckan.lib.navl.validators import (ignore_missing,
-                                      keep_extras,
                                       not_empty,
-                                      empty,
-                                      ignore,
-                                      if_empty_same_as,
-                                      not_missing,
                                       ignore_empty
                                       )
-from ckan.logic.converters import (convert_user_name_or_id_to_id,
-                                   convert_package_name_or_id_to_id,
-                                   convert_group_name_or_id_to_id,
-                                   convert_to_json_if_string,
-                                   convert_to_list_if_string,
-                                   remove_whitespace,
-                                   extras_unicode_convert,
-                                   )
 from ckan.logic.validators import (
-    package_id_not_changed,
-    package_id_or_name_exists,
     name_validator,
-    package_name_validator,
-    package_version_validator,
-    group_name_validator,
-    tag_length_validator,
-    tag_name_validator,
-    tag_string_convert,
-    duplicate_extras_key,
-    ignore_not_package_admin,
-    ignore_not_group_admin,
-    ignore_not_sysadmin,
-    no_http,
-    user_name_validator,
-    user_password_validator,
-    user_both_passwords_entered,
-    user_passwords_match,
-    user_password_not_empty,
-    isodate,
-    int_validator,
-    natural_number_validator,
-    is_positive_integer,
-    boolean_validator,
-    user_about_validator,
-    vocabulary_name_validator,
-    vocabulary_id_not_changed,
-    vocabulary_id_exists,
-    object_id_validator,
-    activity_type_exists,
-    resource_id_exists,
-    tag_not_in_vocabulary,
-    group_id_exists,
-    group_id_or_name_exists,
-    owner_org_validator,
-    user_name_exists,
-    user_id_or_name_exists,
-    role_exists,
-    datasets_with_no_organization_cannot_be_private,
-    list_of_strings,
-    if_empty_guess_format,
-    clean_format,
-    no_loops_in_hierarchy,
-    filter_fields_and_values_should_have_same_length,
-    filter_fields_and_values_exist_and_are_valid,
-    extra_key_not_in_root_schema,
-    empty_if_not_sysadmin,
-    package_id_does_not_exist,
+    package_name_validator
 )
 from requests import HTTPError
 
@@ -83,23 +23,18 @@ from requests import HTTPError
 import logging
 log = logging.getLogger(__name__)
 
+package_schema = {
+    'id': [ignore_missing],
+    'name': [not_empty, unicode, name_validator, package_name_validator]
+}
+
 
 def package_create(context, data_dict):
     """
-    Refines data_dict. Calls Metax API to create new dataset.
+    Refines data_dict. Calls MetaX API to create a new dataset.
 
     :returns: package dictionary that was saved to CKAN db.
     """
-
-    # Debug code
-    from ckanext.etsin.tests.helpers import _get_file_as_string
-    data_dict['id'] = 12345
-    context['xml'] = _get_file_as_string('kielipankki_cmdi/cmdi_record_example.xml')
-    from ckanext.etsin.mappers.cmdi import cmdi_mapper
-    data_dict['package_dict'] = {}
-    cmdi_mapper(context, data_dict)
-    data_dict['organization'] = 'kielipankki'
-    data_dict['preferred_identifier'] = 321
 
     # Get the package_id for the dict
     package_id = data_dict.pop('id')
@@ -119,10 +54,6 @@ def package_create(context, data_dict):
         'id': package_id,
         'name': metax_id
     }
-    context['schema'] = {
-        'id': [ignore_missing],
-        'name': [not_empty, unicode, name_validator, package_name_validator]
-    }
 
     # Create the package in our CKAN database
     print "Creating package: {}".format(package_dict)
@@ -135,7 +66,7 @@ def package_create(context, data_dict):
 
 def package_delete(context, data_dict):
     """
-    Calls Metax API to delete a dataset.
+    Calls MetaX API to delete a dataset.
     """
 
     # TODO: Do we need to refine data_dict here? If there is any refiner that
@@ -154,21 +85,21 @@ def package_delete(context, data_dict):
 
 def package_update(context, data_dict):
     """
-    Refines data_dict. Calls Metax API to update an existing dataset.
+    Refines data_dict. Calls MetaX API to update an existing dataset.
     """
 
     # Refine data_dict based on organization it belongs to
-    #data_dict = refine(data_dict)
+    data_dict = refine(data_dict)
 
     # Check with Metax if we should be creating or updating and do that
     # TODO: We may need to catch an error here
-    #data_dict = _create_or_update(data_dict)
+    data_dict = _create_or_update(data_dict)
 
     # Strip Metax data_dict to CKAN data_dict
-    #data_dict = _strip_data_dict(data_dict)
+    data_dict = _strip_data_dict(data_dict)
 
     # Copy and paste package updating from CKAN's original package_update
-    # ckan.logic.action.update.package_update(context, data_dict)
+    ckan.logic.action.update.package_update(context, data_dict)
 
     return data_dict
 
@@ -176,11 +107,22 @@ def package_update(context, data_dict):
 def _create_or_update(data_dict):
     """ Adds dataset to MetaX, or updates it if it already exists if necessary. """
     dataset_id = data_dict['preferred_identifier']
-    metax_id = metax_api.get_metax_id(dataset_id)
-    if metax_id is not None:
+    exists_in_metax = metax_api.check_dataset_exists(dataset_id)
+    if exists_in_metax:
         # Metax says the package exists
         # TODO: may need to catch an error
-        metax_id = metax_api.replace_dataset(metax_id, data_dict)
+
+        # TODO: do we need to find & use previous harvest_object instead?
+        # previous_harvest_object = model.Session.query(HarvestObject) \
+        #     .filter(HarvestObject.guid == dataset_id) \
+        #     .first()
+
+        metax_id = model.Session.query(Package) \
+            .filter(harvest_object.package_id) \
+            .first() \
+            .name
+
+        metax_api.replace_dataset(metax_id, data_dict)
 
     else:
         # Metax says the package doesn't exist
@@ -188,4 +130,3 @@ def _create_or_update(data_dict):
         metax_id = metax_api.create_dataset(data_dict)
 
     return metax_id
-
