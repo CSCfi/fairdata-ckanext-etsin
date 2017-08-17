@@ -3,6 +3,7 @@ Map CMDI based dicts to Metax values
 '''
 from lxml import etree
 from ckanext.etsin.cmdi_parse_helper import CmdiParseHelper
+from ckanext.etsin.cmdi_parse_helper import CmdiParseException
 
 # For development use
 import logging
@@ -49,7 +50,6 @@ class CmdiMetaxMapper:
             "dataset_catalog": "1",
             "research_dataset": {
                 "creator": creators,
-                # TODO: Note: not sure of the location/name of the distributors field
                 "distributor": distributor,
                 "modified": modified,
                 "title": title_list,
@@ -61,7 +61,6 @@ class CmdiMetaxMapper:
                 "description": description_list,
                 "version_notes": ["todo"],
                 "language": language_list,
-                "preferred_identifier": "todo",
                 "provenance": [{
                     "temporal": [{
                         "startDate": [
@@ -72,10 +71,7 @@ class CmdiMetaxMapper:
                         ]
                     }]
                 }]
-            },
-            "identifier": "todo",
-            "modified": "todo",
-            "versionNotes": ["todo"],
+            }
         }
 
         return metax_dict
@@ -88,8 +84,6 @@ def cmdi_mapper(context, data_dict):
 
     xml_string = context.pop('xml')
     xml = etree.fromstring(xml_string)
-
-    metax_dict = CmdiMetaxMapper().map(xml)
     package_dict['metax_dict'] = metax_dict
 
     # Store reference to the lxml object for refiners' use
