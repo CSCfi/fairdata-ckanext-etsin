@@ -14,7 +14,7 @@ def iso_19139_mapper(self, context, data_dict):
     # Start with an empty slate
     package_dict = {}
 
-    # Metax obligatory fields
+    # METAX OBLIGATORY FIELDS
     # Don't mind missing values. We'll let Metax handle them.
 
     # Obligatory in API but not in Metax data model
@@ -54,6 +54,17 @@ def iso_19139_mapper(self, context, data_dict):
     except:
         lang = 'und'
     package_dict['language'] = [{'identifier': _get_language_identifier(lang)}]
+
+    # METAX OPTIONAL FIELDS
+    
+    # ['tags']['name'] to keywords
+    # ['abstract'] to description (localized text)
+    # ['temporal-extent-begin'] and ['temporal-extent-end'] to temporal (keys start_date and end_date)
+    # copy package_dict['curator'] to owner
+    # ['responsible-organization']['role'='distributor'] to distributor
+    # ['bbox'] to location (unclear how to turn bbox into point coordinates)
+    # ['metadata-date'] to issued?
+    # ['contact-email'] to ['curator']['email'] and ['owner']['email']
 
     return package_dict
 
