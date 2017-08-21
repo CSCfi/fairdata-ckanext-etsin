@@ -1,0 +1,572 @@
+{
+    "identifier": "http://urn.fi/urn:nbn:fi:csc-kata20160308103219249760",
+    "dataset_catalog_id": null,
+    "dataset_json": {
+        "identifier": "http://urn.fi/urn:nbn:fi:csc-kata20160308103219249760",
+        "modified": "2014-01-17T08:19:58Z",
+        "versionInfo": "0.0.1",
+        "versionNotes": [
+            "This version contains changes to x and y."
+        ],
+        "issued": "2014-01-15T08:19:58Z",
+        "title": [{
+            "en": "Wonderful Title"
+        }],
+        "keyword": [
+            "keywords",
+            "tags",
+            "puppies"
+        ],
+        "description": [{
+            "en": "A descriptive description describing the contents of this dataset. Must be descriptive."
+        }],
+        "bibliographicCitation": "Bibliographic citation",
+        "otherIdentifier": [
+            {
+                "notation": "literalvalueoftheidentifier",
+                "localIdentifierType": "Local identifier type defines use of the identifier in given context",
+                "creator": {
+                    "identifier": ["teppoidentifier"],
+                    "name": "Teppo Testaaja",
+                    "email": "teppo.testaaja@csc.fi",
+                    "telephone": [
+                        "+358501231234"
+                    ],
+                    "homepage": "https://www.csc.fi",
+                    "isPartOf": {
+                        "identifier": ["identifieroforganization"],
+                        "name": "Mysterious Organization",
+                        "email": "info@csc.fi",
+                        "telephone": [
+                            "+358501231235"
+                        ],
+                        "homepage": "https://www.csc.fi"
+                    }
+                },
+                "type": {
+                    "identifier": "typeidentifier",
+                    "prefLabel": [{
+                        "en": "pref label"
+                    }],
+                    "definition": [{
+                        "en": "A statement or formal explanation of the meaning of a concept."
+                    }],
+                    "inScheme": [{
+                        "prefLabel": [{
+                            "en": "The preferred lexical label for a resource"
+                        }],
+                        "identifier": "http://uri.of.some.concept/scheme"
+                    }]
+                }
+            },
+            {
+                "notation": "otheridentifiervalue",
+                "localIdentifierType": "Local identifier type defines use of the identifier in given context",
+                "creator": {
+                    "identifier": ["teppoidentifier"],
+                    "name": "Teppo Testaaja",
+                    "email": "teppo.testaaja@csc.fi",
+                    "telephone": [
+                        "+358501231234"
+                    ],
+                    "homepage": "https://www.csc.fi",
+                    "isPartOf": {
+                        "identifier": ["identifieroforganization"],
+                        "name": "Mysterious Organization",
+                        "email": "info@csc.fi",
+                        "telephone": [
+                            "+358501231235"
+                        ],
+                        "homepage": "https://www.csc.fi"
+                    }
+                },
+                "type": {
+                    "identifier": "typeidentifier_y",
+                    "prefLabel": [{
+                        "en": "pref label for y"
+                    }],
+                    "definition": [{
+                        "en": "A statement or formal explanation of the meaning of a concept."
+                    }],
+                    "inScheme": [{
+                        "prefLabel": [{
+                            "en": "The preferred lexical label for a resource"
+                        }],
+                        "identifier": "http://uri.of.other.concept/scheme"
+                    }]
+                }
+            }
+        ],
+        "publisher": {
+            "identifier": ["teppoidentifier"],
+            "name": "Teppo Testaaja",
+            "email": "teppo.testaaja@csc.fi",
+            "telephone": [
+                "+358501231234"
+            ],
+            "homepage": "https://www.csc.fi",
+            "isPartOf": {
+                "identifier": ["identifieroforganization"],
+                "name": "Mysterious Organization",
+                "email": "info@csc.fi",
+                "telephone": [
+                    "+358501231235"
+                ],
+                "homepage": "https://www.csc.fi"
+            }
+        },
+        "creator": [{
+            "identifier": ["teppoidentifier"],
+            "name": "Teppo Testaaja",
+            "email": "teppo.testaaja@csc.fi",
+            "telephone": [
+                "+358501231234"
+            ],
+            "homepage": "https://www.csc.fi",
+            "isPartOf": {
+                "identifier": ["identifieroforganization"],
+                "name": "Mysterious Organization",
+                "email": "info@csc.fi",
+                "telephone": [
+                    "+358501231235"
+                ],
+                "homepage": "https://www.csc.fi"
+            }
+        }],
+        "contributor": [
+            {
+                "identifier": ["contributorid"],
+                "name": "Kalle Kontribuuttaja",
+                "email": "kalle.kontribuuttaaja@csc.fi",
+                "telephone": [
+                    "+358501231122"
+                ],
+                "homepage": "https://www.csc.fi",
+                "isPartOf": {
+                    "identifier": ["identifieroforganization"],
+                    "name": "Mysterious Organization",
+                    "email": "info@csc.fi",
+                    "telephone": [
+                        "+358501231235"
+                    ],
+                    "homepage": "https://www.csc.fi"
+                }
+            },
+            {
+                "identifier": ["contributorid2"],
+                "name": "Franzibald Kontribuuttaja",
+                "email": "franzibald.kontribuuttaaja@csc.fi",
+                "telephone": [
+                    "+358501231133"
+                ],
+                "homepage": "https://www.csc.fi",
+                "isPartOf": {
+                    "identifier": ["identifieroforganization"],
+                    "name": "Mysterious Organization",
+                    "email": "info@csc.fi",
+                    "telephone": [
+                        "+358501231235"
+                    ],
+                    "homepage": "https://www.csc.fi"
+                }
+            }
+        ],
+        "isOutputOf": [{
+            "name": {
+                "en": "Name of project"
+            },
+            "identifier": "projectidentifier",
+            "hasFunderIdentifier": ["funderprojectidentifier"],
+            "homepage": "https://www.csc.fi/projectx",
+            "hasFundingAgency": [{
+                "identifier": ["fundingagencyidentifier"],
+                "name": "Rahoittava Organisaatio",
+                "email": "rahoitus@rahaorg.fi",
+                "telephone": [
+                    "+358501232233"
+                ],
+                "homepage": "https://www.rahoittavaorganisaatio.fi"
+            }],
+            "sourceOrganization" : [{
+                "identifier": ["identifieroforganization"],
+                "name": "Mysterious Organization",
+                "email": "info@csc.fi",
+                "telephone": [
+                    "+358501231235"
+                ],
+                "homepage": "https://www.csc.fi"
+            }]
+        }],
+        "rightsHolder": {
+            "identifier": ["identifieroforganization"],
+            "name": "Mysterious Organization",
+            "email": "info@csc.fi",
+            "telephone": [
+                "+358501231235"
+            ],
+            "homepage": "https://www.csc.fi"
+        },
+        "theme": [{
+            "identifier": "themeidentifier",
+            "prefLabel": [{
+                "en": "pref label for theme"
+            }],
+            "definition": [{
+                "en": "A statement or formal explanation of the meaning of a concept."
+            }],
+            "inScheme": [{
+                "prefLabel": [{
+                    "en": "The preferred lexical label for a resource"
+                }],
+                "identifier": "http://uri.of.concept/scheme"
+            }]
+        }],
+        "language":[{
+            "title": ["en"],
+            "identifier": "http://lang.ident.ifier/en"
+        }],
+        "spatial": [{
+            "geographicName": "Geographic name",
+            "lat": 22.222,
+            "long": 33.333,
+            "alt": [
+                "11.111"
+            ],
+            "addressCountry": [
+                "FI"
+            ],
+            "fullAddress": "The complete address written as a string, with or without formatting"
+        }],
+        "temporal": [{
+            "startDate": [
+                "2014-01-01T08:19:58Z"
+            ],
+            "endDate": [
+                "2014-12-31T08:19:58Z"
+            ]
+        }],
+        "relatedEntity": [{
+            "title": [{
+                "en": "A name given to the resource"
+            }],
+            "description": [{
+                "en": "An account of the resource"
+            }],
+            "identifier": "relatedentityidentifier",
+            "type": {
+                "identifier": "sometypeidentifier",
+                "prefLabel": [{
+                    "en": "pref label for this type"
+                }],
+                "definition": [{
+                    "en": "A statement or formal explanation of the meaning of a concept."
+                }],
+                "inScheme": [{
+                    "prefLabel": [{
+                        "en": "The preferred lexical label for a resource"
+                    }],
+                    "identifier": "http://uri.of.this.concept/scheme"
+                }]
+            }
+        }],
+        "relation": [{
+            "identifier": "relateddatasetidentifier",
+            "modified": "2013-01-15T08:19:58Z",
+            "versionNotes": [
+                "This version contains changes to z."
+            ],
+            "title": [{
+                "en": "Title"
+            }],
+            "description": [{
+                "en": "A descriptive description describing the contents of this dataset. Must be descriptive."
+            }],
+            "creator":  [{
+                "identifier": ["jarskiidentifier"],
+                "name": "Jarski",
+                "email": "jarski@csc.fi",
+                "telephone": [
+                    "+358501237777"
+                ],
+                "homepage": "https://www.csc.fi"
+            }],
+            "language":[{
+                "title": ["en"],
+                "identifier": "http://lang.ident.ifier/en"
+            }],
+            "totalbytesize": 1234
+        }],
+        "discipline": [{
+            "identifier": "disciplineidentifier",
+            "prefLabel": [{
+                "en": "pref label for this type"
+            }],
+            "definition": [{
+                "en": "A statement or formal explanation of the meaning of a concept."
+            }],
+            "inScheme": [{
+                "prefLabel": [{
+                    "en": "The preferred lexical label for a resource"
+                }],
+                "identifier": "http://uri.of.that.concept/scheme"
+            }]
+        }],
+        "remoteResources": [{
+            "identifier": "identifierofresource",
+            "title": "A name given to the distribution",
+            "description": "Free-text account of the distribution.",
+            "modified": "2013-01-17T08:19:58Z",
+            "bytesize": "2048",
+            "accessURL": {
+                "identifier": "https://url.of.resource.com",
+                "title": [{
+                    "en": "A name given to the document, which may be e.g. a landing page"
+                }],
+                "description" : [{
+                    "en": "Description of the link. For example to be used as hover text."
+                }]
+            },
+            "downloadURL": {
+                "identifier": "https://download.url.of.resource.com",
+                "title": [{
+                    "en": "A name given to the document, which would be an actual downloadable file"
+                }],
+                "description" : [{
+                    "en": "Description of the link. For example to be used as hover text."
+                }]
+            },
+            "checksum": {
+                "algorithm": "sha2",
+                "checksumValue": "u5y6f4y68765ngf6ry8n"
+            },
+            "license": [{
+                "identifier": "licenseidentifier",
+                "title": [{
+                    "en": "A name given to the resource"
+                }],
+                "description": [{
+                    "en": "Free account of the rights"
+                }],
+                "license": "https://url.of.license.which.applies.org",
+                "type": [{
+                    "identifier": "licencetypeidentifier",
+                    "prefLabel": [{
+                        "en": "pref label for this type"
+                    }],
+                    "definition": [{
+                        "en": "A statement or formal explanation of the meaning of a concept."
+                    }],
+                    "inScheme": [{
+                        "prefLabel": [{
+                            "en": "The preferred lexical label for a resource"
+                        }],
+                        "identifier": "http://uri.of.license.concept/scheme"
+                    }]
+                }]
+            }],
+            "type": {
+                "identifier": "resourcetypeidentifier",
+                "prefLabel": [{
+                    "en": "pref label for this type"
+                }],
+                "definition": [{
+                    "en": "A statement or formal explanation of the meaning of a concept."
+                }],
+                "inScheme": [{
+                    "prefLabel": [{
+                        "en": "The preferred lexical label for a resource"
+                    }],
+                    "identifier": "http://uri.of.resource.concept/scheme"
+                }]
+            },
+            "hasObjectCharacteristics": {
+                "title": "File type name",
+                "description": "Description of file type",
+                "hasCreatingApplicationName": "Creating application name",
+                "encoding": "utf-8"
+            },
+            "mediatype": "fileformat here"
+        }],
+        "accessRights": {
+            "description": [{
+                "en": "Free account of the rights"
+            }],
+            "available": [
+                "2014-01-15T08:19:58Z"
+            ],
+            "type": [{
+                "identifier": "accessrightsypeidentifier",
+                "prefLabel": [{
+                    "en": "pref label for this type"
+                }],
+                "definition": [{
+                    "en": "A statement or formal explanation of the meaning of a concept."
+                }],
+                "inScheme": [{
+                    "prefLabel": [{
+                        "en": "The preferred lexical label for a resource"
+                    }],
+                    "identifier": "http://uri.of.accessrights.concept/scheme"
+                }]
+            }],
+            "hasRightRelatedAgent": [{
+                "identifier": ["identifieroforganization"],
+                "name": "Mysterious Organization",
+                "email": "info@csc.fi",
+                "telephone": [
+                    "+358501231235"
+                ],
+                "homepage": "https://www.csc.fi"
+            }],
+            "license": [{
+                "identifier": "accessrightslicenseidentifier",
+                "title": [{
+                    "en": "A name given to the resource"
+                }],
+                "description": [{
+                    "en": "Free account of the rights"
+                }],
+                "license": "https://url.of.license.which.applies.here.org",
+                "type": [{
+                    "identifier": "licencetypeidentifier",
+                    "prefLabel": [{
+                        "en": "pref label for this type"
+                    }],
+                    "definition": [{
+                        "en": "A statement or formal explanation of the meaning of a concept."
+                    }],
+                    "inScheme": [{
+                        "prefLabel": [{
+                            "en": "The preferred lexical label for a resource"
+                        }],
+                        "identifier": "http://uri.of.license.concept/scheme"
+                    }]
+                }]
+            }]
+        },
+        "provenance": [{
+            "title": {
+                "en": "Title"
+            },
+            "description": {
+                "en": "Description of provenance"
+            },
+            "temporal": [{
+                "startDate": [
+                    "2014-01-01T08:19:58Z"
+                ],
+                "endDate": [
+                    "2014-12-31T08:19:58Z"
+                ]
+            }],
+            "spatial": [{
+                "geographicName": "Geographic name",
+                "lat": 22.222,
+                "long": 33.333,
+                "alt": [
+                    "11.111"
+                ],
+                "addressCountry": [
+                    "FI"
+                ],
+                "fullAddress": "The complete address written as a string, with or without formatting"
+            }],
+            "type": {
+                "identifier": "provenancetypeidentifier",
+                "prefLabel": [{
+                    "en": "pref label for this type"
+                }],
+                "definition": [{
+                    "en": "A statement or formal explanation of the meaning of a concept."
+                }],
+                "inScheme": [{
+                    "prefLabel": [{
+                        "en": "The preferred lexical label for a resource"
+                    }],
+                    "identifier": "http://uri.of.provenance.concept/scheme"
+                }]
+            },
+            "used": [{
+                "title": [{
+                    "en": "Title"
+                }],
+                "description": [{
+                    "en": "Description"
+                }],
+                "identifier": "someidhereagain",
+                "type": {
+                    "identifier": "thisisnotenoughconcepts",
+                    "prefLabel": [{
+                        "en": "pref label for this type"
+                    }],
+                    "definition": [{
+                        "en": "A statement or formal explanation of the meaning of a concept."
+                    }],
+                    "inScheme": [{
+                        "prefLabel": [{
+                            "en": "The preferred lexical label for a resource"
+                        }],
+                        "identifier": "http://uri.of.used.concept/scheme"
+                    }]
+                }
+            }],
+            "wasAssociatedWith": [{
+                "identifier": ["identifieroforganization"],
+                "name": "Mysterious Organization",
+                "email": "info@csc.fi",
+                "telephone": [
+                    "+358501231235"
+                ],
+                "homepage": "https://www.csc.fi"
+            }],
+            "variable": [{
+                "prefLabel": [{
+                    "en": "Preferred label"
+                }],
+                "description": [{
+                    "en": "Description"
+                }],
+                "concept": {
+                    "identifier": "variableconceptidentifier",
+                    "prefLabel": [{
+                        "en": "pref label"
+                    }],
+                    "definition": [{
+                        "en": "A statement or formal explanation of the meaning of a concept."
+                    }],
+                    "inScheme": [{
+                        "prefLabel": [{
+                            "en": "The preferred lexical label for a resource"
+                        }],
+                        "identifier": "http://uri.of.variable.concept/scheme"
+                    }]
+                },
+                "universe": {
+                    "identifier": "universeconceptidentifier",
+                    "prefLabel": [{
+                        "en": "pref label"
+                    }],
+                    "definition": [{
+                        "en": "A statement or formal explanation of the meaning of a concept."
+                    }],
+                    "inScheme": [{
+                        "prefLabel": [{
+                            "en": "The preferred lexical label for a resource"
+                        }],
+                        "identifier": "http://uri.of.universe.concept/scheme"
+                    }]
+                },
+                "representation": {
+                    "prefLabel": [{
+                        "en": "Preferred label"
+                    }],
+                    "identifier": "identifierheretoo"
+                }
+            }]
+        }],
+        "totalbytesize": 1024,
+        "value": [
+            777
+        ]
+    }
+}

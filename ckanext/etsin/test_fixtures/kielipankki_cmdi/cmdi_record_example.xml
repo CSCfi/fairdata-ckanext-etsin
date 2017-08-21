@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OAI-PMH 
+  xmlns="http://www.openarchives.org/OAI/2.0/" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/            http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <responseDate>2017-07-26T06:54:13Z</responseDate>
+  <request verb="ListRecords" metadataPrefix="cmdi0571">http://metalb.csc.fi/cgi-bin/que</request>
+  <ListRecords>
+    <record>
+      <header>
+        <identifier>oai:kielipankki.fi:shbde0b0</identifier>
+        <datestamp>2016-04-08T01:01:19Z</datestamp>
+      </header>
+      <metadata>
+        <CMD 
+          xmlns="http://www.clarin.eu/cmd/" 
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" CMDVersion="1.1" xsi:schemaLocation="http://www.clarin.eu/cmd/ http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/clarin.eu:cr1:p_1361876010571/xsd">
+          <Header>
+            <MdCreator>metashareToCmdi.xsl remove_metashare_namespace.xsl</MdCreator>
+            <MdCreationDate>2016-04-08</MdCreationDate>
+            <MdSelfLink>http://urn.fi/urn:nbn:fi:lb-20140730170</MdSelfLink>
+            <MdProfile>clarin.eu:cr1:p_1361876010571</MdProfile>
+          </Header>
+          <Resources>
+            <ResourceProxyList/>
+            <JournalFileProxyList/>
+            <ResourceRelationList/>
+          </Resources>
+          <Components>
+            <resourceInfo>
+              <identificationInfo>
+                <resourceName xml:lang="fi">Mikael Agricolan teosten morfosyntaktinen tietokanta</resourceName>
+                <resourceName xml:lang="en">The Morpho-Syntactic Database of Mikael Agricola's Works </resourceName>
+                <description xml:lang="fi">Mikael Agricolan teosten morfosyntaktinen tietokanta on Mikael Agricolan teosten (Abckiria, Rukouskiria, Se Wsi testamenti, Käsikiria, Messu, Piina, Psaltari, Veisut, Profeetat) suomenkieliset osat käsittävä aineisto, joka koostuu 73 XML-tiedostosta (n. 55 Mt). Aineisto on saatu aikaan siten, että Kotimaisten kielten keskuksen tarjoamat tekstit on Turun yliopiston suomen kielen oppiaineessa koodattu ja annotoitu vuosina 2004–2008 Suomen Akatemian ja Alfred Kordelinin säätiön rahoittamassa Mikael Agricolan teosten tieteellinen editio ja morfosyntaktinen tietokanta -hankkeessa Lauseopin arkiston murrekorpuksen antamaa mallia laajentamalla. Kieliopillisten yksiköiden määrät ovat: 38308 virkettä, 83678 lausetta ja 428314 sanaa. Jokaiseen sanaan on annotoitu hakusana, sanaluokka, morfologiset ainekset ja syntaktinen funktio. Kaikkiin kieliopillisiin yksiköihin on kooditettu niiden sijainti teoksissa ja Raamatun kirjoissa. Tietokannan tuleva hakuliittymä on Kielipankin Korp (http://korp.csc.fi/).</description>
+                <description xml:lang="en">The Morpho-Syntactic Database of Mikael Agricola's Works contains the Finnish parts of Mikael Agricola’s works (Abckiria, Rukouskiria, Se Wsi testamenti, Käsikiria, Messu, Piina, Psaltari, Veisut, Profeetat). The database was created from 2004 to 2008, when the texts offered by the Institute for the Languages of Finland were coded and annotated by the Finnish Language Department of the University of Turku in the project The Scientific Edition and the Morpho-Syntactic Database of Mikael Agricola's Works  by broadening the model used in the Finnish Dialect Syntax Archive. The project was funded by the Academy of Finland and the Alfred Kordelin Foundation. The words of the corpus have been annotated by keyword, part of speech, morphological components and syntactical function. All the grammatical units have been coded according to their places in the works and in the books of the Bible.
+
+The database will be made available at http://korp.csc.fi/
+
+More information on the database: http://www.hum.utu.fi/oppiaineet/suomi/tutkimus/tutkimushankkeet/Tutkimushanke_Hakkinen1.html</description>
+                <metaShareId>NOT_DEFINED_FOR_V2</metaShareId>
+                <identifier>http://urn.fi/urn:nbn:fi:lb-20140730170</identifier>
+                <identifier>http://islrn.org/resources/523-822-581-898-9</identifier>
+              </identificationInfo>
+              <distributionInfo>
+                <availability>underNegotiation</availability>
+                <licenceInfo>
+                  <licence>underNegotiation</licence>
+                  <licensorOrganization>
+                    <role>licensor</role>
+                    <organizationInfo>
+                      <organizationName xml:lang="fi">Kotimaisten kielten keskus</organizationName>
+                      <organizationName xml:lang="en">Institute for the Languages of Finland</organizationName>
+                      <organizationShortName xml:lang="en">Kotus</organizationShortName>
+                      <communicationInfo>
+                        <email>etunim.sukunimi@kotus.fi</email>
+                        <url>http://www.kotus.fi</url>
+                        <address>Vuorikatu 24</address>
+                        <zipCode>00100</zipCode>
+                        <city>Helsinki</city>
+                        <country>Finland</country>
+                        <telephoneNumber>+358 295 333 200</telephoneNumber>
+                      </communicationInfo>
+                    </organizationInfo>
+                  </licensorOrganization>
+                  <licensorOrganization>
+                    <role>licensor</role>
+                    <organizationInfo>
+                      <organizationName xml:lang="en">University of Turku</organizationName>
+                      <departmentName xml:lang="en">School of Languages and Translation Studies</departmentName>
+                      <communicationInfo>
+                        <email>firstname.surname@utu.fi</email>
+                        <url>https://www.utu.fi/fi/yksikot/hum/yksikot/kkl/Sivut/home.aspx</url>
+                        <city>Turku</city>
+                        <country>Finland</country>
+                      </communicationInfo>
+                    </organizationInfo>
+                  </licensorOrganization>
+                  <distributionRightsHolderOrganization>
+                    <role>distributionRightsHolder</role>
+                    <organizationInfo>
+                      <organizationName xml:lang="en">University of Turku</organizationName>
+                      <organizationShortName xml:lang="en">UTU</organizationShortName>
+                      <communicationInfo>
+                        <email>registry@utu.fi</email>
+                        <url>http://www.utu.fi/en/</url>
+                        <city>Turku</city>
+                        <country>Finland</country>
+                      </communicationInfo>
+                    </organizationInfo>
+                  </distributionRightsHolderOrganization>
+                  <distributionRightsHolderOrganization>
+                    <role>distributionRightsHolder</role>
+                    <organizationInfo>
+                      <organizationName xml:lang="fi">Kotimaisten kielten keskus</organizationName>
+                      <organizationName xml:lang="en">Institute for the Languages of Finland</organizationName>
+                      <organizationShortName xml:lang="en">Kotus</organizationShortName>
+                      <communicationInfo>
+                        <email>etunim.sukunimi@kotus.fi</email>
+                        <url>http://www.kotus.fi</url>
+                        <address>Vuorikatu 24</address>
+                        <zipCode>00100</zipCode>
+                        <city>Helsinki</city>
+                        <country>Finland</country>
+                        <telephoneNumber>+358 295 333 200</telephoneNumber>
+                      </communicationInfo>
+                    </organizationInfo>
+                  </distributionRightsHolderOrganization>
+                </licenceInfo>
+                <iprHolderOrganization>
+                  <role>iprHolder</role>
+                  <organizationInfo>
+                    <organizationName xml:lang="fi">Kotimaisten kielten keskus</organizationName>
+                    <organizationName xml:lang="en">Institute for the Languages of Finland</organizationName>
+                    <organizationShortName xml:lang="en">Kotus</organizationShortName>
+                    <communicationInfo>
+                      <email>etunim.sukunimi@kotus.fi</email>
+                      <url>http://www.kotus.fi</url>
+                      <address>Vuorikatu 24</address>
+                      <zipCode>00100</zipCode>
+                      <city>Helsinki</city>
+                      <country>Finland</country>
+                      <telephoneNumber>+358 295 333 200</telephoneNumber>
+                    </communicationInfo>
+                  </organizationInfo>
+                </iprHolderOrganization>
+                <iprHolderOrganization>
+                  <role>iprHolder</role>
+                  <organizationInfo>
+                    <organizationName xml:lang="en">University of Turku</organizationName>
+                    <departmentName xml:lang="en">School of Languages and Translation Studies</departmentName>
+                    <communicationInfo>
+                      <email>firstname.surname@utu.fi</email>
+                      <url>https://www.utu.fi/fi/yksikot/hum/yksikot/kkl/Sivut/home.aspx</url>
+                      <city>Turku</city>
+                      <country>Finland</country>
+                    </communicationInfo>
+                  </organizationInfo>
+                </iprHolderOrganization>
+              </distributionInfo>
+              <contactPerson>
+                <role>contactPerson</role>
+                <personInfo>
+                  <surname xml:lang="en">Häkkinen</surname>
+                  <givenName xml:lang="en">Kaisa</givenName>
+                  <sex>female</sex>
+                  <communicationInfo>
+                    <email>kaisa.hakkinen@utu.fi</email>
+                  </communicationInfo>
+                  <affiliation>
+                    <role>affiliation</role>
+                    <organizationInfo>
+                      <organizationName xml:lang="en">University of Turku</organizationName>
+                      <organizationShortName xml:lang="en">UTU</organizationShortName>
+                      <communicationInfo>
+                        <email>registry@utu.fi</email>
+                        <url>http://www.utu.fi/en/</url>
+                        <city>Turku</city>
+                        <country>Finland</country>
+                      </communicationInfo>
+                    </organizationInfo>
+                  </affiliation>
+                </personInfo>
+              </contactPerson>
+              <contactPerson>
+                <role>contactPerson</role>
+                <personInfo>
+                  <surname xml:lang="en">Inaba</surname>
+                  <givenName xml:lang="en">Nobufumi </givenName>
+                  <sex>male</sex>
+                  <communicationInfo>
+                    <email>nobufumi.inaba@utu.fi</email>
+                  </communicationInfo>
+                  <affiliation>
+                    <role>affiliation</role>
+                    <organizationInfo>
+                      <organizationName xml:lang="en">University of Turku</organizationName>
+                      <organizationShortName xml:lang="en">UTU</organizationShortName>
+                      <communicationInfo>
+                        <email>registry@utu.fi</email>
+                        <url>http://www.utu.fi/en/</url>
+                        <city>Turku</city>
+                        <country>Finland</country>
+                      </communicationInfo>
+                    </organizationInfo>
+                  </affiliation>
+                </personInfo>
+              </contactPerson>
+              <metadataInfo>
+                <metadataCreationDate>2012-10-10</metadataCreationDate>
+                <originalMetadataLink>http://www.hum.utu.fi/oppiaineet/suomi/tutkimus/tutkimushankkeet/Tutkimushanke_Hakkinen1.html</originalMetadataLink>
+                <metadataLanguageName>Finnish</metadataLanguageName>
+                <metadataLanguageName>English</metadataLanguageName>
+                <metadataLanguageId>fi</metadataLanguageId>
+                <metadataLanguageId>en</metadataLanguageId>
+                <metadataLastDateUpdated>2012-10-10</metadataLastDateUpdated>
+                <metadataCreator>
+                  <role>metadataCreator</role>
+                  <personInfo>
+                    <surname xml:lang="en">Pöyhönen</surname>
+                    <givenName xml:lang="en">Saara</givenName>
+                    <sex>female</sex>
+                    <communicationInfo>
+                      <email>saara.poyhonen@helsinki.fi</email>
+                    </communicationInfo>
+                    <affiliation>
+                      <role>affiliation</role>
+                      <organizationInfo>
+                        <organizationName xml:lang="en">University of Helsinki</organizationName>
+                        <organizationShortName xml:lang="en">UHEL</organizationShortName>
+                        <communicationInfo>
+                          <email>krister.linden@helsinki.fi</email>
+                        </communicationInfo>
+                      </organizationInfo>
+                    </affiliation>
+                  </personInfo>
+                </metadataCreator>
+              </metadataInfo>
+              <usageInfo>
+                <foreseenUseInfo>
+                  <foreseenUse>humanUse</foreseenUse>
+                  <useNLPSpecific>linguisticResearch</useNLPSpecific>
+                  <useNLPSpecific>other</useNLPSpecific>
+                </foreseenUseInfo>
+              </usageInfo>
+              <corpusInfo>
+                <resourceType>corpus</resourceType>
+                <corpusMediaType>
+                  <corpusTextInfo>
+                    <mediaType>text</mediaType>
+                    <lingualityInfo>
+                      <lingualityType>monolingual</lingualityType>
+                    </lingualityInfo>
+                    <languageInfo>
+                      <languageId>fi</languageId>
+                      <languageName>Finnish</languageName>
+                    </languageInfo>
+                    <modalityInfo>
+                      <modalityType>writtenLanguage</modalityType>
+                    </modalityInfo>
+                    <sizeInfo>
+                      <size>38308</size>
+                      <sizeUnit>words</sizeUnit>
+                    </sizeInfo>
+                    <sizeInfo>
+                      <size>83678</size>
+                      <sizeUnit>sentences</sizeUnit>
+                    </sizeInfo>
+                    <sizeInfo>
+                      <size>428314</size>
+                      <sizeUnit>tokens</sizeUnit>
+                    </sizeInfo>
+                  </corpusTextInfo>
+                </corpusMediaType>
+              </corpusInfo>
+            </resourceInfo>
+          </Components>
+        </CMD>
+      </metadata>
+    </record>
+  </ListRecords>
+</OAI-PMH>
