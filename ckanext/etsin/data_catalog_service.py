@@ -1,6 +1,7 @@
 import requests
 import json
-import pprint
+import logging
+log = logging.getLogger(__name__)
 
 class DatasetCatalogMetaxAPIService:
     '''
@@ -23,41 +24,41 @@ class DatasetCatalogMetaxAPIService:
         try:
             catalog = self._get_data_catalogs_from_file(input_file_path)
         except IOError:
-            pprint.pprint("No file found in path " + input_file_path)
-            return
+            log.error("No dataset catalog file found in path " + input_file_path)
+            raise
 
         c_identifier = catalog['catalog_json']['identifier']
-        pprint.pprint("Checking if dataset catalog with identifier " + c_identifier + " already exists in Metax..")
+        log.info("Checking if dataset catalog with identifier " + c_identifier + " already exists in Metax..")
         try:
             dataset_exists = json.loads(self._do_get_request(self.METAX_DATASET_CATALOG_API_EXISTS_URL.format(id=c_identifier)))
         except requests.exceptions.HTTPError:
-            pprint.pprint("Checking failed for some reason most likely in Metax dataset catalog API")
-            return
+            log.error("Checking failed for some reason most likely in Metax dataset catalog API")
+            raise
 
         if dataset_exists:
-            pprint.pprint("Dataset catalog already exists")
+            log.info("Dataset catalog already exists in Metax")
         else:
-            pprint.pprint("Dataset catalog does not exist")
+            log.info("Dataset catalog does not exist in Metax")
 
         if update_if_exists and dataset_exists:
-            pprint.pprint("Updating dataset catalog..")
+            log.info("Updating dataset catalog in Metax..")
             try:
                 response_text = self._do_put_request(self.METAX_DATASET_CATALOG_API_PUT_URL.format(id=c_identifier), catalog)
-                pprint.pprint("Dataset catalog updated")
+                log.info("Dataset catalog updated in Metax")
             except requests.exceptions.HTTPError:
-                pprint.pprint("Updating dataset catalog failed for some reason most likely in Metax dataset catalog API")
-                return
+                log.error("Updating dataset catalog failed for some reason most likely in Metax dataset catalog API")
+                raise
         elif not dataset_exists:
-            pprint.pprint("Creating dataset catalog..")
+            log.info("Creating dataset catalog in Metax..")
             try:
                 response_text = self._do_post_request(self.METAX_DATASET_CATALOG_API_POST_URL, catalog)
-                pprint.pprint("Dataset catalog created")
-                pprint.pprint(response_text)
+                log.info("Dataset catalog created in Metax")
+                log.info(response_text)
             except requests.exceptions.HTTPError:
-                pprint.pprint("Creating dataset catalog failed for some reason most likely in Metax dataset catalog API")
-                return
+                log.error("Creating dataset catalog failed for some reason most likely in Metax dataset catalog API")
+                raise
         elif not update_if_exists and dataset_exists:
-            pprint.pprint("Skipping dataset catalog..")
+            log.info("Skipping dataset catalog update in Metax..")
 
         return c_identifier
 
@@ -71,7 +72,7 @@ class DatasetCatalogMetaxAPIService:
         return self._handle_request_response(requests.post(url, json=data))
 
     def _handle_request_response(self, response):
-        pprint.pprint("Request response status code: " + str(response.status_code))
+        log.debug("Request response status code: " + str(response.status_code))
         response.raise_for_status()
         return response.text
 
@@ -81,6 +82,7 @@ class DatasetCatalogMetaxAPIService:
 
 def main():
     import sys
+    import pprint
     UPDATE_IF_EXISTS = 'update_if_exists'
     DATA_CATALOG_JSON_FILE_PATH = 'data_catalog_json_file_path'
     run_args = dict([arg.split('=') for arg in sys.argv[1:]])
