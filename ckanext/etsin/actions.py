@@ -7,7 +7,6 @@ import ckanext.etsin.metax_api as metax_api
 from ckanext.etsin.refine import refine
 import ckan.logic.action.create
 import ckan.logic.action.update
-import uuid
 
 from ckan.lib.navl.validators import (ignore_missing,
                                       not_empty,
@@ -24,6 +23,7 @@ import logging
 log = logging.getLogger(__name__)
 
 package_schema = {
+    # Why is id ignore_missing?
     'id': [ignore_missing],
     'name': [not_empty, unicode, name_validator, package_name_validator]
 }
@@ -42,25 +42,22 @@ def package_create(context, data_dict):
     # Refine data_dict based on organization it belongs to
     data_dict = refine(context, data_dict)
 
-    # Create or update the dataset in MetaX
+    # Create the dataset in MetaX
     try:
-        metax_id = _create_or_update(data_dict)
+        metax_id = metax_api.create_dataset(data_dict)
     except HTTPError:
-        log.info("Failed to create or update package to MetaX: {}".format(data_dict))
+        log.error("Failed to create or update package to MetaX: {}".format(data_dict))
         return False
 
-    # Strip Metax data_dict to CKAN package_dict
-    package_dict = {
-        'id': package_id,
-        'name': metax_id
-    }
+    # Get data_dict for storing to CKAN db
+    package_dict = _get_data_dict_for_ckan_db(package_id, metax_id)
     context['schema'] = package_schema
 
     # Create the package in our CKAN database
-    print "Creating package: {}".format(package_dict)
+    log.info("Creating package to CKAN database: {}".format(package_dict))
     package_dict = ckan.logic.action.create.package_create(
         context, package_dict)
-    print "Created package:", package_dict
+    log.info("Created package with id: {} and name: {}".format(package_id, metax_id))
 
     return package_dict
 
@@ -96,8 +93,15 @@ def package_update(context, data_dict):
     # TODO: We may need to catch an error here
     data_dict = _create_or_update(data_dict)
 
+    # The "one row" plus one from _create_or_update for future use:
+    metax_id = model.Session.query(Package) \
+        .filter(harvest_object.package_id) \
+        .first() \
+        .name
+    metax_api.replace_dataset(metax_id, data_dict)
+
     # Strip Metax data_dict to CKAN data_dict
-    data_dict = _strip_data_dict(data_dict)
+    data_dict = _strip_data_dict_for_ckan_db(data_dict)
 
     # Copy and paste package updating from CKAN's original package_update
     ckan.logic.action.update.package_update(context, data_dict)
@@ -105,29 +109,13 @@ def package_update(context, data_dict):
     return data_dict
 
 
-def _create_or_update(data_dict):
-    """ Adds dataset to MetaX, or updates it if it already exists if necessary. """
+def _get_data_dict_for_ckan_db(package_id, metax_id):
+    return {
+        'id': package_id,
+        'name': metax_id
+    }
+
+
+def _dataset_exists_in_metax(data_dict):
     dataset_id = data_dict['preferred_identifier']
-    exists_in_metax = metax_api.check_dataset_exists(dataset_id)
-    if exists_in_metax:
-        # Metax says the package exists
-        # TODO: may need to catch an error
-
-        # TODO: do we need to find & use previous harvest_object instead?
-        # previous_harvest_object = model.Session.query(HarvestObject) \
-        #     .filter(HarvestObject.guid == dataset_id) \
-        #     .first()
-
-        metax_id = model.Session.query(Package) \
-            .filter(harvest_object.package_id) \
-            .first() \
-            .name
-
-        metax_api.replace_dataset(metax_id, data_dict)
-
-    else:
-        # Metax says the package doesn't exist
-        # TODO: may need to catch an error
-        metax_id = metax_api.create_dataset(data_dict)
-
-    return metax_id
+    return metax_api.check_dataset_exists(dataset_id)
