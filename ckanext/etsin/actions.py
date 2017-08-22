@@ -3,28 +3,21 @@ Action overrides
 '''
 
 import ckanext.etsin.metax_api as metax_api
-
 from ckanext.etsin.refine import refine
+
 import ckan.logic.action.create
 import ckan.logic.action.update
+from ckan.lib.navl.validators import not_empty
+from ckan.logic.validators import name_validator
 
-from ckan.lib.navl.validators import (ignore_missing,
-                                      not_empty,
-                                      ignore_empty
-                                      )
-from ckan.logic.validators import (
-    name_validator,
-    package_name_validator
-)
 from requests import HTTPError
 
 import logging
 log = logging.getLogger(__name__)
 
 package_schema = {
-    # TODO: Why is id ignore_missing?
-    'id': [ignore_missing],
-    'name': [not_empty, unicode, name_validator, package_name_validator]
+    'id': [not_empty, unicode],
+    'name': [not_empty, unicode, name_validator]
 }
 
 
@@ -116,6 +109,7 @@ def package_delete(context, data_dict):
     # Get metax_id from ckan database
     metax_id = _get_metax_id_from_ckan_db(package_id)
 
+    # TODO: This check for existence not necessarily needed?
     if _dataset_exists_in_metax(data_dict):
         try:
             log.info("Trying to delete package from MetaX: %s", data_dict)
