@@ -2,7 +2,6 @@ from functionally import first
 from pylons import config
 import ckanext.etsin.utils as utils
 
-
 class CmdiParseException(Exception):
     """ Reader exception is thrown on unexpected data or error. """
     pass
@@ -65,6 +64,7 @@ class CmdiParseHelper:
                  'name': ", ".join(cls._text_xpath(organization, "cmd:organizationInfo/cmd:organizationName/text()")),
                  'short_name': cls._strip_first(organization.xpath("cmd:organizationInfo/cmd:organizationShortName/text()", namespaces=cls.namespaces)),
                  'email': cls._strip_first(organization.xpath("cmd:organizationInfo/cmd:communicationInfo/cmd:email/text()", namespaces=cls.namespaces)),
+                 'telephoneNumber': cls._strip_first(organization.xpath("cmd:organizationInfo/cmd:communicationInfo/cmd:telephoneNumber/text()", namespaces=cls.namespaces)),
                  'url': cls._strip_first(organization.xpath("cmd:organizationInfo/cmd:communicationInfo/cmd:email/text()", namespaces=cls.namespaces))}
 
                 for organization in root.xpath(xpath, namespaces=cls.namespaces)]
@@ -81,6 +81,7 @@ class CmdiParseHelper:
                  'surname': cls._strip_first(person.xpath("cmd:personInfo/cmd:surname/text()", namespaces=cls.namespaces)),
                  'given_name': cls._strip_first(person.xpath("cmd:personInfo/cmd:givenName/text()", namespaces=cls.namespaces)),
                  'email': cls._strip_first(person.xpath("cmd:personInfo/cmd:communicationInfo/cmd:email/text()", namespaces=cls.namespaces)),
+                 'telephoneNumber': cls._strip_first(person.xpath("cmd:personInfo/cmd:communicationInfo/cmd:telephoneNumber/text()", namespaces=cls.namespaces)),
                  'organization': first(cls._get_organizations(person, "cmd:personInfo/cmd:affiliation"))}
                 for person in root.xpath(xpath, namespaces=cls.namespaces)]
 
@@ -92,10 +93,9 @@ class CmdiParseHelper:
         :return: dictionary in the MetaX agent format
         """
         return {
-            "identifier": "todo",
             "name": u"{} {}".format(person['given_name'], person['surname']),
             "email": person['email'],
-            "phone": "todo",
+            "phone": person['telephoneNumber'],
             "isPartOf": cls._get_organization_as_agent(person['organization'])
         }
 
@@ -107,9 +107,9 @@ class CmdiParseHelper:
         :return: dictionary in the MetaX agent format
         """
         return {
-            "identifier": "todo",
             "name": organization['name'],
             "email": organization['email'],
+            "phone": organization['telephoneNumber'],
         }
 
     def parse_languages(self):
@@ -177,9 +177,9 @@ class CmdiParseHelper:
             self.resource_info, "//cmd:distributionInfo/cmd:iprHolderOrganization")
         return [
             self._get_person_as_agent(person) for person in creator_persons
-        ].extend([
+        ]+[
             self._get_organization_as_agent(organization) for organization in creator_organizations
-        ])
+        ]
 
     def parse_curators(self):
         """ Get the curators (contacts) as agents. Curators may be people or organizations. """
@@ -190,10 +190,10 @@ class CmdiParseHelper:
         return [
             self._get_person_as_agent(person)
             for person in contact_persons
-        ].extend([
+        ]+[
             self._get_organization_as_agent(organization)
             for organization in contact_orgs
-        ])
+        ]
 
     def parse_metadata_identifiers(self):
         """ Get the metadata identifiers. """
