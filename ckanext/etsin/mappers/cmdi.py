@@ -39,9 +39,9 @@ class CmdiMetaxMapper:
                 temporal_coverage_begin = split[0]
                 temporal_coverage_end = split[1]
 
-        creators = cmdi.parse_creators() # not implemented yet
+        creators = cmdi.parse_creators() # creators == owners
+        owners = cmdi.parse_owners() # owners implemented but not saved to dict
         distributor = cmdi.parse_distributor()
-        owners = cmdi.parse_owners() # implemented but not saved to dict
         curators = cmdi.parse_curators()
 
         metax_dict = {

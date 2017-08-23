@@ -135,6 +135,31 @@ More information on the database: http://www.hum.utu.fi/oppiaineet/suomi/tutkimu
                     </communicationInfo>
                   </organizationInfo>
                 </iprHolderOrganization>
+                <iprHolderPerson>
+                  <role>iprHolder</role>
+                  <personInfo>
+                    <surname xml:lang="en">Tekijä</surname>
+                    <givenName xml:lang="en">Teija</givenName>
+                    <sex>female</sex>
+                    <communicationInfo>
+                      <email>teija@tekija.fi</email>
+                      <telephoneNumber>+358501234567</telephoneNumber>
+                    </communicationInfo>
+                    <affiliation>
+                      <role>affiliation</role>
+                      <organizationInfo>
+                        <organizationName xml:lang="en">University of Turku</organizationName>
+                        <organizationShortName xml:lang="en">UTU</organizationShortName>
+                        <communicationInfo>
+                          <email>registry@utu.fi</email>
+                          <url>http://www.utu.fi/en/</url>
+                          <city>Turku</city>
+                          <country>Finland</country>
+                        </communicationInfo>
+                      </organizationInfo>
+                    </affiliation>
+                  </personInfo>
+                </iprHolderPerson>                
               </distributionInfo>
               <contactPerson>
                 <role>contactPerson</role>

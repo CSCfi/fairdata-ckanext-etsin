@@ -167,7 +167,9 @@ class CmdiParseHelper:
         return self._get_person_as_agent(distributor_persons[0]) if distributor_persons else None
 
     def parse_creators(self):
-        return []   # TODO
+        """ Get a list of the creators (people or organizations) as agents. """
+        # iprHolderPerson and iprHolderOrganization are mapped as both creators and owners
+        return self.parse_owners()
 
     def parse_owners(self):
         """ Get a list of the owners (people or organizations) as agents. """

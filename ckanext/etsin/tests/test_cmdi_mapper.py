@@ -16,6 +16,9 @@ class TestCmdiMapper(TestCase):
         # Right now we're basically just checking that it does
         # not throw an error with the input
 
+    # Test curators
+    # INCOMPLETE, currently tests only phone numbers
+
     def testTelephoneNumberCuratorPerson(self):
         assert any(curator['phone'] == '+358 123 456 789' for curator in self.metax_dict['research_dataset']['curator'])
 
@@ -36,6 +39,24 @@ class TestCmdiMapper(TestCase):
             'email': 'registry@utu.fi',
             'name': u'University of Turku',
             'phone': ''} in self.metax_dict['research_dataset']['curator']
+
+    # Test creators
+
+    def testCreatorPerson(self):
+        assert {
+            'email': 'teija@tekija.fi',
+            'name': u'Teija Tekij\xe4',
+            'phone': '+358501234567',
+            'isPartOf': {'email': 'registry@utu.fi',
+                'name': u'University of Turku',
+                'phone': ''}} in self.metax_dict['research_dataset']['creator']
+
+    def testCreatorOrganization(self):
+        assert {
+            'email': 'etunim.sukunimi@kotus.fi',
+            'name': u'Kotimaisten kielten keskus, Institute for the Languages of Finland',
+            'phone': '+358 295 333 200'} in self.metax_dict['research_dataset']['creator']
+
 
 if __name__ == '__main__':
     import logging
