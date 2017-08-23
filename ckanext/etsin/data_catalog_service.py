@@ -1,3 +1,4 @@
+import os
 import requests
 import json
 import logging
@@ -30,7 +31,7 @@ class DataCatalogMetaxAPIService:
         c_identifier = catalog['catalog_json']['identifier']
         log.info("Checking if data catalog with identifier " + c_identifier + " already exists in Metax..")
         try:
-            catalog_exists = json.loads(self._do_get_request(self.METAX_DATA_CATALOG_API_EXISTS_URL.format(id=c_identifier)))
+            catalog_exists = json.loads(self._do_exists_request(self.METAX_DATA_CATALOG_API_EXISTS_URL.format(id=c_identifier)))
         except requests.exceptions.HTTPError:
             log.error("Checking existence failed for some reason most likely in Metax data catalog API")
             raise
@@ -63,21 +64,21 @@ class DataCatalogMetaxAPIService:
         return c_identifier
 
     def _do_put_request(self, url, data):
-        return self._handle_request_response(requests.put(url, json=data))
+        return self._handle_request_response_with_raise(requests.put(url, json=data))
 
-    def _do_get_request(self, url):
-        return self._handle_request_response(requests.get(url))
+    def _do_exists_request(self, url):
+        return requests.get(url).text
 
     def _do_post_request(self, url, data):
-        return self._handle_request_response(requests.post(url, json=data))
+        return self._handle_request_response_with_raise(requests.post(url, json=data))
 
-    def _handle_request_response(self, response):
+    def _handle_request_response_with_raise(self, response):
         log.debug("Request response status code: " + str(response.status_code))
         response.raise_for_status()
         return response.text
 
     def _get_data_catalogs_from_file(self, input_file_path):
-        with open(input_file_path, 'r') as f:
+        with open(os.path.dirname(os.path.realpath(__file__)) + '/' + input_file_path, 'r') as f:
             return json.load(f)
 
 def main():
