@@ -8,11 +8,6 @@ import logging
 log = logging.getLogger(__name__)
 
 
-class KielipankkiRefinerException(Exception):
-    """ Reader exception is thrown on unexpected data or error. """
-    pass
-
-
 class KielipankkiRefiner():
 
     LICENSE_CLARIN_PUB = "CLARIN_PUB"
@@ -92,8 +87,6 @@ def kielipankki_refiner(context, data_dict):
         if 'urn' in pid and not primary_pid:
             pids.append(dict(id=pid, provider=cmdi.provider, type='primary'))
             primary_pid = pid
-    if primary_pid is None:
-        raise KielipankkiRefinerException("Could not find primary pid in the metadata")
 
     direct_download_URL = ''
     access_request_URL = ''
