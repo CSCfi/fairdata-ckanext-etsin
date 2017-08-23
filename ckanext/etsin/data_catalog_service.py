@@ -3,62 +3,62 @@ import json
 import logging
 log = logging.getLogger(__name__)
 
-class DatasetCatalogMetaxAPIService:
+class DataCatalogMetaxAPIService:
     '''
         This class can be used either from command line or CKAN extension.
         In CKAN, import this class and instantiate, then call
-        create_or_update_dataset_catalogs method by giving data catalog
+        create_or_update_data_catalogs method by giving data catalog
         json file path and boolean for whether data catalog should be
-        updated if it exists. Use at the beginning of harvester?
+        updated if it exists.
     '''
 
-    METAX_DATASET_CATALOG_API_POST_URL = 'https://metax-test.csc.fi/rest/datasetcatalogs'
-    METAX_DATASET_CATALOG_API_PUT_URL = 'https://metax-test.csc.fi/rest/datasetcatalogs' + "/{id}"
-    METAX_DATASET_CATALOG_API_EXISTS_URL = METAX_DATASET_CATALOG_API_POST_URL + "/{id}/exists"
+    METAX_DATA_CATALOG_API_POST_URL = 'https://metax-test.csc.fi/rest/datacatalogs'
+    METAX_DATA_CATALOG_API_PUT_URL = 'https://metax-test.csc.fi/rest/datacatalogs' + "/{id}"
+    METAX_DATA_CATALOG_API_EXISTS_URL = METAX_DATA_CATALOG_API_POST_URL + "/{id}/exists"
 
-    def create_or_update_dataset_catalogs(self, update_if_exists, input_file_path):
+    def create_or_update_data_catalogs(self, update_if_exists, input_file_path):
         '''
-        Return identifier for placing into metax dataset
+        Return data catalog identifier
         '''
 
         try:
             catalog = self._get_data_catalogs_from_file(input_file_path)
         except IOError:
-            log.error("No dataset catalog file found in path " + input_file_path)
+            log.error("No data catalog file found in path " + input_file_path)
             raise
 
         c_identifier = catalog['catalog_json']['identifier']
-        log.info("Checking if dataset catalog with identifier " + c_identifier + " already exists in Metax..")
+        log.info("Checking if data catalog with identifier " + c_identifier + " already exists in Metax..")
         try:
-            dataset_exists = json.loads(self._do_get_request(self.METAX_DATASET_CATALOG_API_EXISTS_URL.format(id=c_identifier)))
+            catalog_exists = json.loads(self._do_get_request(self.METAX_DATA_CATALOG_API_EXISTS_URL.format(id=c_identifier)))
         except requests.exceptions.HTTPError:
-            log.error("Checking failed for some reason most likely in Metax dataset catalog API")
+            log.error("Checking existence failed for some reason most likely in Metax data catalog API")
             raise
 
-        if dataset_exists:
-            log.info("Dataset catalog already exists in Metax")
+        if catalog_exists:
+            log.info("Data catalog already exists in Metax")
         else:
-            log.info("Dataset catalog does not exist in Metax")
+            log.info("Data catalog does not exist in Metax")
 
-        if update_if_exists and dataset_exists:
-            log.info("Updating dataset catalog in Metax..")
+        if update_if_exists and catalog_exists:
+            log.info("Updating data catalog in Metax..")
             try:
-                response_text = self._do_put_request(self.METAX_DATASET_CATALOG_API_PUT_URL.format(id=c_identifier), catalog)
-                log.info("Dataset catalog updated in Metax")
+                self._do_put_request(self.METAX_DATA_CATALOG_API_PUT_URL.format(id=c_identifier), catalog)
+                log.info("Data catalog updated in Metax")
             except requests.exceptions.HTTPError:
-                log.error("Updating dataset catalog failed for some reason most likely in Metax dataset catalog API")
+                log.error("Updating data catalog failed for some reason most likely in Metax data catalog API")
                 raise
-        elif not dataset_exists:
-            log.info("Creating dataset catalog in Metax..")
+        elif not catalog_exists:
+            log.info("Creating data catalog in Metax..")
             try:
-                response_text = self._do_post_request(self.METAX_DATASET_CATALOG_API_POST_URL, catalog)
-                log.info("Dataset catalog created in Metax")
+                response_text = self._do_post_request(self.METAX_DATA_CATALOG_API_POST_URL, catalog)
+                log.info("Data catalog created in Metax")
                 log.info(response_text)
             except requests.exceptions.HTTPError:
-                log.error("Creating dataset catalog failed for some reason most likely in Metax dataset catalog API")
+                log.error("Creating data catalog failed for some reason most likely in Metax data catalog API")
                 raise
-        elif not update_if_exists and dataset_exists:
-            log.info("Skipping dataset catalog update in Metax..")
+        elif not update_if_exists and catalog_exists:
+            log.info("Skipping data catalog update in Metax..")
 
         return c_identifier
 
@@ -97,8 +97,8 @@ def main():
 
     update_if_exists = True if run_args[UPDATE_IF_EXISTS] == 'True' else False
     input_file_path = run_args[DATA_CATALOG_JSON_FILE_PATH]
-    catalog_service = DatasetCatalogMetaxAPIService()
-    catalog_service.create_or_update_dataset_catalogs(update_if_exists, input_file_path)
+    catalog_service = DataCatalogMetaxAPIService()
+    catalog_service.create_or_update_data_catalogs(update_if_exists, input_file_path)
 
 if __name__ == '__main__':
     # calling main function
