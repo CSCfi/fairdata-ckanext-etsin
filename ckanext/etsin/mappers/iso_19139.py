@@ -9,8 +9,7 @@ import logging
 log = logging.getLogger(__name__)
 
 # Overwrites ckanext-spatial's get_package_dict
-def iso_19139_mapper(self, context, data_dict):
-
+def iso_19139_mapper(context, data_dict):
     # Start with an empty slate
     package_dict = {}
 
