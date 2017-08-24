@@ -2,6 +2,7 @@ import os
 import requests
 import json
 import logging
+import requests.exceptions
 log = logging.getLogger(__name__)
 
 class DataCatalogMetaxAPIService:
@@ -31,8 +32,8 @@ class DataCatalogMetaxAPIService:
         c_identifier = catalog['catalog_json']['identifier']
         log.info("Checking if data catalog with identifier " + c_identifier + " already exists in Metax..")
         try:
-            catalog_exists = json.loads(self._do_exists_request(self.METAX_DATA_CATALOG_API_EXISTS_URL.format(id=c_identifier)))
-        except requests.exceptions.HTTPError:
+            catalog_exists = json.loads(requests.get(self.METAX_DATA_CATALOG_API_EXISTS_URL.format(id=c_identifier)).text)
+        except (ConnectionError, Timeout, ConnectTimeout, ReadTimeout):
             log.error("Checking existence failed for some reason most likely in Metax data catalog API")
             raise
 
@@ -65,9 +66,6 @@ class DataCatalogMetaxAPIService:
 
     def _do_put_request(self, url, data):
         return self._handle_request_response_with_raise(requests.put(url, json=data))
-
-    def _do_exists_request(self, url):
-        return requests.get(url).text
 
     def _do_post_request(self, url, data):
         return self._handle_request_response_with_raise(requests.post(url, json=data))
