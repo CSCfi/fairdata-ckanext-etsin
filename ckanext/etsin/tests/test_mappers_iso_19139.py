@@ -10,7 +10,7 @@ class TestMappersISO19139(TestCase):
 
 
     def testObligatoryFieldsMap(self):
-        dict = iso_19139_mapper(self, {}, _testdict())
+        dict = iso_19139_mapper({}, _testdict())
 
         eq_(dict['preferred_identifier'], 'M28mitl:')
         eq_(dict['title'], [{'default': 'Testiaineisto'}])
@@ -26,7 +26,7 @@ class TestMappersISO19139(TestCase):
 
 
     def testObligatoryFieldsMissing(self):
-        dict = iso_19139_mapper(self, {}, {})
+        dict = iso_19139_mapper({}, {})
 
         eq_(dict['preferred_identifier'], '')
         eq_(dict['title'], [{'default': ''}])
@@ -38,7 +38,7 @@ class TestMappersISO19139(TestCase):
 def _testdict():
     return {
         'iso_values': {
-            'guid': 'M28mitl:', 
+            'guid': 'M28mitl:',
             'title': 'Testiaineisto',
             'responsible-organisation': [
                 {
@@ -56,7 +56,7 @@ def _testdict():
                 {
                     'organisation-name': 'muu',
                     'role': ['jotainmuuta']
-                    }, 
+                    },
                 ],
               'metadata-language': 'fin',
             }
