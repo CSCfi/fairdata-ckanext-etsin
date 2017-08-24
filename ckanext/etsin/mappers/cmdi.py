@@ -22,6 +22,9 @@ class CmdiMetaxMapper:
         """
         cmdi = CmdiParseHelper(xml)
 
+        # Preferred identifier will be added in refinement
+        preferred_identifier = None
+
         languages = cmdi.parse_languages()
         language_list = [{'title': lang, 'identifier': 'todo'}
                          for lang in languages]
@@ -50,6 +53,7 @@ class CmdiMetaxMapper:
             # TODO: "etsin" or such (doesn't exist yet in metax)
             "dataset_catalog": "1",
             "research_dataset": {
+                "preferred_identifier": preferred_identifier,
                 "creator": creators,
                 "distributor": distributor,
                 "modified": modified,
