@@ -40,3 +40,6 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+
+# IntelliJ Idea files
+.idea
