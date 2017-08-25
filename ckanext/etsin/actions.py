@@ -19,7 +19,7 @@ log = logging.getLogger(__name__)
 
 package_schema = {
     'id': [not_empty, unicode],
-    'name': [not_empty, unicode, name_validator]
+    'name': [not_empty, unicode]
 }
 
 
