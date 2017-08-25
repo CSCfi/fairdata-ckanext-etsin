@@ -12,9 +12,9 @@ class TestCmdiMapper(TestCase):
     data_dict = {'package_dict': {}}
     metax_dict = cmdi_mapper(source, data_dict)['metax_dict']
 
-        # TODO: validate fields (or at least check existence)
-        # Right now we're basically just checking that it does
-        # not throw an error with the input
+    # TODO: validate fields (or at least check existence)
+    # Right now we're basically just checking that it does
+    # not throw an error with the input
 
     # Test preferred identifier
     # Note that the identifier will be assigned by refiner, not mapper
@@ -31,14 +31,17 @@ class TestCmdiMapper(TestCase):
             'name': u'Teija Tekij\xe4',
             'phone': '+358501234567',
             'isPartOf': {'email': 'registry@utu.fi',
-                'name': u'University of Turku',
-                'phone': ''}} in self.metax_dict['research_dataset']['creator']
+                         'name': u'University of Turku',
+                         'phone': '',
+                         }
+        } in self.metax_dict['research_dataset']['creator']
 
     def testCreatorOrganization(self):
         assert {
             'email': 'etunim.sukunimi@kotus.fi',
             'name': u'Kotimaisten kielten keskus, Institute for the Languages of Finland',
-            'phone': '+358 295 333 200'} in self.metax_dict['research_dataset']['creator']
+            'phone': '+358 295 333 200',
+        } in self.metax_dict['research_dataset']['creator']
 
     # Test curators
 
@@ -46,31 +49,35 @@ class TestCmdiMapper(TestCase):
         assert {
             'email': 'nobufumi.inaba@utu.fi',
             'isPartOf': {'email': 'registry@utu.fi',
-                'name': u'University of Turku',
-                'phone': ''},
+                         'name': u'University of Turku',
+                         'phone': ''},
             'name': u'Nobufumi Inaba',
-            'phone': '+358 123 456 789'} in self.metax_dict['research_dataset']['curator']
+            'phone': '+358 123 456 789',
+        } in self.metax_dict['research_dataset']['curator']
 
     def testCuratorPerson2(self):
         assert {
             'email': 'kaisa.hakkinen@utu.fi',
             'isPartOf': {'email': 'registry@utu.fi',
-                'name': u'University of Turku',
-                'phone': ''},
+                         'name': u'University of Turku',
+                         'phone': ''},
             'name': u'Kaisa H\xe4kkinen',
-            'phone': ''} in self.metax_dict['research_dataset']['curator']
+            'phone': '',
+        } in self.metax_dict['research_dataset']['curator']
 
     def testCuratorOrganization1(self):
         assert {
             'email': 'etunim.sukunimi@kotus.fi',
             'name': u'Kotimaisten kielten keskus, Institute for the Languages of Finland',
-            'phone': '+358 295 333 200'} in self.metax_dict['research_dataset']['curator']
+            'phone': '+358 295 333 200',
+        } in self.metax_dict['research_dataset']['curator']
 
     def testCuratorOrganization2(self):
         assert {
             'email': 'registry@utu.fi',
             'name': u'University of Turku',
-            'phone': ''} in self.metax_dict['research_dataset']['curator']
+            'phone': '',
+        } in self.metax_dict['research_dataset']['curator']
 
     # Test language
 
