@@ -24,9 +24,16 @@ def iso_19139_mapper(self, context, data_dict):
     except KeyError:
         package_dict['preferred_identifier'] = ''
 
+    # Use 'undefined' if language code not given or isn't valid ISO 639-3
     try:
-        # Harvest source only ever has one title, so no need to bother with language codes.
-        package_dict['title'] = [{'default': data_dict['iso_values']['title']}]
+        lang = languages.get(part3=data_dict['iso_values']['metadata-language']).part3
+    except:
+        lang = 'und'
+    package_dict['language'] = [{'identifier': _get_language_identifier(lang)}]
+
+    # Find title
+    try:
+        package_dict['title'] = [{lang: data_dict['iso_values']['title']}]
     except KeyError:
         package_dict['title'] = [{'default': ''}]
 
@@ -47,13 +54,6 @@ def iso_19139_mapper(self, context, data_dict):
             package_dict['curator'].append({'name': org['organisation-name']})
     except KeyError:
         pass
-
-    # Use 'undefined' if language code not given or isn't valid ISO 639-3
-    try:
-        lang = languages.get(part3=data_dict['iso_values']['metadata-language']).part3
-    except:
-        lang = 'und'
-    package_dict['language'] = [{'identifier': _get_language_identifier(lang)}]
 
     # METAX OPTIONAL FIELDS
     
