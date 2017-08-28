@@ -81,7 +81,7 @@ def package_update(context, data_dict):
         package_id = data_dict.pop('id')
 
         # Refine data_dict based on organization it belongs to
-        data_dict = refine(data_dict)
+        #data_dict = refine(data_dict)
 
         # Get metax_id from ckan database
         metax_id = _get_metax_id_from_ckan_db(package_id)
@@ -89,7 +89,7 @@ def package_update(context, data_dict):
         # Update the dataset in MetaX
         try:
             log.info("Trying to update package to MetaX having preferred identifier: %s", data_dict['preferred_identifier'])
-            metax_api.replace_dataset(metax_id, convert_to_metax_dict(data_dict))
+            metax_api.replace_dataset(metax_id, convert_to_metax_dict(data_dict, metax_id))
             log.info("Updated package to MetaX having MetaX ID: %s", metax_id)
         except HTTPError:
             log.error("Failed to update package to MetaX for a package having package ID: %s and MetaX ID: %s",
@@ -156,7 +156,7 @@ def _get_metax_id_from_ckan_db(package_id):
     return model.Session.query(model.Package) \
                         .filter(model.Package.id == package_id) \
                         .first() \
-                        .value('name')
+                        .name
 
 
 def _get_data_dict_for_ckan_db(package_id, metax_id):

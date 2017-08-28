@@ -21,7 +21,7 @@ def convert_language(language):
             return ''
 
 
-def convert_to_metax_dict(data_dict):
+def convert_to_metax_dict(data_dict, metax_id=None):
     '''
     :param data_dict: contains data that has come from harvester, mapped and refined
                         and about to be sent to metax
@@ -32,6 +32,9 @@ def convert_to_metax_dict(data_dict):
     log = logging.getLogger(__name__)
 
     catalog_id = data_dict.pop('data_catalog')
+
+    if metax_id:
+        data_dict['urn_identifier'] =  metax_id
     try:
         # Do json dumps - loads routine to get rid of problematic character encodings
         return json.loads(json.dumps({'research_dataset': data_dict, 'data_catalog': catalog_id}, ensure_ascii=True))
