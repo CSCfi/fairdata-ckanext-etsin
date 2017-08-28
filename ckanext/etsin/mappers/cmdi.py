@@ -83,10 +83,9 @@ def cmdi_mapper(context, data_dict):
 
     package_dict = data_dict['package_dict']
 
-    xml_string = context.pop('xml')
-    xml = etree.fromstring(xml_string)
+    xml = context.pop('xml')
     metax_dict = CmdiMetaxMapper.map(xml)
-    package_dict['metax_dict'] = metax_dict
+    package_dict.update(metax_dict)
 
     # Store reference to the lxml object for refiners' use
     context['lxml'] = xml
