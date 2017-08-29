@@ -7,6 +7,7 @@ from iso639 import languages
 import logging
 log = logging.getLogger(__name__)
 
+
 # Overwrites ckanext-spatial's get_package_dict
 def iso_19139_mapper(context, data_dict):
     # Start with an empty slate
@@ -31,13 +32,6 @@ def iso_19139_mapper(context, data_dict):
         package_dict['description'] = [{'fi': data_dict.get('iso_values').get('abstract')}]
     except KeyError:
         package_dict['description'] = ''
-
-    # These three below are here just because on 24.8.2017 metax wants to have these
-    # but these will most probably not be compulsory when time passes so remove these
-    # or modify accordingly when the time has come
-    package_dict['version_notes'] = ["THIS SHOULD NOT BE COMPULSORY"]
-    package_dict['total_byte_size'] = 123
-    package_dict['ready_status'] = "Finished"
 
     try:
         # Harvest source only ever has one title, so no need to bother with language codes.
