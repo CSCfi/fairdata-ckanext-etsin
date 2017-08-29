@@ -55,7 +55,6 @@ def replace_dataset(metax_id, dataset_json):
         log.debug('Failed to replace dataset {id}: \ndataset={dataset}, \nerror={error}, \njson={json}'.format(
             dataset=dataset_json, id=metax_id, error=repr(e), json=json_or_empty(r)))
         raise
-    log.debug('Replaced dataset {id}'.format(id=metax_id))
 
 
 def delete_dataset(metax_id):
@@ -68,9 +67,6 @@ def delete_dataset(metax_id):
         log.debug('Failed to delete dataset {id}: \nerror={error}, \njson={json}'.format(
             id=metax_id, error=repr(e), json=json_or_empty(r)))
         raise
-    log.debug('Deleted dataset {id}, response: ({code}) {json}'.format(
-        id=metax_id, code=r.status_code, json=json_or_empty(r)))
-    r.raise_for_status()
 
 
 def check_dataset_exists(preferred_id):
@@ -86,6 +82,6 @@ def check_dataset_exists(preferred_id):
         log.debug('Failed to check dataset {id} existance in metax: error={error}, json={json}'.format(
             id=preferred_id, error=repr(e), json=json_or_empty(r)))
         raise
-    log.debug('Checked dataset existance: ({code}) {json}'.format(
+    log.debug('Checked dataset existence: ({code}) {json}'.format(
         code=r.status_code, json=r.json()))
     return r.json()
