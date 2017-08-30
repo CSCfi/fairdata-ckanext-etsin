@@ -5,6 +5,15 @@ import logging
 import requests.exceptions
 log = logging.getLogger(__name__)
 
+
+def get_data_catalog_id(harvest_source_config):
+    if harvest_source_config and harvest_source_config.get('data_catalog_json_file', False):
+        data_catalog_json_file = harvest_source_config.get('data_catalog_json_file')
+        catalog_service = DataCatalogMetaxAPIService()
+        return catalog_service.create_or_update_data_catalogs(True, data_catalog_json_file)
+    return None
+
+
 class DataCatalogMetaxAPIService:
     '''
         This class can be used either from command line or CKAN extension.
@@ -18,15 +27,16 @@ class DataCatalogMetaxAPIService:
     METAX_DATA_CATALOG_API_PUT_URL = 'https://metax-test.csc.fi/rest/datacatalogs' + "/{id}"
     METAX_DATA_CATALOG_API_EXISTS_URL = METAX_DATA_CATALOG_API_POST_URL + "/{id}/exists"
 
-    def create_or_update_data_catalogs(self, update_if_exists, input_file_path):
+    def create_or_update_data_catalogs(self, update_if_exists, data_catalog_json_file):
         '''
         Return data catalog identifier
         '''
 
         try:
-            catalog = self._get_data_catalogs_from_file(input_file_path)
+            file_path = os.path.dirname(os.path.realpath(__file__)) + '/resources/' + data_catalog_json_file
+            catalog = self._get_data_catalogs_from_file(file_path)
         except IOError:
-            log.error("No data catalog file found in path " + input_file_path)
+            log.error("No data catalog file found in path " + file_path)
             raise
 
         c_identifier = catalog['catalog_json']['identifier']
@@ -75,8 +85,8 @@ class DataCatalogMetaxAPIService:
         response.raise_for_status()
         return response.text
 
-    def _get_data_catalogs_from_file(self, input_file_path):
-        with open(os.path.dirname(os.path.realpath(__file__)) + '/' + input_file_path, 'r') as f:
+    def _get_data_catalogs_from_file(self, data_catalog_file_path):
+        with open(data_catalog_file_path, 'r') as f:
             return json.load(f)
 
 def main():
