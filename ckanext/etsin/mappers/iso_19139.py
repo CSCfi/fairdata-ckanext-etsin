@@ -4,9 +4,9 @@ Map ISO 19139 dicts to Metax values
 
 from iso639 import languages
 
-# For development use
 import logging
 log = logging.getLogger(__name__)
+
 
 # Overwrites ckanext-spatial's get_package_dict
 def iso_19139_mapper(context, data_dict):
@@ -19,9 +19,19 @@ def iso_19139_mapper(context, data_dict):
     # Obligatory in API but not in Metax data model
     try:
         # Use whatever id harvest source gives us
-        package_dict['preferred_identifier'] = data_dict['iso_values']['guid']
+        package_dict['preferred_identifier'] = data_dict['harvest_object'].guid
     except KeyError:
         package_dict['preferred_identifier'] = ''
+
+    try:
+        package_dict['modified'] = data_dict['iso_values']['date-updated']
+    except KeyError:
+        package_dict['modified'] = ''
+
+    try:
+        package_dict['description'] = [{'fi': data_dict.get('iso_values').get('abstract')}]
+    except KeyError:
+        package_dict['description'] = ''
 
     try:
         # Harvest source only ever has one title, so no need to bother with language codes.
@@ -30,7 +40,8 @@ def iso_19139_mapper(context, data_dict):
         package_dict['title'] = [{'default': ''}]
 
     # Find creators, if any
-    package_dict['creator'] = []
+    # package_dict['creator'] = []
+    package_dict['creator'] = [{'name': 'TEST'}]
     try:
         creators = (org for org in data_dict['iso_values']['responsible-organisation'] if 'author' in org['role'])
         for org in creators:
@@ -39,7 +50,8 @@ def iso_19139_mapper(context, data_dict):
         pass
 
     # Find curators, if any
-    package_dict['curator'] = []
+    # package_dict['curator'] = []
+    package_dict['curator'] = [{'name': 'TEST'}]
     try:
         curators = (org for org in data_dict['iso_values']['responsible-organisation'] if 'owner' in org['role'])
         for org in curators:
@@ -61,4 +73,4 @@ def _get_language_identifier(lang):
     if not isinstance(lang, basestring):
         lang = 'und'
 
-    return 'http://www.lexvo.org/id/iso639-3/' + lang
+    return 'http://lexvo.org/id/iso639-3/' + lang
