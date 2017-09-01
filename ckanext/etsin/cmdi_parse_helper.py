@@ -1,6 +1,8 @@
 from functionally import first
 from pylons import config
-import ckanext.etsin.utils as utils
+
+from .utils import convert_language
+
 
 class CmdiParseException(Exception):
     """ Reader exception is thrown on unexpected data or error. """
@@ -127,7 +129,7 @@ class CmdiParseHelper:
         """
         description_list = []
         for desc in self.xml.xpath("//cmd:identificationInfo/cmd:description", namespaces=CmdiParseHelper.namespaces):
-            lang = utils.convert_language(
+            lang = convert_language(
                 desc.get('{http://www.w3.org/XML/1998/namespace}lang', 'undefined').strip())
             description_list.append({lang: unicode(desc.text).strip()})
         return description_list
@@ -139,7 +141,7 @@ class CmdiParseHelper:
         """
         title_list = []
         for title in self.xml.xpath('//cmd:identificationInfo/cmd:resourceName', namespaces=CmdiParseHelper.namespaces):
-            lang = utils.convert_language(
+            lang = convert_language(
                 title.get('{http://www.w3.org/XML/1998/namespace}lang', 'undefined').strip())
             title_list.append({lang: title.text.strip()})
         return title_list
@@ -168,7 +170,8 @@ class CmdiParseHelper:
 
     def parse_creators(self):
         """ Get a list of the creators (people or organizations) as agents. """
-        # iprHolderPerson and iprHolderOrganization are mapped as both creators and owners
+        # iprHolderPerson and iprHolderOrganization are mapped as both creators
+        # and owners
         return self.parse_owners()
 
     def parse_owners(self):
@@ -179,7 +182,7 @@ class CmdiParseHelper:
             self.resource_info, "//cmd:distributionInfo/cmd:iprHolderOrganization")
         return [
             self._get_person_as_agent(person) for person in creator_persons
-        ]+[
+        ] + [
             self._get_organization_as_agent(organization) for organization in creator_organizations
         ]
 
@@ -192,7 +195,7 @@ class CmdiParseHelper:
         return [
             self._get_person_as_agent(person)
             for person in contact_persons
-        ]+[
+        ] + [
             self._get_organization_as_agent(organization)
             for organization in contact_orgs
         ]
