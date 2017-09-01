@@ -62,13 +62,13 @@ class CmdiMetaxMapper:
                 "distributor": distributor,
                 "modified": modified,
                 "title": title_list,
-                "files": ["todo"],
+#                "files": [""],
                 "curator": curators,
-                "ready_status": "todo",
-                "urn_identifier": "todo",
+#                "ready_status": "",
+#                "urn_identifier": "",
                 "total_byte_size": 0,
                 "description": description_list,
-                "version_notes": ["todo"],
+#                "version_notes": [""],
                 "language": language_list,
                 "provenance": [{
                     "temporal": [{
