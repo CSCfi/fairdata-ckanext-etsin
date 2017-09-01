@@ -22,6 +22,7 @@ class TestCmdiMapper(TestCase):
         assert 'preferred_identifier' in self.metax_dict['research_dataset']
 
     # Test language
+
     def testLanguage(self):
         import pprint
         pprint.pprint(self.metax_dict)
@@ -31,6 +32,14 @@ class TestCmdiMapper(TestCase):
         } in self.metax_dict['research_dataset']['language']
 
     # Test title
+
+    def testTitle(self):
+        assert {
+            'fin': u'Mikael Agricolan teosten morfosyntaktinen tietokanta',
+        } in self.metax_dict['research_dataset']['title']        
+        assert {
+            'eng': u'The Morpho-Syntactic Database of Mikael Agricola\'s Works',
+        } in self.metax_dict['research_dataset']['title']        
 
     # Test creators
 
