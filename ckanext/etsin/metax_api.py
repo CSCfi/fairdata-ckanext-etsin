@@ -12,13 +12,13 @@ log = logging.getLogger(__name__)
 # requests_log.propagate = True
 
 
-def json_or_empty(request):
-    request_json = ""
+def json_or_empty(response):
+    response_json = ""
     try:
-        request_json = request.json()
+        response_json = response.json()
     except:
         pass
-    return request_json
+    return response_json
 
 
 def create_dataset(dataset_json):

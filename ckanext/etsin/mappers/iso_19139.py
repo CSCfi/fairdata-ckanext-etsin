@@ -29,7 +29,7 @@ def iso_19139_mapper(context, data_dict):
         package_dict['modified'] = ''
 
     try:
-        package_dict['description'] = [{'fi': data_dict.get('iso_values').get('abstract')}]
+        package_dict['description'] = [{'fi': data_dict['iso_values']['abstract']}]
     except KeyError:
         package_dict['description'] = ''
 
@@ -40,8 +40,8 @@ def iso_19139_mapper(context, data_dict):
         package_dict['title'] = [{'default': ''}]
 
     # Find creators, if any
-    # package_dict['creator'] = []
-    package_dict['creator'] = [{'name': 'TEST'}]
+    package_dict['creator'] = []
+    # package_dict['creator'] = [{'name': 'TEST'}]
     try:
         creators = (org for org in data_dict['iso_values']['responsible-organisation'] if 'author' in org['role'])
         for org in creators:
@@ -50,8 +50,8 @@ def iso_19139_mapper(context, data_dict):
         pass
 
     # Find curators, if any
-    # package_dict['curator'] = []
-    package_dict['curator'] = [{'name': 'TEST'}]
+    package_dict['curator'] = []
+    # package_dict['curator'] = [{'name': 'TEST'}]
     try:
         curators = (org for org in data_dict['iso_values']['responsible-organisation'] if 'owner' in org['role'])
         for org in curators:
