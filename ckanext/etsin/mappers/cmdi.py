@@ -5,6 +5,8 @@ from lxml import etree
 from ckanext.etsin.cmdi_parse_helper import CmdiParseHelper
 from ckanext.etsin.cmdi_parse_helper import CmdiParseException
 
+from ..utils import get_language_identifier, convert_language
+
 # For development use
 import logging
 log = logging.getLogger(__name__)
@@ -26,7 +28,9 @@ class CmdiMetaxMapper:
         preferred_identifier = None
 
         languages = cmdi.parse_languages()
-        language_list = [{'title': lang, 'identifier': 'todo'}
+        language_list = [{'title': lang,
+                          'identifier': get_language_identifier(
+                              convert_language(lang))}
                          for lang in languages]
 
         description_list = cmdi.parse_descriptions()
@@ -42,8 +46,8 @@ class CmdiMetaxMapper:
                 temporal_coverage_begin = split[0]
                 temporal_coverage_end = split[1]
 
-        creators = cmdi.parse_creators() # creators == owners
-        owners = cmdi.parse_owners() # owners implemented but not saved to dict
+        creators = cmdi.parse_creators()  # creators == owners
+        owners = cmdi.parse_owners()  # implemented but not saved to dict
         distributor = cmdi.parse_distributor()
         curators = cmdi.parse_curators()
 

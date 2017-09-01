@@ -22,7 +22,7 @@ class TestMappersISO19139(TestCase):
         assert {'name': 'tekija2'} not in dict['curator']
         assert {'name': 'omistaja'} in dict['curator']
         assert {'name': 'jotainmuuta'} not in dict['curator']
-        eq_(dict['language'], [{'identifier':'http://www.lexvo.org/id/iso639-3/fin'}])
+        eq_(dict['language'], [{'identifier':'http://lexvo.org/id/iso639-3/fin'}])
 
 
     def testObligatoryFieldsMissing(self):
@@ -32,7 +32,7 @@ class TestMappersISO19139(TestCase):
         eq_(dict['title'], [{'default': ''}])
         eq_(dict['creator'], [])
         eq_(dict['curator'], [])
-        eq_(dict['language'], [{'identifier':'http://www.lexvo.org/id/iso639-3/und'}])
+        eq_(dict['language'], [{'identifier':'http://lexvo.org/id/iso639-3/und'}])
 
 
 def _testdict():

@@ -2,12 +2,12 @@ from ckanext.etsin.mappers.cmdi import cmdi_mapper
 import unittest
 from unittest import TestCase
 from nose.tools import ok_, eq_
-import helpers
+from .helpers import _get_file_as_string
 
 
 class TestCmdiMapper(TestCase):
     source = {}
-    source['xml'] = helpers._get_file_as_string(
+    source['xml'] = _get_file_as_string(
         'kielipankki_cmdi/cmdi_record_example.xml')
     data_dict = {'package_dict': {}}
     metax_dict = cmdi_mapper(source, data_dict)['metax_dict']
@@ -20,6 +20,15 @@ class TestCmdiMapper(TestCase):
     # Note that the identifier will be assigned by refiner, not mapper
     def testPreferredIdentifier(self):
         assert 'preferred_identifier' in self.metax_dict['research_dataset']
+
+    # Test language
+    def testLanguage(self):
+        import pprint
+        pprint.pprint(self.metax_dict)
+        assert {
+            'identifier': 'http://lexvo.org/id/iso639-3/fin',
+            'title': u'fi',
+        } in self.metax_dict['research_dataset']['language']
 
     # Test title
 
@@ -78,8 +87,6 @@ class TestCmdiMapper(TestCase):
             'name': u'University of Turku',
             'phone': '',
         } in self.metax_dict['research_dataset']['curator']
-
-    # Test language
 
 
 if __name__ == '__main__':

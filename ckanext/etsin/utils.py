@@ -18,3 +18,10 @@ def convert_language(language):
             return lang_object.terminology
         except KeyError as ke:
             return ''
+
+
+def get_language_identifier(lang):
+    if not isinstance(lang, basestring):
+        lang = 'und'
+
+    return 'http://lexvo.org/id/iso639-3/' + lang
