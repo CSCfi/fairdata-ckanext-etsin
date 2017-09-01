@@ -2,25 +2,25 @@
 import ckanext.etsin.metax_api as api
 import unittest
 from unittest import TestCase
-from requests.exceptions import HTTPError
 
 from mock import Mock, patch
 from nose.tools import ok_, eq_
 
 
 class TestMetaxAPI(TestCase):
+
     def testCreateDatasetSuccess(self):
         ''' Test that create_dataset returns identifier on successful get request '''
         with patch('requests.post') as mock_post:
             mock_post.return_value = Mock()
-            mock_post.return_value.json.return_value = {
-                'research_dataset': {'urn_identifier': '123'}}
+            mock_post.return_value.text = '{"research_dataset": {"urn_identifier": "123"}}'
+            mock_post.return_value.json.return_value = {'research_dataset': {'urn_identifier': '123'}}
             id = api.create_dataset({})
             ok_(mock_post.called)
             ok_(mock_post.return_value.raise_for_status.called)
             eq_(id, '123')
 
-    def testReplaceDataset(self):
+    def testReplaceDatasetSuccess(self):
         ''' Test that replace_dataset does a put request and checks for http errors '''
         with patch('requests.put') as mock_put:
             mock_put.return_value = Mock()
@@ -28,7 +28,7 @@ class TestMetaxAPI(TestCase):
             ok_(mock_put.called)
             ok_(mock_put.return_value.raise_for_status.called)
 
-    def testDeleteDataset(self):
+    def testDeleteDatasetSuccess(self):
         ''' Test that delete_dataset does a delete request and checks for http errors '''
         with patch('requests.delete') as mock_delete:
             mock_delete.return_value = Mock()
