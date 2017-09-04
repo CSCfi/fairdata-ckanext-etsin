@@ -5,6 +5,8 @@ from lxml import etree
 from ckanext.etsin.cmdi_parse_helper import CmdiParseHelper
 from ckanext.etsin.cmdi_parse_helper import CmdiParseException
 
+from ..utils import get_language_identifier, convert_language
+
 # For development use
 import logging
 log = logging.getLogger(__name__)
@@ -22,8 +24,13 @@ class CmdiMetaxMapper:
         """
         cmdi = CmdiParseHelper(xml)
 
+        # Preferred identifier will be added in refinement
+        preferred_identifier = None
+
         languages = cmdi.parse_languages()
-        language_list = [{'title': lang, 'identifier': 'todo'}
+        language_list = [{'title': lang,
+                          'identifier': get_language_identifier(
+                              convert_language(lang))}
                          for lang in languages]
 
         description_list = cmdi.parse_descriptions()
@@ -39,9 +46,9 @@ class CmdiMetaxMapper:
                 temporal_coverage_begin = split[0]
                 temporal_coverage_end = split[1]
 
-        creators = cmdi.parse_creators()
+        creators = cmdi.parse_creators()  # creators == owners
+        owners = cmdi.parse_owners()  # implemented but not saved to dict
         distributor = cmdi.parse_distributor()
-        owners = cmdi.parse_owners()
         curators = cmdi.parse_curators()
 
         metax_dict = {
@@ -50,17 +57,14 @@ class CmdiMetaxMapper:
             # TODO: "etsin" or such (doesn't exist yet in metax)
             "dataset_catalog": "1",
             "research_dataset": {
+                "preferred_identifier": preferred_identifier,
                 "creator": creators,
                 "distributor": distributor,
                 "modified": modified,
                 "title": title_list,
-                "files": ["todo"],
                 "curator": curators,
-                "ready_status": "todo",
-                "urn_identifier": "todo",
                 "total_byte_size": 0,
                 "description": description_list,
-                "version_notes": ["todo"],
                 "language": language_list,
                 "provenance": [{
                     "temporal": [{
