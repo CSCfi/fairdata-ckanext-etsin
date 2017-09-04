@@ -76,9 +76,9 @@ def kielipankki_refiner(context, data_dict):
     """
 
     package_dict = data_dict
+    xml = context.get('xml')
 
     # Read lxml object passed in from CMDI mapper
-    xml = context['lxml']
     cmdi = CmdiParseHelper(xml)
 
     license_identifier = KielipankkiRefiner._language_bank_license_enhancement(

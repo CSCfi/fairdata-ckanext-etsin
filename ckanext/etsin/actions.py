@@ -37,11 +37,12 @@ def package_create(context, data_dict):
     if user.name == "harvest":
         # Get the package_id for the dict. Corresponds to harvest_object's guid
         package_id = data_dict.pop('id')
-        pref_id = data_dict['preferred_identifier']
 
         # Refine data_dict based on organization it belongs to
-        # Enable refine method when it has been properly implemented
-        #data_dict = refine(context, data_dict)
+        data_dict = refine(context, data_dict)
+
+        pref_id = data_dict['preferred_identifier']
+        log.info(data_dict)
 
         # Create the dataset in MetaX
         try:
@@ -83,8 +84,7 @@ def package_update(context, data_dict):
         package_id = data_dict.pop('id')
 
         # Refine data_dict based on organization it belongs to
-        # Enable refine method when it has been properly implemented
-        #data_dict = refine(data_dict)
+        data_dict = refine(context, data_dict)
 
         # Get metax_id from ckan database
         metax_id = _get_metax_id_from_ckan_db(package_id)

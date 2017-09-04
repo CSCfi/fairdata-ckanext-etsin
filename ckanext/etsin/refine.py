@@ -19,6 +19,7 @@ def refine(context, data_dict):
     # TODO: This assignment probably doesn't work, because organization is a CKAN object and not a string.
     # What's actually needed is the name of the organization. Fix this when actually implementing.
     organization = data_dict['organization']
+    #organization = 'kielipankki'
 
     if organization == "kielipankki":
         data_dict = kielipankki.kielipankki_refiner(context, data_dict)
@@ -26,6 +27,7 @@ def refine(context, data_dict):
         data_dict = syke.syke_refiner(context, data_dict)
     else:
         # TODO: Throw error
-        return False
+        #return False
+        pass # For testing
 
     return data_dict

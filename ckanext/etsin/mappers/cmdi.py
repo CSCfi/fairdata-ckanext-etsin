@@ -50,10 +50,6 @@ class CmdiMetaxMapper:
         curators = cmdi.parse_curators()
 
         metax_dict = {
-            # TODO: "etsin" or such (doesn't exist yet in metax)
-            "contract": "1",
-            # TODO: "etsin" or such (doesn't exist yet in metax)
-            "dataset_catalog": "1",
             "research_dataset": {
                 "preferred_identifier": preferred_identifier,
                 "creator": creators,
