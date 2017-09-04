@@ -1,0 +1,79 @@
+{
+  "catalog_json": {
+    "title": [
+      {"fi": "SYKE Metatietopalvelu"},
+      {"en": "SYKE Metadata portal"}
+    ],
+    "harvested": true,
+    "language": [
+      {
+        "identifier": "http://lexvo.org/id/iso639-3/fin",
+        "notation": "fin"
+      },
+      {
+        "identifier": "http://lexvo.org/id/iso639-3/eng",
+        "notation": "eng"
+      }
+    ],
+    "homepage": [
+      {
+        "identifier": "http://metatieto.ymparisto.fi/geoportal/",
+        "title": [
+          {"en": "SYKE Metadata portal"},
+          {"fi": "SYKE Metatietopalvelu"}
+        ]
+      },
+      {
+        "identifier": "http://www.syke.fi/fi-FI/Avoin_tieto/Avoimet_rajapinnat",
+        "title": [
+          {"en": "SYKE Open APIs"},
+          {"fi": "SYKE Avoimet rajapinnat"}
+        ]
+      }
+    ],
+    "publisher": [{
+      "identifier": "http://isni.org/isni/0000000110191419",
+      "name": [
+        {"fi": "Suomen ympäristökeskus"},
+        {"en": "Finnish Environment Insitute"}
+      ],
+      "homepage": [{
+        "identifier": "http://www.syke.fi/",
+        "title": [
+          {"fi": "Suomen ympäristökeskus"},
+          {"en": "Finnish Environment Institute"}
+        ]
+      }]
+    }],
+    "rights": {
+      "description": [
+        {"fi": "Joihinkin SYKEn jakamiin aineistoihin sovelletaan eri käyttöehtoja. Avoimen tietoaineiston käyttöluvasta poikkeavat käyttöehdot on kuvattu kunkin järjestelmän ja rajapinnan yhteydessä ja aineistojen metatiedoissa. SYKE pyrkii tarjoamaan palvelussa virheetöntä tietoa keskeytyksettä. Käyttäjä käyttää palvelua ja sen sisältämiä tietoja omalla vastuullaan eikä SYKE vastaa mistään välittömistä tai välillisistä vahingoista, jotka aiheutuvat esimerkiksi palvelun tai sen sisältämän aineiston virheistä, puutteista, aineiston käyttämisestä, kolmannen osapuolen vaatimuksista, toimintakatkoksista, aineiston sisällön muuttamisesta tai järjestelmän ylläpidon lopettamisesta tai siitä, että palvelu ei toimi tai että se ei sovi tiettyyn tarkoitukseen."}
+      ],
+      "type": [
+        {
+          "identifier": "http://purl.org/att/reference_data/access_type/access_type_open_access",
+          "pref_label": [
+            {"fi": "Avoin"},
+            {"en": "Open"}
+          ]
+        }
+      ],
+      "license": [{
+        "identifier": "https://creativecommons.org/licenses/by/4.0/",
+        "title": [
+          {"en": "Attribution - CC BY 4.0"},
+          {"fi": "Nimeä - CC BY 4.0"}
+        ]
+      }]
+    },
+    "field_of_science": [
+      {
+        "identifier": "http://www.yso.fi/onto/okm-tieteenala/ta1172",
+        "pref_label": {
+          "fi": "Ympäristötiede",
+          "en": "Environmental sciences"
+        }
+      }
+    ]
+  }
+}
