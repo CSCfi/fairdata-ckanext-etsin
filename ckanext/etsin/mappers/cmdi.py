@@ -1,9 +1,7 @@
 '''
 Map CMDI based dicts to Metax values
 '''
-from lxml import etree
 from ckanext.etsin.cmdi_parse_helper import CmdiParseHelper
-from ckanext.etsin.cmdi_parse_helper import CmdiParseException
 
 # For development use
 import logging
@@ -82,12 +80,7 @@ def cmdi_mapper(context, data_dict):
     """ Maps a CMDI record in xml format into a MetaX format dict. """
 
     package_dict = data_dict['package_dict']
-
     xml = context.pop('xml')
     metax_dict = CmdiMetaxMapper.map(xml)
     package_dict.update(metax_dict)
-
-    # Store reference to the lxml object for refiners' use
-    context['lxml'] = xml
-
     return package_dict

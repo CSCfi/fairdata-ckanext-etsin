@@ -106,6 +106,9 @@ class CmdiParseHelper:
         :param organization: dictionary produced by the _get_organizations method
         :return: dictionary in the MetaX agent format
         """
+        if not organization:
+            return {}
+
         return {
             "identifier": "todo",
             "name": organization['name'],
