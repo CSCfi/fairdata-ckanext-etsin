@@ -1,9 +1,12 @@
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
-import ckanext.etsin.mappers as mappers
+from ckanext.etsin.mappers import iso_19139
 
 from ckanext.etsin import actions
 from ckanext.spatial.interfaces import ISpatialHarvester
+
+import logging
+log = logging.getLogger(__name__)
 
 class EtsinPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IActions)
@@ -47,5 +50,9 @@ class EtsinPlugin(plugins.SingletonPlugin):
     # ISpatialHarvester
 
     def get_package_dict(self, context, data_dict):
-        return mappers.iso_19139_mapper(context, data_dict)
+        return iso_19139.iso_19139_mapper(context, data_dict)
+
+    # This needs to be here - otherwise ckanext-spatial fails silently
+    def get_validators(self):
+        return []
 
