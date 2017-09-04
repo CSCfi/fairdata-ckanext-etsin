@@ -61,7 +61,6 @@ class CmdiMetaxMapper:
                 "modified": modified,
                 "title": title_list,
                 "curator": curators,
-                "total_byte_size": 0,
                 "description": description_list,
                 "language": language_list,
                 "provenance": [{
@@ -80,11 +79,6 @@ class CmdiMetaxMapper:
         return metax_dict
 
 
-def cmdi_mapper(context, data_dict):
+def cmdi_mapper(xml):
     """ Maps a CMDI record in xml format into a MetaX format dict. """
-
-    package_dict = data_dict['package_dict']
-    xml = context.pop('xml')
-    metax_dict = CmdiMetaxMapper.map(xml)
-    package_dict.update(metax_dict)
-    return package_dict
+    return CmdiMetaxMapper.map(xml)
