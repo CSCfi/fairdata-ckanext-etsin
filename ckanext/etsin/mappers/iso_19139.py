@@ -3,6 +3,7 @@ Map ISO 19139 dicts to Metax values
 '''
 
 from iso639 import languages
+from ..utils import get_language_identifier
 
 import logging
 log = logging.getLogger(__name__)
@@ -64,13 +65,6 @@ def iso_19139_mapper(context, data_dict):
         lang = languages.get(part3=data_dict['iso_values']['metadata-language']).part3
     except:
         lang = 'und'
-    package_dict['language'] = [{'identifier': _get_language_identifier(lang)}]
+    package_dict['language'] = [{'identifier': get_language_identifier(lang)}]
 
     return package_dict
-
-
-def _get_language_identifier(lang):
-    if not isinstance(lang, basestring):
-        lang = 'und'
-
-    return 'http://lexvo.org/id/iso639-3/' + lang

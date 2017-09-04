@@ -20,7 +20,12 @@ def convert_language(language):
         except KeyError as ke:
             return ''
 
+def get_language_identifier(lang):
+    if not isinstance(lang, basestring):
+        lang = 'und'
 
+    return 'http://lexvo.org/id/iso639-3/' + lang
+  
 def convert_to_metax_dict(data_dict, metax_id=None):
     '''
     :param data_dict: contains data that has come from harvester, mapped and refined
