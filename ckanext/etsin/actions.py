@@ -41,16 +41,20 @@ def package_create(context, data_dict):
         # Refine data_dict based on organization it belongs to
         data_dict = refine(context, data_dict)
 
-        pref_id = data_dict['preferred_identifier']
+        pref_id = data_dict.get('preferred_identifier', None)
         log.info(data_dict)
 
         # Create the dataset in MetaX
-        try:
-            log.info("Trying to create package to MetaX having preferred_identifier: %s", pref_id)
-            metax_id = metax_api.create_dataset(convert_to_metax_dict(data_dict))
-            log.info("Created package to MetaX successfully. MetaX ID: %s", metax_id)
-        except HTTPError:
-            log.error("Failed to create package to MetaX for a package having package ID: %s and preferred_identifier: %s", package_id, pref_id)
+        if pref_id:
+            try:
+                log.info("Trying to create package to MetaX having preferred_identifier: %s", pref_id)
+                metax_id = metax_api.create_dataset(convert_to_metax_dict(data_dict))
+                log.info("Created package to MetaX successfully. MetaX ID: %s", metax_id)
+            except HTTPError:
+                log.error("Failed to create package to MetaX for a package having package ID: %s and preferred_identifier: %s", package_id, pref_id)
+                return False
+        else:
+            log.error("Package does not have a preferred identifier. Skipping.")
             return False
 
         # Get data_dict for storing to CKAN db
