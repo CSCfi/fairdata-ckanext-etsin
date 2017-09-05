@@ -32,7 +32,9 @@ def package_create(context, data_dict):
 
     :returns: package dictionary that was saved to CKAN db.
     """
+
     user = model.User.get(context['user'])
+    return_id_only = context.get('return_id_only', False)
 
     if user.name == "harvest":
         # Get the package_id for the dict. Corresponds to harvest_object's guid
@@ -41,9 +43,9 @@ def package_create(context, data_dict):
         # Refine data_dict based on organization it belongs to
         data_dict = refine(context, data_dict)
 
-        pref_id = data_dict.get('preferred_identifier', None)
         log.info(data_dict)
 
+        pref_id = data_dict.get('preferred_identifier', None)
         # Create the dataset in MetaX
         if pref_id:
             try:
@@ -57,20 +59,18 @@ def package_create(context, data_dict):
             log.error("Package does not have a preferred identifier. Skipping.")
             return False
 
-        # Get data_dict for storing to CKAN db
-        package_dict = _get_data_dict_for_ckan_db(package_id, metax_id)
-        context['schema'] = package_schema
-
         # Create the package in our CKAN database
+        context['schema'] = package_schema
         log.info("Trying to Create package to CKAN database with id: %s and name: %s", package_id, metax_id)
-        package_dict = ckan.logic.action.create.package_create(context, package_dict)
+        package_dict = ckan.logic.action.create.package_create(context, _get_data_dict_for_ckan_db(package_id, metax_id))
         log.info("Created package to CKAN database successfully with id: %s and name: %s", package_id, metax_id)
 
         # TODO: Do we need to index the package?
     else:
         package_dict = ckan.logic.action.create.package_create(context, data_dict)
 
-    return package_dict
+    output = package_dict['id'] if return_id_only else package_dict
+    return output
 
 
 def package_update(context, data_dict):
@@ -82,6 +82,7 @@ def package_update(context, data_dict):
     """
 
     user = model.User.get(context['user'])
+    return_id_only = context.get('return_id_only', False)
 
     if user.name == "harvest":
         # Get the package_id for the dict. Corresponds to harvest_object's guid
@@ -89,6 +90,8 @@ def package_update(context, data_dict):
 
         # Refine data_dict based on organization it belongs to
         data_dict = refine(context, data_dict)
+
+        log.info(data_dict)
 
         # Get metax_id from ckan database
         metax_id = _get_metax_id_from_ckan_db(package_id)
@@ -103,20 +106,18 @@ def package_update(context, data_dict):
                       package_id, metax_id)
             return False
 
-        # Get data_dict for storing to CKAN db
-        package_dict = _get_data_dict_for_ckan_db(package_id, metax_id)
-        context['schema'] = package_schema
-
         # Update the package in our CKAN database
+        context['schema'] = package_schema
         log.info("Trying to update package to CKAN database with id: %s and name: %s", package_id, metax_id)
-        package_dict = ckan.logic.action.update.package_update(context, package_dict)
+        package_dict = ckan.logic.action.update.package_update(context, _get_data_dict_for_ckan_db(package_id, metax_id))
         log.info("Updated package to CKAN database successfully with id: %s and name: %s", package_id, metax_id)
 
         # TODO: Do we need to index the package?
     else:
         package_dict = ckan.logic.action.update.package_update(context, data_dict)
 
-    return package_dict
+    output = package_dict['id'] if return_id_only else package_dict
+    return output
 
 
 def package_delete(context, data_dict):
@@ -128,7 +129,7 @@ def package_delete(context, data_dict):
     """
 
     user = model.User.get(context['user'])
-    pref_id = data_dict['preferred_identifier']
+    return_id_only = context.get('return_id_only', False)
 
     if user.name == "harvest":
         # Get the package_id for the dict. Corresponds to harvest_object's guid
@@ -155,7 +156,8 @@ def package_delete(context, data_dict):
     else:
         package_dict = ckan.logic.action.delete.package_delete(context, data_dict)
 
-    return package_dict
+    output = package_dict['id'] if return_id_only else package_dict
+    return output
 
 
 def _get_metax_id_from_ckan_db(package_id):
