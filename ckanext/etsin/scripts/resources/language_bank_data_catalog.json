@@ -1,33 +1,43 @@
 {
   "catalog_json": {
-    "language": [{
-      "identifier": "http://lexvo.org/id/iso639-3/eng"
-    },
-    {
-      "identifier": "http://lexvo.org/id/iso639-3/fin"
-    }],
-    "publisher": {
-      "name": {
-        "fi": "FIN-CLARIN",
-        "en": "FIN-CLARIN"
-      }
-    },
     "title": [
+      {"fi": "Kielipankki Metatietopalvelu"},
+      {"en": "Kielipankki Metadata portal"}
+    ],
+    "harvested": true,
+    "language": [
       {
-        "fi": "Kielipankki-harava"
+        "identifier": "http://lexvo.org/id/iso639-3/fin",
+        "notation": "fin"
       },
       {
-        "en": "Language Bank harvester"
+        "identifier": "http://lexvo.org/id/iso639-3/eng",
+        "notation": "eng"
       }
     ],
+    "homepage": [
+      {
+        "identifier": "https://kitwiki.csc.fi/twiki/bin/view/FinCLARIN/Kielipankki_OAI-PMH",
+        "title": [
+          {"en": "Kielipankki Metadata portal"},
+          {"fi": "Kielipankki Metatietopalvelu"}
+        ]
+      }
+    ],
+    "publisher": [{
+      "identifier": "urn:nbn:fi:research-infras-201607252",
+      "name": [
+        {"fi": "FIN-CLARIN"},
+        {"en": "FIN-CLARIN"}
+      ],
+      "homepage": [{
+        "identifier": "https://kitwiki.csc.fi/twiki/bin/view/FinCLARIN/FinClarinKonsortio"
+      }]
+    }],
     "rights": {
       "license": [{
         "identifier": "https://creativecommons.org/licenses/by/4.0/"
       }]
-    },
-    "identifier": "urn:nbn:fi:metax:harvest_source:lb",
-    "homepage": {
-      "identifier": "https://kitwiki.csc.fi/twiki/bin/view/FinCLARIN/KielipankkiEtusivu"
     }
   }
 }

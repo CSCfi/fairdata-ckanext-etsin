@@ -69,10 +69,10 @@
     "field_of_science": [
       {
         "identifier": "http://www.yso.fi/onto/okm-tieteenala/ta1172",
-        "pref_label": {
+        "pref_label": [{
           "fi": "Ympäristötiede",
           "en": "Environmental sciences"
-        }
+        }]
       }
     ]
   }
