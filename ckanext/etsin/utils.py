@@ -20,7 +20,18 @@ def convert_language(language):
         except KeyError as ke:
             return ''
 
+def convert_language_to_6391(language):
+    '''
+    Convert ISO 639-2 and 639-3 language code ('fin') to ISO 639-1 ('fi'), if possible.
+    Note that not all languages are included in ISO 639-1.
+    '''
+    return languages.get(part3=language).part1
+
+
 def get_language_identifier(lang):
+    '''
+    Returns a URI representing the given ISO 639-3 encoded language
+    '''
     if not isinstance(lang, basestring):
         lang = 'und'
 
