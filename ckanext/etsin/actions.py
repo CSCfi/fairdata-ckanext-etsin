@@ -3,97 +3,171 @@ Action overrides
 '''
 
 import ckanext.etsin.metax_api as metax_api
-
 from ckanext.etsin.refine import refine
+from ckanext.etsin.utils import convert_to_metax_dict
 
-# For development use
+import ckan.model as model
+import ckan.logic.action.create
+import ckan.logic.action.update
+from ckan.lib.navl.validators import not_empty
+from ckan.logic.validators import name_validator
+
+from requests import HTTPError
+
 import logging
 log = logging.getLogger(__name__)
 
+package_schema = {
+    'id': [not_empty, unicode],
+    'name': [not_empty, unicode]
+}
+
+
 def package_create(context, data_dict):
-    '''
-    Refines data_dict. Calls Metax API to create new dataset.
-    '''
+    """
+    Refines data_dict. Calls MetaX API to create a new dataset.
+    If successful storing to Metax, store dataset to CKAN db.
+    Call the method as 'harvest' user only when harvesting datasets.
+    In other cases (e.g. creating harvest source) do NOT use 'harvest' user
 
-    # Refine data_dict based on organization it belongs to
-    data_dict = refine(data_dict)
+    :returns: package dictionary that was saved to CKAN db.
+    """
+    user = model.User.get(context['user'])
 
-    # Check with Metax if we should be creating or updating and do that
-    # TODO: We may need to catch an error here
-    data_dict = _create_or_update(data_dict)
+    if user.name == "harvest":
+        # Get the package_id for the dict. Corresponds to harvest_object's guid
+        package_id = data_dict.pop('id')
+        pref_id = data_dict['preferred_identifier']
 
-    # Strip Metax data_dict to CKAN data_dict
-    data_dict = _strip_data_dict(data_dict)
+        # Refine data_dict based on organization it belongs to
+        # Enable refine method when it has been properly implemented
+        #data_dict = refine(context, data_dict)
 
-    # Copy and paste package creation from CKAN's original package_create
+        # Create the dataset in MetaX
+        try:
+            log.info("Trying to create package to MetaX having preferred_identifier: %s", pref_id)
+            metax_id = metax_api.create_dataset(convert_to_metax_dict(data_dict))
+            log.info("Created package to MetaX successfully. MetaX ID: %s", metax_id)
+        except HTTPError:
+            log.error("Failed to create package to MetaX for a package having package ID: %s and preferred_identifier: %s", package_id, pref_id)
+            return False
 
-    return data_dict
+        # Get data_dict for storing to CKAN db
+        package_dict = _get_data_dict_for_ckan_db(package_id, metax_id)
+        context['schema'] = package_schema
 
+        # Create the package in our CKAN database
+        log.info("Trying to Create package to CKAN database with id: %s and name: %s", package_id, metax_id)
+        package_dict = ckan.logic.action.create.package_create(context, package_dict)
+        log.info("Created package to CKAN database successfully with id: %s and name: %s", package_id, metax_id)
 
-def package_delete(context, data_dict):
-    '''
-    Calls Metax API to delete a dataset.
-    '''
+        # TODO: Do we need to index the package?
+    else:
+        package_dict = ckan.logic.action.create.package_create(context, data_dict)
 
-    # TODO: Do we need to refine data_dict here? If there is any refiner that 
-    # changes package if, we need to refine here, too.
-
-    # TODO: This is the function that will be created in CSCETSIN-22
-    if metax_api.ask_metax_whether_package_exists(data_dict['id']):
-        # Metax says the package exists
-        # TODO: we may need to catch an error
-        metax_api.delete_dataset(data_dict['metax-id'])
-
-    # Copy and paste package deletion from CKAN's original package_delete
-
-    return data_dict
+    return package_dict
 
 
 def package_update(context, data_dict):
-    '''
-    Refines data_dict. Calls Metax API to update an existing dataset.
-    '''
+    """
+    Refines data_dict. Calls MetaX API to update an existing dataset.
+    If successful updating to Metax, update dataset to CKAN db.
+    Call the method as 'harvest' user only when harvesting datasets.
+    In other cases (e.g. creating harvest source) do NOT use 'harvest' user
+    """
 
-    # Refine data_dict based on organization it belongs to
-    data_dict = refine(data_dict)
+    user = model.User.get(context['user'])
 
-    # Check with Metax if we should be creating or updating and do that
-    # TODO: We may need to catch an error here
-    data_dict = _create_or_update(data_dict)
+    if user.name == "harvest":
+        # Get the package_id for the dict. Corresponds to harvest_object's guid
+        package_id = data_dict.pop('id')
 
-    # Strip Metax data_dict to CKAN data_dict
-    data_dict = _strip_data_dict(data_dict)
+        # Refine data_dict based on organization it belongs to
+        # Enable refine method when it has been properly implemented
+        #data_dict = refine(data_dict)
 
-    # Copy and paste package updating from CKAN's original package_update
+        # Get metax_id from ckan database
+        metax_id = _get_metax_id_from_ckan_db(package_id)
 
-    return data_dict
+        # Update the dataset in MetaX
+        try:
+            log.info("Trying to update package to MetaX having MetaX ID: %s", metax_id)
+            metax_api.replace_dataset(metax_id, convert_to_metax_dict(data_dict, metax_id))
+            log.info("Updated package to MetaX successfully having MetaX ID: %s", metax_id)
+        except HTTPError:
+            log.error("Failed to update package to MetaX for a package having package ID: %s and MetaX ID: %s",
+                      package_id, metax_id)
+            return False
 
+        # Get data_dict for storing to CKAN db
+        package_dict = _get_data_dict_for_ckan_db(package_id, metax_id)
+        context['schema'] = package_schema
 
-def _create_or_update(data_dict):
+        # Update the package in our CKAN database
+        log.info("Trying to update package to CKAN database with id: %s and name: %s", package_id, metax_id)
+        package_dict = ckan.logic.action.update.package_update(context, package_dict)
+        log.info("Updated package to CKAN database successfully with id: %s and name: %s", package_id, metax_id)
 
-    # Ask Metax if this dataset exists
-    # TODO: This is the function that will be created in CSCETSIN-22
-    # At this point I don't know if it returns True/False, ID or something else
-    if metax_api.ask_metax_whether_package_exists(data_dict['id']):
-        # Metax says the package exists
-        # TODO: may need to catch an error
-        id = metax_api.replace_dataset(data_dict['metax-id'], data_dict)
-
+        # TODO: Do we need to index the package?
     else:
-        # Metax says the package doesn't exist
-        # TODO: may need to catch an error
-        id = metax_api.create_dataset(data_dict)
+        package_dict = ckan.logic.action.update.package_update(context, data_dict)
 
-    data_dict['metax-id'] = id
-
-    return data_dict
+    return package_dict
 
 
-# TODO: This function should have its own file
-def _strip_data_dict(data_dict):
+def package_delete(context, data_dict):
+    """
+    Calls MetaX API to delete a dataset.
+    If successful deleting from Metax, delete dataset from CKAN db.
+    Call the method as 'harvest' user only when harvesting datasets.
+    In other cases (e.g. creating harvest source) do NOT use 'harvest' user
+    """
 
-    # Remove all fields not required in CKAN schema
-    # Metax id field is our only extra field
+    user = model.User.get(context['user'])
+    pref_id = data_dict['preferred_identifier']
 
-    return data_dict
+    if user.name == "harvest":
+        # Get the package_id for the dict. Corresponds to harvest_object's guid
+        package_id = data_dict.pop('id')
 
+        # Get metax_id from ckan database
+        metax_id = _get_metax_id_from_ckan_db(package_id)
+
+        try:
+            log.info("Trying to delete package from MetaX having MetaX ID: %s", metax_id)
+            metax_api.delete_dataset(metax_id)
+            log.info("Deleted package from MetaX successfully having MetaX ID: %s", metax_id)
+        except HTTPError:
+            log.error("Failed to delete package from MetaX for a package having package ID: %s and MetaX ID: %s",
+                  package_id, metax_id)
+            return False
+
+        package_dict = _get_data_dict_for_ckan_db(package_id, metax_id)
+        log.info("Trying to delete package from CKAN database with id: %s and name: %s", package_id, metax_id)
+        package_dict = ckan.logic.action.delete.package_delete(context, package_dict)
+        log.info("Deleted package from CKAN database successfully with id: %s and name: %s", package_id, metax_id)
+
+        # TODO: Do we need to index the package?
+    else:
+        package_dict = ckan.logic.action.delete.package_delete(context, data_dict)
+
+    return package_dict
+
+
+def _get_metax_id_from_ckan_db(package_id):
+    return model.Session.query(model.Package) \
+                        .filter(model.Package.id == package_id) \
+                        .first() \
+                        .name
+
+
+def _get_data_dict_for_ckan_db(package_id, metax_id):
+    return {
+        'id': package_id,
+        'name': metax_id
+    }
+
+
+def _dataset_exists_in_metax(data_dict):
+    dataset_id = data_dict['preferred_identifier']
+    return metax_api.check_dataset_exists(dataset_id)

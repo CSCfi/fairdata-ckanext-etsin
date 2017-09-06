@@ -1,16 +1,16 @@
 """Tests for mappers/iso_19139.py."""
 
-
 from ckanext.etsin.mappers.iso_19139 import iso_19139_mapper
 from nose.tools import eq_
 from unittest import TestCase
+from ckanext.harvest.model import HarvestObject
 
 
 class TestMappersISO19139(TestCase):
 
 
     def testObligatoryFieldsMap(self):
-        dict = iso_19139_mapper(self, {}, _testdict())
+        dict = iso_19139_mapper({}, _testdict())
 
         eq_(dict['preferred_identifier'], 'M28mitl:')
         eq_(dict['title'], [{'default': 'Testiaineisto'}])
@@ -22,23 +22,24 @@ class TestMappersISO19139(TestCase):
         assert {'name': 'tekija2'} not in dict['curator']
         assert {'name': 'omistaja'} in dict['curator']
         assert {'name': 'jotainmuuta'} not in dict['curator']
-        eq_(dict['language'], [{'identifier':'http://www.lexvo.org/id/iso639-3/fin'}])
+        eq_(dict['language'], [{'identifier':'http://lexvo.org/id/iso639-3/fin'}])
 
 
     def testObligatoryFieldsMissing(self):
-        dict = iso_19139_mapper(self, {}, {})
+        dict = iso_19139_mapper({}, {})
 
         eq_(dict['preferred_identifier'], '')
         eq_(dict['title'], [{'default': ''}])
         eq_(dict['creator'], [])
         eq_(dict['curator'], [])
-        eq_(dict['language'], [{'identifier':'http://www.lexvo.org/id/iso639-3/und'}])
+        eq_(dict['language'], [{'identifier':'http://lexvo.org/id/iso639-3/und'}])
 
 
 def _testdict():
+    ho = HarvestObject()
+    ho.guid = 'M28mitl:'
     return {
         'iso_values': {
-            'guid': 'M28mitl:', 
             'title': 'Testiaineisto',
             'responsible-organisation': [
                 {
@@ -56,8 +57,10 @@ def _testdict():
                 {
                     'organisation-name': 'muu',
                     'role': ['jotainmuuta']
-                    }, 
+                    },
                 ],
-              'metadata-language': 'fin',
-            }
-        }
+            'metadata-language': 'fin',
+            'abstract': 'kuvailuteksti'
+        },
+        'harvest_object': ho
+    }
