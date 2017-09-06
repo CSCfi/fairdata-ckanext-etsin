@@ -37,10 +37,10 @@ class TestCmdiMapper(TestCase):
 
     def testTitle(self):
         assert {
-            'fin': u'Mikael Agricolan teosten morfosyntaktinen tietokanta',
+            'fi': u'Mikael Agricolan teosten morfosyntaktinen tietokanta',
         } in self.metax_dict['research_dataset']['title']        
         assert {
-            'eng': u'The Morpho-Syntactic Database of Mikael Agricola\'s Works',
+            'en': u'The Morpho-Syntactic Database of Mikael Agricola\'s Works',
         } in self.metax_dict['research_dataset']['title']        
 
     # Test creators

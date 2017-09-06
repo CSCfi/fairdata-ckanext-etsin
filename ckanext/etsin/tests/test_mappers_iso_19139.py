@@ -13,7 +13,7 @@ class TestMappersISO19139(TestCase):
         dict = iso_19139_mapper({}, _testdict())
 
         eq_(dict['preferred_identifier'], 'M28mitl:')
-        eq_(dict['title'], [{'default': 'Testiaineisto'}])
+        eq_(dict['title'], [{'fi': 'Testiaineisto'}])
         assert {'name': 'tekija1'} in dict['creator']
         assert {'name': 'tekija2'} in dict['creator']
         assert {'name': 'omistaja'} not in dict['creator']
