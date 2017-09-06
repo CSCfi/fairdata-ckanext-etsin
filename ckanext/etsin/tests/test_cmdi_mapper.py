@@ -1,16 +1,18 @@
 from ckanext.etsin.mappers.cmdi import cmdi_mapper
 import unittest
 from unittest import TestCase
-from nose.tools import ok_, eq_
-from .helpers import _get_file_as_string
+from .helpers import _get_file_as_lxml
+
+import logging
+log = logging.getLogger(__name__)
 
 
 class TestCmdiMapper(TestCase):
-    source = {}
-    source['xml'] = _get_file_as_string(
-        'kielipankki_cmdi/cmdi_record_example.xml')
-    data_dict = {'package_dict': {}}
-    metax_dict = cmdi_mapper(source, data_dict)['metax_dict']
+
+    @classmethod
+    def setup_class(cls):
+        cls.metax_dict = cmdi_mapper(_get_file_as_lxml(
+            'kielipankki_cmdi/cmdi_record_example.xml'))
 
     # TODO: validate fields (or at least check existence)
     # Right now we're basically just checking that it does

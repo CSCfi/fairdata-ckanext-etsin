@@ -49,7 +49,7 @@ class CmdiMetaxMapper:
         distributor = cmdi.parse_distributor()
         curators = cmdi.parse_curators()
 
-        metax_dict = {
+        return {
             "research_dataset": {
                 "preferred_identifier": preferred_identifier,
                 "creator": creators,
@@ -71,8 +71,6 @@ class CmdiMetaxMapper:
                 }]
             }
         }
-
-        return metax_dict
 
 
 def cmdi_mapper(xml):
