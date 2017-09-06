@@ -37,7 +37,7 @@ def get_language_identifier(lang):
 
     return 'http://lexvo.org/id/iso639-3/' + lang
   
-def convert_to_metax_dict(data_dict, metax_id=None):
+def convert_to_metax_dict(data_dict, context, metax_id=None):
     '''
     :param data_dict: contains data that has come from harvester, mapped and refined
                         and about to be sent to metax
@@ -47,12 +47,11 @@ def convert_to_metax_dict(data_dict, metax_id=None):
     import logging
     log = logging.getLogger(__name__)
 
-    catalog_id = data_dict.pop('data_catalog')
-
     if metax_id:
-        data_dict['urn_identifier'] =  metax_id
+        data_dict['urn_identifier'] = metax_id
     try:
+        data_catalog_id = context.pop('data_catalog_id')
         # Do json dumps - loads routine to get rid of problematic character encodings
-        return json.loads(json.dumps({'research_dataset': data_dict, 'data_catalog': catalog_id}, ensure_ascii=True))
+        return json.loads(json.dumps({'research_dataset': data_dict, 'data_catalog': data_catalog_id}, ensure_ascii=True))
     except Exception as e:
         log.error(e)

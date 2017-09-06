@@ -50,7 +50,7 @@ def package_create(context, data_dict):
         if pref_id:
             try:
                 log.info("Trying to create package to MetaX having preferred_identifier: %s", pref_id)
-                metax_id = metax_api.create_dataset(convert_to_metax_dict(data_dict))
+                metax_id = metax_api.create_dataset(convert_to_metax_dict(data_dict, context))
                 log.info("Created package to MetaX successfully. MetaX ID: %s", metax_id)
             except HTTPError:
                 log.error("Failed to create package to MetaX for a package having package ID: %s and preferred_identifier: %s", package_id, pref_id)
@@ -99,7 +99,7 @@ def package_update(context, data_dict):
         # Update the dataset in MetaX
         try:
             log.info("Trying to update package to MetaX having MetaX ID: %s", metax_id)
-            metax_api.replace_dataset(metax_id, convert_to_metax_dict(data_dict, metax_id))
+            metax_api.replace_dataset(metax_id, convert_to_metax_dict(data_dict, context, metax_id))
             log.info("Updated package to MetaX successfully having MetaX ID: %s", metax_id)
         except HTTPError:
             log.error("Failed to update package to MetaX for a package having package ID: %s and MetaX ID: %s",

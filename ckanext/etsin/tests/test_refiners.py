@@ -14,19 +14,15 @@ class TestRefine(TestCase):
 
     def testRefineKielipankki(self):
         with patch('ckanext.etsin.refiners.kielipankki.kielipankki_refiner') as mock_refiner:
-            context = {}
-            data_dict = {
-                'organization': 'kielipankki'
-            }
+            context = {'harvest_source_name': 'kielipankki'}
+            data_dict = {}
             refine(context, data_dict)
             ok_(mock_refiner.called)
 
     def testRefineSyke(self):
         with patch('ckanext.etsin.refiners.syke.syke_refiner') as mock_refiner:
-            context = {}
-            data_dict = {
-                'organization': 'syke'
-            }
+            context = {'harvest_source_name': 'syke'}
+            data_dict = {}
             refine(context, data_dict)
             ok_(mock_refiner.called)
 
