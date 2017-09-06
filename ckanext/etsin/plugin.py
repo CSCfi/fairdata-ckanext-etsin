@@ -45,7 +45,7 @@ class EtsinPlugin(plugins.SingletonPlugin):
     # ISpatialHarvester
 
     def get_package_dict(self, context, data_dict):
-        return iso_19139.iso_19139_mapper(data_dict)
+        return iso_19139.iso_19139_mapper(context, data_dict)
 
     # This needs to be here - otherwise ckanext-spatial fails silently
     def get_validators(self):
