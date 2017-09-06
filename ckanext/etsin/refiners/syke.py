@@ -8,7 +8,7 @@ log = logging.getLogger(__name__)
 
 # Refines Syke data_dict
 # TODO: Not yet implemented
-def syke_refiner(data_dict):
+def syke_refiner(context, data_dict):
 
     package_dict = data_dict
 
