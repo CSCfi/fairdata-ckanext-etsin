@@ -1,6 +1,7 @@
 import requests
 from requests import HTTPError
 import json
+from pylons import config
 
 import logging
 log = logging.getLogger(__name__)
@@ -27,11 +28,11 @@ def create_dataset(dataset_json):
     :return: metax-id of the created dataset.
     """
     r = requests.post('https://metax-test.csc.fi/rest/datasets/',
-                  headers={
-                      'Content-Type': 'application/json',
-                      'Accept': 'application/json'
-                  },
-                  json=dataset_json)
+            headers={
+              'Content-Type': 'application/json',
+            },
+            json=dataset_json,
+            auth=(config.get('metax.api_user'), config.get('metax.api_password')))
     try:
         r.raise_for_status()
     except HTTPError as e:
@@ -45,10 +46,11 @@ def create_dataset(dataset_json):
 def replace_dataset(metax_id, dataset_json):
     """ Replace existing dataset in MetaX with a new version. """
     r = requests.put('https://metax-test.csc.fi/rest/datasets/{id}'.format(id=metax_id),
-                     headers={
-        'Content-Type': 'application/json'
-    },
-        json=dataset_json)
+            headers={
+                'Content-Type': 'application/json'
+            },
+            json=dataset_json,
+            auth=(config.get('metax.api_user'), config.get('metax.api_password')))
     try:
         r.raise_for_status()
     except HTTPError as e:
@@ -59,8 +61,8 @@ def replace_dataset(metax_id, dataset_json):
 
 def delete_dataset(metax_id):
     """ Delete a dataset from MetaX. """
-    r = requests.delete(
-        'https://metax-test.csc.fi/rest/datasets/{id}'.format(id=metax_id))
+    r = requests.delete('https://metax-test.csc.fi/rest/datasets/{id}'.format(id=metax_id),
+            auth=(config.get('metax.api_user'), config.get('metax.api_password')))
     try:
         r.raise_for_status()
     except HTTPError as e:
