@@ -129,8 +129,8 @@ class CmdiParseHelper:
         """
         description_list = []
         for desc in self.xml.xpath("//cmd:identificationInfo/cmd:description", namespaces=CmdiParseHelper.namespaces):
-            lang = convert_language(
-                desc.get('{http://www.w3.org/XML/1998/namespace}lang', 'undefined').strip())
+            lang = desc.get(
+                '{http://www.w3.org/XML/1998/namespace}lang', 'undefined').strip()
             description_list.append({lang: unicode(desc.text).strip()})
         return description_list
 
@@ -141,8 +141,8 @@ class CmdiParseHelper:
         """
         title_list = []
         for title in self.xml.xpath('//cmd:identificationInfo/cmd:resourceName', namespaces=CmdiParseHelper.namespaces):
-            lang = convert_language(
-                title.get('{http://www.w3.org/XML/1998/namespace}lang', 'undefined').strip())
+            lang = title.get(
+                '{http://www.w3.org/XML/1998/namespace}lang', 'undefined').strip()
             title_list.append({lang: title.text.strip()})
         return title_list
 

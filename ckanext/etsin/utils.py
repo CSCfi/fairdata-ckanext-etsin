@@ -21,6 +21,9 @@ def convert_language(language):
             return ''
 
 def get_language_identifier(lang):
+    '''
+    Returns a URI representing the given ISO 639-3 encoded language
+    '''
     if not isinstance(lang, basestring):
         lang = 'und'
 
