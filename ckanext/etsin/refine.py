@@ -13,8 +13,5 @@ def refine(context, data_dict):
         data_dict = kielipankki.kielipankki_refiner(context, data_dict)
     elif harvest_source_name == "syke":
         data_dict = syke.syke_refiner(context, data_dict)
-    else:
-        # TODO: Throw error
-        return False
 
     return data_dict
