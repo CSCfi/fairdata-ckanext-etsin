@@ -15,6 +15,9 @@ def iso_19139_mapper(context, data_dict):
     # Start with an empty slate
     package_dict = {}
 
+    if 'iso_values' not in data_dict:
+        return {}
+
     iso_values = data_dict['iso_values']
 
     # Find out metadata language
