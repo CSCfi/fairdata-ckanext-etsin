@@ -1,9 +1,9 @@
 {
   "catalog_json": {
-    "title": [
-      {"fi": "Kielipankki Metatietopalvelu"},
-      {"en": "Kielipankki Metadata portal"}
-    ],
+    "title": {
+      "fi": "Kielipankki Metatietopalvelu",
+      "en": "Kielipankki Metadata portal"
+    },
     "harvested": true,
     "language": [
       {
@@ -18,18 +18,18 @@
     "homepage": [
       {
         "identifier": "https://kitwiki.csc.fi/twiki/bin/view/FinCLARIN/Kielipankki_OAI-PMH",
-        "title": [
-          {"en": "Kielipankki Metadata portal"},
-          {"fi": "Kielipankki Metatietopalvelu"}
-        ]
+        "title": {
+          "en": "Kielipankki Metadata portal",
+          "fi": "Kielipankki Metatietopalvelu"
+        }
       }
     ],
     "publisher": [{
       "identifier": "urn:nbn:fi:research-infras-201607252",
-      "name": [
-        {"fi": "FIN-CLARIN"},
-        {"en": "FIN-CLARIN"}
-      ],
+      "name": {
+        "fi": "FIN-CLARIN",
+        "en": "FIN-CLARIN"
+      },
       "homepage": [{
         "identifier": "https://kitwiki.csc.fi/twiki/bin/view/FinCLARIN/FinClarinKonsortio"
       }]
