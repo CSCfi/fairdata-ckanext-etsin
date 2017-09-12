@@ -28,7 +28,7 @@ def iso_19139_mapper(context, data_dict):
     except Exception:
         meta_lang = 'fi'
 
-    # METAX COMPULSORY FIELDS
+    # COMPULSORY FIELDS
 
     try:
         # Use whatever id harvest source gives us
@@ -42,17 +42,16 @@ def iso_19139_mapper(context, data_dict):
     except KeyError:
         package_dict['title'] = [{'default': ''}]
 
-    # METAX OPTIONAL FIELDS
+    # OPTIONAL FIELDS
 
-    # Dataset language - use 'undefined' if language code not given or isn't valid ISO 639-3
+    # Dataset language
     package_dict['language'] = []
     try:
         dataset_lang = (lang for lang in iso_values['dataset-language'])
         for ds_lang in dataset_lang:
             package_dict['language'].append({'identifier': get_language_identifier(ds_lang)})
-    except:
-        if not len(package_dict['language']):
-            package_dict['language'].append({'identifier': get_language_identifier('und')})
+    except Exception:
+        pass
 
     # Description
     try:
@@ -61,6 +60,7 @@ def iso_19139_mapper(context, data_dict):
         pass
 
     # Dataset creators
+    package_dict['creator'] = []
     try:
         creators = (org for org in iso_values['responsible-organisation'] if 'originator' in org['role'])
         for creator in creators:
@@ -69,6 +69,7 @@ def iso_19139_mapper(context, data_dict):
         pass
 
     # Dataset curator
+    package_dict['curator'] = []
     try:
         curators = (org for org in iso_values['responsible-organisation'] if 'pointOfContact' in org['role'])
         for curator in curators:
@@ -122,8 +123,9 @@ def iso_19139_mapper(context, data_dict):
     package_dict['spatial'] = []
     try:
         for bbox in iso_values['bbox']:
-            polygon = convert_bbox_to_polygon(bbox['north'], bbox['east'], bbox['south'], bbox['west'])
-            package_dict['spatial'].append({'polygon': polygon})
+            if 'north' in bbox and 'east' in bbox and 'south' in bbox and 'west' in bbox:
+                polygon = convert_bbox_to_polygon(bbox['north'], bbox['east'], bbox['south'], bbox['west'])
+                package_dict['spatial'].append({'polygon': polygon})
     except KeyError:
         pass
 
@@ -161,14 +163,9 @@ def iso_19139_mapper(context, data_dict):
 
     # Last straws
 
-    if 'curator' not in package_dict:
-        package_dict['curator'] = []
-
     # Syke-specifically, use user role as value for creator if it does not exist
     # TODO: We need to ask SYKE what user role means!
-    if 'creator' not in package_dict:
-        if 'creator' not in package_dict:
-            package_dict['creator'] = []
+    if not len(package_dict['creator']):
         try:
             for org in (org for org in iso_values['responsible-organisation'] if 'user' in org['role']):
                 name = org['organisation-name'] or org.get('individual-name', '')
