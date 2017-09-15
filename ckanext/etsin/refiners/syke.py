@@ -1,4 +1,6 @@
 from ckanext.etsin.scripts.data_catalog_service import get_data_catalog_from_file
+from ckanext.etsin.exceptions import DatasetFieldsMissingError
+
 # For development use
 import logging
 log = logging.getLogger(__name__)
@@ -24,15 +26,23 @@ def syke_refiner(context, package_dict):
     if 'rights_holder' in package_dict:
         _fix_email_address(package_dict, 'rights_holder')
 
-    # If curator or creator has not been set, force it from data catalog
+    # If curator has not been set, force it from data catalog
     if 'curator' not in package_dict or not len(package_dict['curator']):
         package_dict['curator'] = [{'identifier': default_contact['identifier'],
                                     'name': default_contact['name']['fi']}]
-    if not len(package_dict['creator']):
-        package_dict['creator'] = [{'identifier': default_contact['identifier'],
-                                    'name': default_contact['name']['fi']}]
+
+    _check_for_required_fields(package_dict)
 
     return package_dict
+
+
+def _check_for_required_fields(package_dict):
+    if 'preferred_identifier' not in package_dict or not package_dict['preferred_identifier']:
+        raise DatasetFieldsMissingError(package_dict)
+    if 'title' not in package_dict or not package_dict['title']:
+        raise DatasetFieldsMissingError(package_dict)
+    if 'curator' not in package_dict or not len(package_dict['curator']):
+        raise DatasetFieldsMissingError(package_dict)
 
 
 def _fix_email_address(package_dict, agent_type):

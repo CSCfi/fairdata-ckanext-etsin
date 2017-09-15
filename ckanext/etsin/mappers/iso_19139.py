@@ -28,8 +28,6 @@ def iso_19139_mapper(context, data_dict):
     except Exception:
         meta_lang = 'fi'
 
-    # COMPULSORY FIELDS
-
     try:
         # Use whatever id harvest source gives us
         package_dict['preferred_identifier'] = data_dict['harvest_object'].guid
@@ -41,8 +39,6 @@ def iso_19139_mapper(context, data_dict):
         package_dict['title'] = [{meta_lang: iso_values['title']}]
     except KeyError:
         package_dict['title'] = [{'default': ''}]
-
-    # OPTIONAL FIELDS
 
     # Dataset language
     package_dict['language'] = []
@@ -125,7 +121,7 @@ def iso_19139_mapper(context, data_dict):
         for bbox in iso_values['bbox']:
             if 'north' in bbox and 'east' in bbox and 'south' in bbox and 'west' in bbox:
                 polygon = convert_bbox_to_polygon(bbox['north'], bbox['east'], bbox['south'], bbox['west'])
-                package_dict['spatial'].append({'polygon': polygon})
+                package_dict['spatial'].append({'as_wkt': polygon})
     except KeyError:
         pass
 
@@ -164,7 +160,7 @@ def iso_19139_mapper(context, data_dict):
     # Last straws
 
     # Syke-specifically, use user role as value for creator if it does not exist
-    # TODO: We need to ask SYKE what user role means!
+    # TODO: We need to ask SYKE what user role means! Move this this refiner if possible
     if not len(package_dict['creator']):
         try:
             for org in (org for org in iso_values['responsible-organisation'] if 'user' in org['role']):

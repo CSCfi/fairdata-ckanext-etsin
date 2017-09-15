@@ -2,6 +2,7 @@ from ckanext.etsin.refine import refine
 from ckanext.etsin.refiners.kielipankki import kielipankki_refiner
 from ckanext.etsin.refiners.syke import syke_refiner
 from iso19139_test_dicts import get_package_dict_1
+from ckanext.etsin.exceptions import DatasetFieldsMissingError
 
 import unittest
 from unittest import TestCase
@@ -75,5 +76,9 @@ class TestSykeRefiner(TestCase):
         if 'identifier' not in refined_dict['discipline'] or not refined_dict['discipline']['identifier']:
             self.fail("Missing discipline information")
 
-if __name__ == '__main__':
-    unittest.main()
+    def testMissingFields(self):
+        test_dict = get_package_dict_1()
+        del test_dict['preferred_identifier']
+        context= {}
+        with self.assertRaises(DatasetFieldsMissingError):
+            syke_refiner(context, test_dict)

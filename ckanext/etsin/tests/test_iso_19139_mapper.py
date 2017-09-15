@@ -10,14 +10,13 @@ from iso19139_test_dicts import get_iso_values_dict_1
 class TestMappersISO19139(TestCase):
 
 
-    def testObligatoryFieldsMap(self):
+    # TODO: Should this test be actually in refiner tests?
+    # At this point we may not have set all the required fields
+
+    def testMapper(self):
         dict = iso_19139_mapper({}, get_iso_values_dict_1())
         eq_(dict['preferred_identifier'], 'M28mitl:')
         eq_(dict['title'], [{'fi': 'Testiaineisto'}])
-
-
-    def testOptionalFieldsMap(self):
-        dict = iso_19139_mapper({}, get_iso_values_dict_1())
         assert {'email': 'tekija1@testi.fi', 'name': 'tekija1'} in dict['creator']
         assert {'email': 'tekija2@testi.fi', 'name': 'tekija2'} in dict['creator']
         assert {'email': 'omistaja@testi.fi', 'name': 'omistaja'} not in dict['creator']
@@ -32,16 +31,10 @@ class TestMappersISO19139(TestCase):
         assert 'testiavainsana' in dict['keyword']
         eq_(
             'POLYGON((59.880178 21.193932,59.880178 23.154996,60.87458 23.154996,60.87458 21.193932,59.880178 21.193932))',
-            dict['spatial'][0]['polygon'])
+            dict['spatial'][0]['as_wkt'])
         eq_('2017-01-01', dict['issued'])
         eq_('joopajoo', dict['access_rights']['description'][0]['fi'])
         eq_('2000-01-01', dict['temporal'][0]['start_date'])
         eq_('2001-01-01', dict['temporal'][0]['end_date'])
         eq_('2017-06-06', dict['modified'])
         eq_('provenance', dict['provenance'][0]['description'])
-
-    def testObligatoryFieldsMissing(self):
-        dict = iso_19139_mapper({}, {'iso_values': {}})
-
-        eq_(dict['preferred_identifier'], '')
-        eq_(dict['title'], [{'default': ''}])

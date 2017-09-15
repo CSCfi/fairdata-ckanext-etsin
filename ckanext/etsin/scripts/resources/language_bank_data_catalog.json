@@ -34,9 +34,12 @@
         "identifier": "https://kitwiki.csc.fi/twiki/bin/view/FinCLARIN/FinClarinKonsortio"
       }]
     }],
-    "rights": {
+   "rights": {
+      "type": [{
+          "identifier": "http://purl.org/att/reference_data/access_type/access_type_open_access"
+      }],
       "license": [{
-        "identifier": "https://creativecommons.org/licenses/by/4.0/"
+        "identifier": "https://creativecommons.org/licenses/by/4.0/",
       }]
     }
   }

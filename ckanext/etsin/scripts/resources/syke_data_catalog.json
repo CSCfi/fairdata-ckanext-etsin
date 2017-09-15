@@ -60,10 +60,10 @@
       ],
       "license": [{
         "identifier": "https://creativecommons.org/licenses/by/4.0/",
-        "title": {
+        "title": [{
           "fi": "Nimeä - CC BY 4.0",
           "en": "Attribution - CC BY 4.0"
-        }
+        }]
       }]
     },
     "field_of_science": [
