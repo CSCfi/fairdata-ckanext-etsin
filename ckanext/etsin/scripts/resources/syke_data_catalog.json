@@ -9,10 +9,6 @@
       {
         "identifier": "http://lexvo.org/id/iso639-3/fin",
         "notation": "fin"
-      },
-      {
-        "identifier": "http://lexvo.org/id/iso639-3/eng",
-        "notation": "eng"
       }
     ],
     "homepage": [
@@ -74,6 +70,7 @@
           "en": "Environmental sciences"
         }
       }
-    ]
+    ],
+    "research_dataset_schema": "harvester"
   }
 }

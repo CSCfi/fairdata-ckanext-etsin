@@ -157,20 +157,6 @@ def iso_19139_mapper(context, data_dict):
     except KeyError:
         pass
 
-    # Last straws
-
-    # Syke-specifically, use user role as value for creator if it does not exist
-    # TODO: We need to ask SYKE what user role means! Move this this refiner if possible
-    if not len(package_dict['creator']):
-        try:
-            for org in (org for org in iso_values['responsible-organisation'] if 'user' in org['role']):
-                name = org['organisation-name'] or org.get('individual-name', '')
-                email = org['contact-info'].get('email', '') if 'contact-info' in org else ''
-                if 'creator' in package_dict and not len(package_dict['creator']):
-                    package_dict['creator'].append({'name': name, 'email': email})
-        except KeyError:
-            pass
-
     return package_dict
 
 

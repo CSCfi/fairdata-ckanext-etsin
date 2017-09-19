@@ -17,15 +17,15 @@
     ],
     "homepage": [
       {
-        "identifier": "https://kitwiki.csc.fi/twiki/bin/view/FinCLARIN/Kielipankki_OAI-PMH",
+        "identifier": "http://metashare.csc.fi/",
         "title": {
-          "en": "Kielipankki Metadata portal",
-          "fi": "Kielipankki Metatietopalvelu"
+          "en": "Metashare Metadata portal",
+          "fi": "Metashare Metatietopalvelu"
         }
       }
     ],
     "publisher": [{
-      "identifier": "urn:nbn:fi:research-infras-201607252",
+      "identifier": "http://urn.fi/urn:nbn:fi:research-infras-201607252",
       "name": {
         "fi": "FIN-CLARIN",
         "en": "FIN-CLARIN"
@@ -39,8 +39,18 @@
           "identifier": "http://purl.org/att/reference_data/access_type/access_type_open_access"
       }],
       "license": [{
-        "identifier": "https://creativecommons.org/licenses/by/4.0/",
+        "identifier": "https://creativecommons.org/licenses/by/4.0/"
       }]
-    }
+    },
+    "field_of_science": [
+      {
+        "identifier": "http://www.yso.fi/onto/okm-tieteenala/ta6121",
+        "pref_label": {
+          "fi": "Kielitieteet",
+          "en": "Languages"
+        }
+      }
+    ],
+    "research_dataset_schema": "harvester"
   }
 }

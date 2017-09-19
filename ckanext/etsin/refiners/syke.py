@@ -11,7 +11,7 @@ def syke_refiner(context, package_dict):
     data_catalog = get_data_catalog_from_file('syke_data_catalog.json')['catalog_json']
     default_contact = data_catalog['publisher'][0]
 
-    #Discipline / Field of science
+    # Field of science
     discipline = data_catalog['field_of_science'][0]
     package_dict['discipline'] = {'identifier': discipline['identifier']}
 
@@ -26,11 +26,6 @@ def syke_refiner(context, package_dict):
     if 'rights_holder' in package_dict:
         _fix_email_address(package_dict, 'rights_holder')
 
-    # If curator has not been set, force it from data catalog
-    if 'curator' not in package_dict or not len(package_dict['curator']):
-        package_dict['curator'] = [{'identifier': default_contact['identifier'],
-                                    'name': default_contact['name']['fi']}]
-
     _check_for_required_fields(package_dict)
 
     return package_dict
@@ -40,8 +35,6 @@ def _check_for_required_fields(package_dict):
     if 'preferred_identifier' not in package_dict or not package_dict['preferred_identifier']:
         raise DatasetFieldsMissingError(package_dict)
     if 'title' not in package_dict or not package_dict['title']:
-        raise DatasetFieldsMissingError(package_dict)
-    if 'curator' not in package_dict or not len(package_dict['curator']):
         raise DatasetFieldsMissingError(package_dict)
 
 
