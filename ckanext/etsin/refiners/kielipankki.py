@@ -131,7 +131,12 @@ def kielipankki_refiner(context, data_dict):
             }
 
     # Set field of science
-    package_dict['field_of_science'] = [{"identifier": "http://www.yso.fi/onto/okm-tieteenala/ta6121"}]
+    # TODO: JPL: When implemented in Metax change 'discipline' -> 'field_of_science' & remove 'perf_label', 'definition'
+    package_dict['discipline'] = [{"identifier": "http://www.yso.fi/onto/okm-tieteenala/ta6121",
+                                   "pref_label": [{"en": "TODO: Remove this property"}],
+                                   "definition": [
+                                       {"en": "TODO: Remove this property. We already give identifier. Use it to "
+                                              "get rest from reference_data."}]}]
 
     package_dict.setdefault('otherIdentifier', [])
     package_dict['otherIdentifier'].extend([{
