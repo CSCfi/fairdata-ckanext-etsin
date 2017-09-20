@@ -41,7 +41,7 @@ class EtsinPlugin(plugins.SingletonPlugin):
         # OAI-PMH comes in several formats
         if format == 'cmdi0571':
             return cmdi.cmdi_mapper(xml)
-        elif format == 'datacite':
+        elif format == 'oai_datacite':
             return datacite.datacite_mapper(xml)
         else:
             return {}

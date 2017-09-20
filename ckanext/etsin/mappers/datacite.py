@@ -2,25 +2,39 @@
 Map Datacite 3.1 and 4.0 dicts to Metax values
 '''
 
+from lxml import objectify
+
 # from iso639 import languages
 # from ..utils import get_language_identifier, convert_language_to_6391
 
 import logging
 log = logging.getLogger(__name__)
 
+# Mapper receives an LXML element and maps it to Metax format
 
-def datacite_mapper(data_dict):
+
+def datacite_mapper(xml):
+
+    from lxml import etree
+
+    # Strip element prefixes
+    xml = _strip_prefixes(xml)
+
     # Start with an empty slate
-    # package_dict = {}
+    package_dict = {}
 
-    # MAP DATACITE MANDATORY FIELD
-
-    # # Identifier to primary pid
-    # identifier = xml.find('.//{http://datacite.org/schema/kernel-3}identifier')
-    # pids = [{
-    #     'id': identifier.text,
-    #     'type': 'primary',
-    #     'provider': identifier.get('identifierType')}]
+    # Identifier to preferred_identifier
+    # According to DataCite 4.0 schema, IdentifierType should always be "DOI", 
+    # but OpenAire seems to use URLs as well
+    identifier = xml.find('.//identifier')
+    identifier_type = xml.find('.//identifier').get('identifierType')
+    if identifier_type == "URL":
+        package_dict['preferred_identifier'] = identifier.text
+    elif identifier_type == "DOI":
+        package_dict['preferred_identifier'] = "https://dx.doi.org/" + \
+            identifier.text
+    else:
+        package_dict['preferred_identifier'] = ""
 
     # # Creator name to agent
     # # TODO: map nameIdentifier to agent.id and nameIdentifierScheme and schemeURI
@@ -48,7 +62,8 @@ def datacite_mapper(data_dict):
 
     # # Publication year to event
     # publication_year = xml.find('.//{http://datacite.org/schema/kernel-3}publicationYear').text
-    # events = [{'type': u'published', 'when': publication_year, 'who': publisher, 'descr': u'Dataset was published'}]
+    # events = [{'type': u'published', 'when': publication_year, 'who':
+    # publisher, 'descr': u'Dataset was published'}]
 
     # # MAP DATACITE RECOMMENDED FIELDS
 
@@ -119,25 +134,23 @@ def datacite_mapper(data_dict):
     # for right in xml.findall('.//{http://datacite.org/schema/kernel-3}rights'):
     #     license_URL += right.text + ' ' + right.get('rightsURI') + ' '
 
-    # package_dict = {
-    # 'agent': agents,
-    # 'contact': contacts,
-    # 'event': events,
-    # 'langnotes': langnotes,
-    # 'langtitle': langtitle,
-    # 'license_URL': license_URL,
-    # 'pids': pids,
-    # 'title': title,
-    # 'type': 'dataset',
-    # 'version': datetime.datetime.now().strftime("%Y-%m-%d")
-    # }
-
     return {
-        "research_dataset": {
-            'preferred_identifier': 123,
-            'language': [{'identifier': u'http://lexvo.org/id/iso639-3/und'}],
-            'title': [{'fi': u'Testiaineisto'}],
-            'creator': [{'name': u'Terhi Tekija'}],
-            'curator': [{'name': u'Janne Jakelija'}],
-            'decription': [{'fi': u'Dummy-arvoja harvestointiputken testausta varten'}],
-        }}
+        "research_dataset": package_dict}
+
+
+def _strip_prefixes(xml):
+    root = xml.getroottree()
+
+    # Zenodo uses {namespace}element
+    for elem in root.getiterator():
+        if not hasattr(elem.tag, 'find'):  # pass comments
+            continue
+
+        i = elem.tag.find('}')
+        if i >= 0:
+            elem.tag = elem.tag[i + 1:]
+
+    # OpenAire uses namespace:element
+    objectify.deannotate(root, cleanup_namespaces=True)
+
+    return xml

@@ -43,8 +43,6 @@ def package_create(context, data_dict):
         # Refine data_dict based on organization it belongs to
         data_dict = refine(context, data_dict)
 
-        log.info(data_dict)
-
         pref_id = data_dict.get('preferred_identifier', None)
         # Create the dataset in MetaX
         if pref_id:
