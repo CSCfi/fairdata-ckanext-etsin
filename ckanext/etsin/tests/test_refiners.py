@@ -62,7 +62,7 @@ class TestSykeRefiner(TestCase):
 
     def testRefiner(self):
         test_dict = get_package_dict_1()
-        context = {}
+        context = {'guid': '{51C9D60D-6D41-44BD-9136-C4933510DB2D}'}
         refined_dict = syke_refiner(context, test_dict)
 
         if '@' not in refined_dict['creator'][1]['email']:

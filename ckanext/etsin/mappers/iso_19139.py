@@ -34,6 +34,9 @@ def iso_19139_mapper(context, data_dict):
     except KeyError:
         package_dict['preferred_identifier'] = ''
 
+    # Set guid to context for refiner use
+    context['guid'] = data_dict['harvest_object'].guid
+
     # Find title
     try:
         package_dict['title'] = [{meta_lang: iso_values['title']}]
