@@ -73,8 +73,8 @@ class TestSykeRefiner(TestCase):
             self.fail("email address invalid: {0}".format(refined_dict['rights_holder']['email']))
         if '@' not in refined_dict['publisher']['email']:
             self.fail("email address invalid: {0}".format(refined_dict['publisher']['email']))
-        if 'identifier' not in refined_dict['discipline'] or not refined_dict['discipline']['identifier']:
-            self.fail("Missing discipline information")
+        if 'identifier' not in refined_dict['field_of_science'] or not refined_dict['field_of_science']['identifier']:
+            self.fail("Missing field of science information")
         if 'type' not in refined_dict['access_rights'] \
                 or 'identifier' not in refined_dict['access_rights']['type'][0]:
             self.fail("Missing access type information")

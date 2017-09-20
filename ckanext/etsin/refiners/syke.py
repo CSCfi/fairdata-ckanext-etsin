@@ -9,11 +9,10 @@ log = logging.getLogger(__name__)
 # Refines Syke data_dict
 def syke_refiner(context, package_dict):
     data_catalog = get_data_catalog_from_file('syke_data_catalog.json')['catalog_json']
-    default_contact = data_catalog['publisher'][0]
 
     # Field of science
-    discipline = data_catalog['field_of_science'][0]
-    package_dict['discipline'] = {'identifier': discipline['identifier']}
+    field_of_science = data_catalog['field_of_science'][0]
+    package_dict['field_of_science'] = {'identifier': field_of_science['identifier']}
 
     # Fix email addresses
     # TODO: Verify from syke this is ok
