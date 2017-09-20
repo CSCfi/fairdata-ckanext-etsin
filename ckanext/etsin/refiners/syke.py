@@ -26,6 +26,18 @@ def syke_refiner(context, package_dict):
     if 'rights_holder' in package_dict:
         _fix_email_address(package_dict, 'rights_holder')
 
+    # Set license to "other" since only access rights description is available in the source metadata
+    if 'access_rights' in package_dict and 'description' in package_dict['access_rights']:
+        package_dict['access_rights']['license'] = [{
+            'identifier': 'http://purl.org/att/es/reference_data/license/license_other'
+        }]
+
+    # Set access type to "restricted" since it is the only safe bet. Unless someone tells otherwise
+    if 'access_rights' in package_dict and 'description' in package_dict['access_rights']:
+        package_dict['access_rights']['type'] = [{
+            'identifier': 'http://purl.org/att/es/reference_data/access_type/access_type_restricted_access'
+        }]
+
     _check_for_required_fields(package_dict)
 
     return package_dict

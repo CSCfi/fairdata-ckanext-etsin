@@ -75,10 +75,22 @@ class TestSykeRefiner(TestCase):
             self.fail("email address invalid: {0}".format(refined_dict['publisher']['email']))
         if 'identifier' not in refined_dict['discipline'] or not refined_dict['discipline']['identifier']:
             self.fail("Missing discipline information")
+        if 'type' not in refined_dict['access_rights'] \
+                or 'identifier' not in refined_dict['access_rights']['type'][0]:
+            self.fail("Missing access type information")
+        if 'license' not in refined_dict['access_rights'] \
+                or 'identifier' not in refined_dict['access_rights']['license'][0]:
+            self.fail("Missing license information")
+
+        assert refined_dict['access_rights']['type'][0]['identifier'] == \
+               'http://purl.org/att/es/reference_data/access_type/access_type_restricted_access'
+
+        assert refined_dict['access_rights']['license'][0]['identifier'] == \
+               'http://purl.org/att/es/reference_data/license/license_other'
 
     def testMissingFields(self):
         test_dict = get_package_dict_1()
         del test_dict['preferred_identifier']
-        context= {}
+        context = {}
         with self.assertRaises(DatasetFieldsMissingError):
             syke_refiner(context, test_dict)
