@@ -130,6 +130,9 @@ def kielipankki_refiner(context, data_dict):
                     'identifier': availability}]
             }
 
+    # Set field of science
+    package_dict['field_of_science'] = [{"identifier": "http://www.yso.fi/onto/okm-tieteenala/ta6121"}]
+
     package_dict.setdefault('otherIdentifier', [])
     package_dict['otherIdentifier'].extend([{
         "notation": pid['id'],
