@@ -18,3 +18,10 @@ class TestMappersDataCite(TestCase):
 
     def testPreferredIdentifier(self):
         assert self.metax_dict['research_dataset']['preferred_identifier'] == 'http://dx.doi.org/10.18150/9887707'
+
+    # TODO: test creators with identifiers and affiliations
+    def testCreator(self):
+        assert {"name": "Drozdzal, Pawel"} in self.metax_dict['research_dataset']['creator']
+        assert {"name": "Kierzek, Ryszard"} in self.metax_dict['research_dataset']['creator']
+        assert {"name": "Gilski, Miroslaw"} in self.metax_dict['research_dataset']['creator']
+        assert {"name": "Jaskolski, Mariusz"} in self.metax_dict['research_dataset']['creator']

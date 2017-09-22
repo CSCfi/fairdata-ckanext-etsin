@@ -24,7 +24,7 @@ def datacite_mapper(xml):
     package_dict = {}
 
     # Identifier to preferred_identifier
-    # According to DataCite 4.0 schema, IdentifierType should always be "DOI", 
+    # According to DataCite 4.0 schema, IdentifierType should always be "DOI",
     # but OpenAire seems to use URLs as well
     identifier = xml.find('.//identifier')
     identifier_type = xml.find('.//identifier').get('identifierType')
@@ -36,18 +36,40 @@ def datacite_mapper(xml):
     else:
         package_dict['preferred_identifier'] = ""
 
-    # # Creator name to agent
-    # # TODO: map nameIdentifier to agent.id and nameIdentifierScheme and schemeURI
-    # # to extras
-    # agents = []
-    # for creator in xml.findall('.//{http://datacite.org/schema/kernel-3}creator'):
-    #     creatorName = creator.find('.//{http://datacite.org/schema/kernel-3}creatorName').text
-    #     creatorAffiliation = creator.find('.//{http://datacite.org/schema/kernel-3}affiliation').text
-    #     agents.append({
-    #         'role': u'author',
-    #         'name': creatorName,
-    #         'organisation': creatorAffiliation
-    #         })
+    # Creator to creator
+    package_dict['creator'] = []
+    for creator in xml.findall('.//creator'):
+        metaxCreator = {}
+
+        creatorName = creator.find('.//creatorName').text
+        creatorFamilyName = creator.find('.//creatorName').get('familyName')
+        creatorGivenName = creator.find('.//creatorName').get('givenName')
+        if creatorName:
+            metaxCreator['name'] = creatorName
+        elif creatorFamilyName:
+            metaxCreator['name'] = creatorFamilyName
+            if creatorGivenName:
+                metaxCreator['name'] += ", " + creatorGivenName
+        elif creatorGivenName:
+            metaxCreator['name'] = creatorGivenName
+        else:  # Skip creator with no name
+            continue
+
+        if creator.find('.//nameIdentifier'):
+            creatorIdentifier = creator.find('.//nameIdentifier').text
+            creatorIdentifierScheme = creator.find(
+                './/nameIdentifier').get('nameIdentifierScheme')
+            # TODO: There are some more schemes we want to map. Waiting for the
+            # list.
+            if creatorIdentifier and creatorIdentifierScheme == "URL":
+                metaxCreator['identifier'] = creatorIdentifier
+
+        if creator.find('.//affiliation'):
+            creatorAffiliation = creator.find('.//affiliation').text
+            if creatorAffiliation:
+                metaxCreator['is_part_of'] = {"name": creatorAffiliation}
+
+        package_dict['creator'].append(metaxCreator)
 
     # # Primary title to title
     # # TODO: if titleType is present, check to find out if title is actually primary
