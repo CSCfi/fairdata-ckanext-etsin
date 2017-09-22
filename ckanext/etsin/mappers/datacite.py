@@ -4,8 +4,7 @@ Map Datacite 3.1 and 4.0 dicts to Metax values
 
 from lxml import objectify
 
-# from iso639 import languages
-# from ..utils import get_language_identifier, convert_language_to_6391
+from ..utils import validate_6391, get_language_identifier
 
 import logging
 log = logging.getLogger(__name__)
@@ -23,7 +22,7 @@ def datacite_mapper(xml):
     # Start with an empty slate
     package_dict = {}
 
-    # Identifier to preferred_identifier
+    # Map preferred_identifier
     # According to DataCite 4.0 schema, IdentifierType should always be "DOI",
     # but OpenAire seems to use URLs as well
     identifier = xml.find('.//identifier')
@@ -36,7 +35,7 @@ def datacite_mapper(xml):
     else:
         package_dict['preferred_identifier'] = ""
 
-    # Creator to creator
+    # Map creators
     package_dict['creator'] = []
     for creator in xml.findall('.//creator'):
         metaxCreator = {}
@@ -44,32 +43,47 @@ def datacite_mapper(xml):
         creatorName = creator.find('.//creatorName').text
         creatorFamilyName = creator.find('.//creatorName').get('familyName')
         creatorGivenName = creator.find('.//creatorName').get('givenName')
-        if creatorName:
+        if creatorName is not None:
             metaxCreator['name'] = creatorName
-        elif creatorFamilyName:
+        elif creatorFamilyName is not None:
             metaxCreator['name'] = creatorFamilyName
-            if creatorGivenName:
+            if creatorGivenName is not None:
                 metaxCreator['name'] += ", " + creatorGivenName
-        elif creatorGivenName:
+        elif creatorGivenName is not None:
             metaxCreator['name'] = creatorGivenName
         else:  # Skip creator with no name
             continue
 
-        if creator.find('.//nameIdentifier'):
+        if creator.find('.//nameIdentifier') is not None:
             creatorIdentifier = creator.find('.//nameIdentifier').text
             creatorIdentifierScheme = creator.find(
                 './/nameIdentifier').get('nameIdentifierScheme')
             # TODO: There are some more schemes we want to map. Waiting for the
             # list.
-            if creatorIdentifier and creatorIdentifierScheme == "URL":
+            if creatorIdentifier is not None and creatorIdentifierScheme == "URL":
                 metaxCreator['identifier'] = creatorIdentifier
 
-        if creator.find('.//affiliation'):
+        if creator.find('.//affiliation') is not None:
             creatorAffiliation = creator.find('.//affiliation').text
-            if creatorAffiliation:
+            if creatorAffiliation is not None:
                 metaxCreator['is_part_of'] = {"name": creatorAffiliation}
 
         package_dict['creator'].append(metaxCreator)
+
+    # Map language
+    language = xml.find('.//identifier')
+    if language is not None:
+        # Language should be either ISO 639-1 or IETF BCP 47. The first two
+        # characters of IETF BCP 47 should be same as ISO 639-1 code.
+        if validate_6391(language[0:2]):
+            language = get_language_identifier(language[0:2])
+            package_dict['language'] = language
+        else:
+            language = "default"
+    else:
+        # Use "default" for title and description language codes, but don't
+        # save it in language field
+        language = "default"
 
     # # Primary title to title
     # # TODO: if titleType is present, check to find out if title is actually primary
@@ -134,9 +148,6 @@ def datacite_mapper(xml):
     # # geographic_coverage
 
     # # MAP DATACITE OPTIONAL FIELDS
-
-    # # Language to language
-    # # TODO: map language to language
 
     # # AlternateIdentifier to pids
     # # TODO: map AlternateIdentifier to pids.id, alternateIdentifierType to pids.provider

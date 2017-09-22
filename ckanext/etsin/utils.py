@@ -25,17 +25,36 @@ def convert_language_to_6391(language):
     Convert ISO 639-2 and 639-3 language code ('fin') to ISO 639-1 ('fi'), if possible.
     Note that not all languages are included in ISO 639-1.
     '''
-    return languages.get(part3=language).part1
+    try:
+        part1 = languages.get(part3=language).part1
+    except:
+        return False
+
+    return part1
+
+def validate_6391(language):
+    '''
+    Check if language code is valid ISO 639-1.
+    '''
+    if not isinstance(language, basestring):
+        return False
+
+    try:
+        part1 = languages.get(part1=language).part1
+    except:
+        return False
+
+    return language == part1
 
 
-def get_language_identifier(lang):
+def get_language_identifier(language):
     '''
     Returns a URI representing the given ISO 639-3 encoded language
     '''
-    if not isinstance(lang, basestring):
-        lang = 'und'
+    if not isinstance(language, basestring):
+        language = 'und'
 
-    return 'http://lexvo.org/id/iso639-3/' + lang
+    return 'http://lexvo.org/id/iso639-3/' + language
   
 def convert_to_metax_dict(data_dict, context, metax_id=None):
     '''
