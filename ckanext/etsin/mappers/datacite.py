@@ -149,6 +149,11 @@ def datacite_mapper(xml):
                 "description": relationType,
             })
 
+    # Map version
+    version = xml.find('.//publicationYear')
+    if version is not None:
+        package_dict['version_info'] = version.text
+
     # # Description to langnotes
     # description = ''
     # for element in xml.findall('.//{http://datacite.org/schema/kernel-3}description'):
@@ -161,21 +166,6 @@ def datacite_mapper(xml):
     # # GeoLocation to geograhic_coverage
     # # TODO: map geoLocationPoint and geoLocationBox to extras, geoLocationPlace to
     # # geographic_coverage
-
-    # # MAP DATACITE OPTIONAL FIELDS
-
-    # # AlternateIdentifier to pids
-    # # TODO: map AlternateIdentifier to pids.id, alternateIdentifierType to pids.provider
-
-    # # Size to extra
-    # # TODO: map size to extra
-
-    # # Format to resources
-    # # TODO: map format to resources.format
-
-    # # Version to extra
-    # # DataCite version is a string such as 'v3.2.1' and can't be used as Etsin version
-    # # TODO: map version to extra
 
     # # Rights to license
     # # license_URL = ''

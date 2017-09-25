@@ -71,4 +71,8 @@ class TestMappersDataCite(TestCase):
     # TODO: current test file doesn't have related identifiers
     def testRelatedIdentifier(self):
         pass
-        
+
+    # TODO: current test file doesn't have version
+    def testVersion(self):
+        pass
+
