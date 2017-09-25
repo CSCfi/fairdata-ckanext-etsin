@@ -127,6 +127,16 @@ def datacite_mapper(xml):
                 }
             })
 
+    # Map alternate identifier
+    package_dict['other_identifier'] = []
+    for alternateIdentifier in xml.findall('.//alternateIdentifier'):
+        alternateIdentifier_type = alternateIdentifier.get('alternateIdentifierType')
+        if alternateIdentifier_type == "URL":
+            package_dict['other_identifier'].append({
+                'notation': alternateIdentifier.text,
+                'type': alternateIdentifier_type,
+                })
+
     # # RelatedIdentifier to showcase
     # # TODO: map RelatedIdentifier to showcase title, relatedIdentifierType, relationType,
     # # relatedMetadataScheme, schemeURI and schemeType to showcase description

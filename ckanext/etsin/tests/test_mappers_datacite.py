@@ -63,3 +63,7 @@ class TestMappersDataCite(TestCase):
     # TODO: Date mapping hasn't been compeleted
     def testDate(self):
         pass
+
+    # TODO: current test file doesn't have alternate identifiers with type URL
+    def testAlternateIdentifier(self):
+        assert not self.metax_dict['research_dataset']['other_identifier']
