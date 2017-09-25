@@ -38,37 +38,10 @@ def datacite_mapper(xml):
     # Map creators
     package_dict['creator'] = []
     for creator in xml.findall('.//creator'):
-        metaxCreator = {}
-
-        creatorName = creator.find('.//creatorName').text
-        creatorFamilyName = creator.find('.//creatorName').get('familyName')
-        creatorGivenName = creator.find('.//creatorName').get('givenName')
-        if creatorName is not None:
-            metaxCreator['name'] = creatorName
-        elif creatorFamilyName is not None:
-            metaxCreator['name'] = creatorFamilyName
-            if creatorGivenName is not None:
-                metaxCreator['name'] += ", " + creatorGivenName
-        elif creatorGivenName is not None:
-            metaxCreator['name'] = creatorGivenName
-        else:  # Skip creator with no name
+        person = _get_person(creator)
+        if not person:
             continue
-
-        if creator.find('.//nameIdentifier') is not None:
-            creatorIdentifier = creator.find('.//nameIdentifier').text
-            creatorIdentifierScheme = creator.find(
-                './/nameIdentifier').get('nameIdentifierScheme')
-            # TODO: There are some more schemes we want to map. Waiting for the
-            # list.
-            if creatorIdentifier is not None and creatorIdentifierScheme == "URL":
-                metaxCreator['identifier'] = creatorIdentifier
-
-        if creator.find('.//affiliation') is not None:
-            creatorAffiliation = creator.find('.//affiliation').text
-            if creatorAffiliation is not None:
-                metaxCreator['is_part_of'] = {"name": creatorAffiliation}
-
-        package_dict['creator'].append(metaxCreator)
+        package_dict['creator'].append(person)
 
     # Map language
     language = xml.find('.//identifier')
@@ -113,21 +86,31 @@ def datacite_mapper(xml):
             package_dict['keyword'].append(subject.text)
         elif subjectScheme == "YSO" or "finto.fi/yso" in schemeURI:
             if valueURI is not None:
-                package_dict['theme'].append({'identifier': valueURI})                
+                package_dict['theme'].append({'identifier': valueURI})
             elif is_uri(subject.text):
                 package_dict['theme'].append({'identifier': subject.text})
 
-    # # Contributor to agent
-    # # TODO: map nameIdentifier to agent.id, nameIdentifierScheme, schemeURI and
-    # # contributorType to extras
-    # for contributor in xml.findall('.//{http://datacite.org/schema/kernel-3}contributor'):
-    #     contributorName = contributor.find('.//{http://datacite.org/schema/kernel-3}contributorName').text
-    #     contributorAffiliation = contributor.find('.//{http://datacite.org/schema/kernel-3}affiliation').text
-    #     agents.append({
-    #         'role': u'contributor',
-    #         'name': contributorName,
-    #         'organisation': contributorAffiliation
-    #         })
+    # Map contributor
+    for contributor in xml.findall('.//contributor'):
+        package_dict['contributor'] = []
+        package_dict['publisher'] = []
+        package_dict['curator'] = []
+        package_dict['rights_holder'] = []
+        contributorType = contributor.find('.//contributorType').text
+        if contributorType in ["DataCollector", "DataCurator", "DataManager", "Editor", "Producer", "ProjectLeader", "ProjectMember", "Researcher", "ResearchGroup", "Supervisor"]:
+            metaxContributorType = "contributor"
+        elif contributorType == "Distributor":
+            metaxContributorType = "publisher"
+        elif contributorType == "ContactPerson":
+            metaxContributorType = "curator"
+        elif contributorType == "RightsHolder":
+            metaxContributorType = "rights_holder"
+        else:
+            continue
+        person = _get_person(contributor)
+        if not Person:
+            continue
+        package_dict[metaxContributorType].append(person)
 
     # # Date to event
     # for date in xml.findall('.//{http://datacite.org/schema/kernel-3}date'):
@@ -195,3 +178,43 @@ def _strip_prefixes(xml):
     objectify.deannotate(root, cleanup_namespaces=True)
 
     return xml
+
+
+def _get_person(person):
+    '''
+    Input: LXML element that contains either DataCite creator or contributor.
+    '''
+    personDict = {}
+    name = person.find('.//creatorName').text
+    if name is not None:
+        familyName = person.find('.//creatorName').get('familyName')
+        givenName = person.find('.//creatorName').get('givenName')
+    else:
+        name = person.find('.//contributorName').text
+        familyName = person.find('.//contributorName').get('familyName')
+        givenName = person.find('.//contributorName').get('givenName')
+    if name:
+        personDict['name'] = name
+    elif familyName:
+        personDict['name'] = familyName
+        if givenName:
+            personDict['name'] += ', ' + givenName
+    elif givenName:
+        personDict['name'] = givenName
+    else:
+        return {}
+    if person.find('.//nameIdentifier') is not None:
+        identifier = person.find('.//nameIdentifier').text
+        identifierScheme = personfind(
+            './/nameIdentifier').get('nameIdentifierScheme')
+        # TODO: There are some more schemes we want to map. Waiting for the
+        # list.
+        if identifier is not None and identifierScheme == "URL":
+            personDict['identifier'] = identifier
+
+    if person.find('.//affiliation') is not None:
+        affiliation = person.find('.//affiliation').text
+        if affiliation is not None:
+            personDict['is_part_of'] = {
+                "name": affiliation}
+    return personDict

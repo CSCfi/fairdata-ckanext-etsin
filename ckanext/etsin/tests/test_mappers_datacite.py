@@ -55,3 +55,7 @@ class TestMappersDataCite(TestCase):
         assert "twin detection" in self.metax_dict['research_dataset']['keyword']
         assert "Natural and mathematical sciences" in self.metax_dict['research_dataset']['keyword']
         assert not self.metax_dict['research_dataset']['theme']
+
+    # TODO: current test file doesn't have contributors
+    def testContributor(self):
+        pass
