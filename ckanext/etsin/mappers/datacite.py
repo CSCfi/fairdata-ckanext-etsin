@@ -123,23 +123,31 @@ def datacite_mapper(xml):
                 },
                 'type': {
                     'pref_label': dateType,
-                    'identifier': 'TODO' # TODO
+                    'identifier': 'TODO'  # TODO
                 }
             })
 
     # Map alternate identifier
     package_dict['other_identifier'] = []
     for alternateIdentifier in xml.findall('.//alternateIdentifier'):
-        alternateIdentifier_type = alternateIdentifier.get('alternateIdentifierType')
-        if alternateIdentifier_type == "URL":
+        alternateIdentifierType = alternateIdentifier.get(
+            'alternateIdentifierType')
+        if alternateIdentifierType == "URL":
             package_dict['other_identifier'].append({
                 'notation': alternateIdentifier.text,
-                'type': alternateIdentifier_type,
-                })
+                'type': alternateIdentifierType,
+            })
 
-    # # RelatedIdentifier to showcase
-    # # TODO: map RelatedIdentifier to showcase title, relatedIdentifierType, relationType,
-    # # relatedMetadataScheme, schemeURI and schemeType to showcase description
+    # Map related identifier
+    package_dict['related_entity'] = []
+    for relatedIdentifier in xml.findall('.//relatedIdentifier'):
+        relatedIdentifierType = relatedIdentifier.get('relatedIdentifierType')
+        if relatedIdentifierType == "URL":
+            relationType = relatedIdentifier.get('relationType')
+            package_dict['related_entity'].append({
+                "identifier": relatedIdentifier.text,
+                "description": relationType,
+            })
 
     # # Description to langnotes
     # description = ''

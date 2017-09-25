@@ -67,3 +67,8 @@ class TestMappersDataCite(TestCase):
     # TODO: current test file doesn't have alternate identifiers with type URL
     def testAlternateIdentifier(self):
         assert not self.metax_dict['research_dataset']['other_identifier']
+
+    # TODO: current test file doesn't have related identifiers
+    def testRelatedIdentifier(self):
+        pass
+        
