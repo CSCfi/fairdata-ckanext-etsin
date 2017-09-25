@@ -91,11 +91,10 @@ def datacite_mapper(xml):
                 package_dict['theme'].append({'identifier': subject.text})
 
     # Map contributor
+    package_dict['contributor'] = []
+    package_dict['curator'] = []
+    package_dict['rights_holder'] = []
     for contributor in xml.findall('.//contributor'):
-        package_dict['contributor'] = []
-        package_dict['publisher'] = []
-        package_dict['curator'] = []
-        package_dict['rights_holder'] = []
         contributorType = contributor.find('.//contributorType').text
         if contributorType in ["DataCollector", "DataCurator", "DataManager", "Editor", "Producer", "ProjectLeader", "ProjectMember", "Researcher", "ResearchGroup", "Supervisor"]:
             metaxContributorType = "contributor"
@@ -112,14 +111,21 @@ def datacite_mapper(xml):
             continue
         package_dict[metaxContributorType].append(person)
 
-    # # Date to event
-    # for date in xml.findall('.//{http://datacite.org/schema/kernel-3}date'):
-    #     events.append({
-    #       'type': date.get('dateType'),
-    #       'when': date.text,
-    #       'who': u'unknown',
-    #       'descr': date.get('dateType'),
-    #       })
+    # Map date
+    package_dict['provenance'] = []
+    for date in xml.findall('.//date'):
+        dateType = date.get('dateType')
+        if dateType in ['todo: find correct reference data']:  # TODO
+            package_dict['provenance'].append({
+                'temporal': {
+                    'start_date': date.text,
+                    'end_date': date.text
+                },
+                'type': {
+                    'pref_label': dateType,
+                    'identifier': 'TODO' # TODO
+                }
+            })
 
     # # RelatedIdentifier to showcase
     # # TODO: map RelatedIdentifier to showcase title, relatedIdentifierType, relationType,
