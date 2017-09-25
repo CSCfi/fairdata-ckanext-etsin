@@ -108,10 +108,13 @@ def datacite_mapper(xml):
     for subject in xml.findall('.//subject'):
         subjectScheme = subject.get('subjectScheme')
         schemeURI = subject.get('schemeURI')
+        valueURI = subject.get('valueURI')
         if subjectScheme is None and schemeURI is None:
             package_dict['keyword'].append(subject.text)
         elif subjectScheme == "YSO" or "finto.fi/yso" in schemeURI:
-            if is_uri(subject.text):
+            if valueURI is not None:
+                package_dict['theme'].append({'identifier': valueURI})                
+            elif is_uri(subject.text):
                 package_dict['theme'].append({'identifier': subject.text})
 
     # # Contributor to agent
