@@ -41,3 +41,6 @@ class TestMappersDataCite(TestCase):
 
     def testPublisher(self):
         assert {"name": "RepOD"} in self.metax_dict['research_dataset']['publisher']
+
+    def testPublicationYear(self):
+        assert self.metax_dict['research_dataset']['issued'] == '2015'

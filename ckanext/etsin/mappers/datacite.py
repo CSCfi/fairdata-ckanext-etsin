@@ -98,10 +98,9 @@ def datacite_mapper(xml):
     publisher = xml.find('.//publisher').text
     package_dict['publisher'] = [{'name': publisher}]
 
-    # # Publication year to event
-    # publication_year = xml.find('.//{http://datacite.org/schema/kernel-3}publicationYear').text
-    # events = [{'type': u'published', 'when': publication_year, 'who':
-    # publisher, 'descr': u'Dataset was published'}]
+    # Map publication year
+    publication_year = xml.find('.//publicationYear').text
+    package_dict['issued'] = publication_year
 
     # # MAP DATACITE RECOMMENDED FIELDS
 
