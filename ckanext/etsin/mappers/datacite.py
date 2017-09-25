@@ -163,14 +163,11 @@ def datacite_mapper(xml):
             'license': {'identifier': rightsURI},
         })
 
-    # # Description to langnotes
-    # description = ''
-    # for element in xml.findall('.//{http://datacite.org/schema/kernel-3}description'):
-    #     description += element.get('descriptionType') + ': ' + element.text + ' '
-    # langnotes = [{
-    #   'lang': 'en', # Assuming we always harvest English
-    #   'value': description,
-    #   }]
+    # Map description
+    fullDescription = ""
+    for description in xml.findall('.//description'):
+        fullDescription += description.get('descriptionType') + ': ' + description.text + ' '
+    package_dict['description'] = [{language: fullDescription}]
 
     # # GeoLocation to geograhic_coverage
     # # TODO: map geoLocationPoint and geoLocationBox to extras, geoLocationPlace to
