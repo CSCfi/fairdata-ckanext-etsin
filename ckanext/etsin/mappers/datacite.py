@@ -4,7 +4,7 @@ Map Datacite 3.1 and 4.0 dicts to Metax values
 
 from lxml import objectify
 
-from ..utils import validate_6391, get_language_identifier
+from ..utils import validate_6391, get_language_identifier, is_uri
 
 import logging
 log = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ def datacite_mapper(xml):
     # Start with an empty slate
     package_dict = {}
 
-    # Map preferred_identifier
+    # Map identifier
     # According to DataCite 4.0 schema, IdentifierType should always be "DOI",
     # but OpenAire seems to use URLs as well
     identifier = xml.find('.//identifier')
@@ -102,10 +102,17 @@ def datacite_mapper(xml):
     publication_year = xml.find('.//publicationYear').text
     package_dict['issued'] = publication_year
 
-    # # MAP DATACITE RECOMMENDED FIELDS
-
-    # # Subject to tags
-    # # TODO: map subjectsScheme and schemeURI to extras
+    # Map subject
+    package_dict['keyword'] = []
+    package_dict['theme'] = []
+    for subject in xml.findall('.//subject'):
+        subjectScheme = subject.get('subjectScheme')
+        schemeURI = subject.get('schemeURI')
+        if subjectScheme is None and schemeURI is None:
+            package_dict['keyword'].append(subject.text)
+        elif subjectScheme == "YSO" or "finto.fi/yso" in schemeURI:
+            if is_uri(subject.text):
+                package_dict['theme'].append({'identifier': subject.text})
 
     # # Contributor to agent
     # # TODO: map nameIdentifier to agent.id, nameIdentifierScheme, schemeURI and
@@ -127,9 +134,6 @@ def datacite_mapper(xml):
     #       'who': u'unknown',
     #       'descr': date.get('dateType'),
     #       })
-
-    # # ResourceType to extra
-    # # TODO: map resourceType and resourceTypeGeneral to extras
 
     # # RelatedIdentifier to showcase
     # # TODO: map RelatedIdentifier to showcase title, relatedIdentifierType, relationType,

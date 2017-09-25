@@ -1,6 +1,6 @@
 from iso639 import languages
-import json
-
+from json import dumps, loads
+from urlparse import urlparse
 
 def convert_language(language):
     '''
@@ -20,6 +20,7 @@ def convert_language(language):
         except KeyError as ke:
             return ''
 
+
 def convert_language_to_6391(language):
     '''
     Convert ISO 639-2 and 639-3 language code ('fin') to ISO 639-1 ('fi'), if possible.
@@ -31,6 +32,7 @@ def convert_language_to_6391(language):
         return False
 
     return part1
+
 
 def validate_6391(language):
     '''
@@ -55,7 +57,8 @@ def get_language_identifier(language):
         language = 'und'
 
     return 'http://lexvo.org/id/iso639-3/' + language
-  
+
+
 def convert_to_metax_dict(data_dict, context, metax_id=None):
     '''
     :param data_dict: contains data that has come from harvester, mapped and refined
@@ -70,7 +73,21 @@ def convert_to_metax_dict(data_dict, context, metax_id=None):
         data_dict['urn_identifier'] = metax_id
     try:
         data_catalog_id = context.pop('data_catalog_id')
-        # Do json dumps - loads routine to get rid of problematic character encodings
-        return json.loads(json.dumps({'research_dataset': data_dict, 'data_catalog': data_catalog_id}, ensure_ascii=True))
+        # Do json dumps - loads routine to get rid of problematic character
+        # encodings
+        return loads(dumps({'research_dataset': data_dict, 'data_catalog': data_catalog_id}, ensure_ascii=True))
     except Exception as e:
         log.error(e)
+
+
+def is_uri(string):
+    '''
+    Guess if given string is a URI.
+    '''
+    if string[0:4] == "urn:":
+        return True
+    else:
+        url = urlparse(string)
+        if [url.scheme, url.netloc, url.path]:
+            return True
+    return False
