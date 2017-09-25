@@ -38,3 +38,6 @@ class TestMappersDataCite(TestCase):
     def testTitle(self):
         assert {"default": "Raw X-ray diffraction data for DNA-RNA chimera crystals in complex with barium cations"} in self.metax_dict[
             'research_dataset']['title']
+
+    def testPublisher(self):
+        assert {"name": "RepOD"} in self.metax_dict['research_dataset']['publisher']

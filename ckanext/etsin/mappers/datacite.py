@@ -85,7 +85,7 @@ def datacite_mapper(xml):
         # save it in language field
         language = "default"
 
-    # Primary title to title
+    # Map title
     # In case of multiple primary titles, pick only the first one
     for title in xml.findall('.//title'):
         titleType = xml.find('.//title').get('titleType')
@@ -94,9 +94,9 @@ def datacite_mapper(xml):
             package_dict['title'] = [{language: title.text}]
             break
 
-    # # Publisher to contact
-    # publisher = xml.find('.//{http://datacite.org/schema/kernel-3}publisher').text
-    # contacts = [{'name': publisher}]
+    # Map publisher
+    publisher = xml.find('.//publisher').text
+    package_dict['publisher'] = [{'name': publisher}]
 
     # # Publication year to event
     # publication_year = xml.find('.//{http://datacite.org/schema/kernel-3}publicationYear').text
