@@ -40,20 +40,28 @@ class TestMappersDataCite(TestCase):
             'research_dataset']['title']
 
     def testPublisher(self):
-        assert {"name": "RepOD"} in self.metax_dict['research_dataset']['publisher']
+        assert {"name": "RepOD"} in self.metax_dict[
+            'research_dataset']['publisher']
 
     def testPublicationYear(self):
         assert self.metax_dict['research_dataset']['issued'] == '2015'
 
     # TODO: current test file doesn't have YSO subjects
     def testSubject(self):
-        assert "DNA-RNA chimera" in self.metax_dict['research_dataset']['keyword']
-        assert "X-ray synchrotron diffraction images" in self.metax_dict['research_dataset']['keyword']
-        assert "left-handed Z-type duplex" in self.metax_dict['research_dataset']['keyword']
-        assert "multi-domain twinning" in self.metax_dict['research_dataset']['keyword']
-        assert "pseudosymmetry" in self.metax_dict['research_dataset']['keyword']
-        assert "twin detection" in self.metax_dict['research_dataset']['keyword']
-        assert "Natural and mathematical sciences" in self.metax_dict['research_dataset']['keyword']
+        assert "DNA-RNA chimera" in self.metax_dict[
+            'research_dataset']['keyword']
+        assert "X-ray synchrotron diffraction images" in self.metax_dict[
+            'research_dataset']['keyword']
+        assert "left-handed Z-type duplex" in self.metax_dict[
+            'research_dataset']['keyword']
+        assert "multi-domain twinning" in self.metax_dict[
+            'research_dataset']['keyword']
+        assert "pseudosymmetry" in self.metax_dict[
+            'research_dataset']['keyword']
+        assert "twin detection" in self.metax_dict[
+            'research_dataset']['keyword']
+        assert "Natural and mathematical sciences" in self.metax_dict[
+            'research_dataset']['keyword']
         assert not self.metax_dict['research_dataset']['theme']
 
     # TODO: current test file doesn't have contributors
@@ -76,3 +84,10 @@ class TestMappersDataCite(TestCase):
     def testVersion(self):
         pass
 
+    def testRights(self):
+        assert {
+            "description": "Open Access",
+            "license": {
+                "identifier": "info:eu-repo/semantics/openAccess"
+            }
+        } in self.metax_dict['research_dataset']['access_rights']

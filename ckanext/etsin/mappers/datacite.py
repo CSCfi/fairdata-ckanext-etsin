@@ -154,6 +154,15 @@ def datacite_mapper(xml):
     if version is not None:
         package_dict['version_info'] = version.text
 
+    # Map rights
+    package_dict['access_rights'] = []
+    for right in xml.findall('.//rights'):
+        rightsURI = right.get('rightsURI')
+        package_dict['access_rights'].append({
+            'description': right.text,
+            'license': {'identifier': rightsURI},
+        })
+
     # # Description to langnotes
     # description = ''
     # for element in xml.findall('.//{http://datacite.org/schema/kernel-3}description'):
@@ -166,11 +175,6 @@ def datacite_mapper(xml):
     # # GeoLocation to geograhic_coverage
     # # TODO: map geoLocationPoint and geoLocationBox to extras, geoLocationPlace to
     # # geographic_coverage
-
-    # # Rights to license
-    # # license_URL = ''
-    # for right in xml.findall('.//{http://datacite.org/schema/kernel-3}rights'):
-    #     license_URL += right.text + ' ' + right.get('rightsURI') + ' '
 
     return {
         "research_dataset": package_dict}
