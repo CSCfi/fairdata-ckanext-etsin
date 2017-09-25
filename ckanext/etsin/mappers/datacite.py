@@ -85,12 +85,14 @@ def datacite_mapper(xml):
         # save it in language field
         language = "default"
 
-    # # Primary title to title
-    # # TODO: if titleType is present, check to find out if title is actually primary
-    # # TODO: map non-primary titles to extras
-    # title = xml.find('.//{http://datacite.org/schema/kernel-3}title').text
-    # langtitle = [{'lang': 'en', 'value': title}] # Assuming we always
-    # harvest English
+    # Primary title to title
+    # In case of multiple primary titles, pick only the first one
+    for title in xml.findall('.//title'):
+        titleType = xml.find('.//title').get('titleType')
+        if not titleType:
+            # Title is primary when there's no titleType
+            package_dict['title'] = [{language: title.text}]
+            break
 
     # # Publisher to contact
     # publisher = xml.find('.//{http://datacite.org/schema/kernel-3}publisher').text
