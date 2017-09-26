@@ -61,8 +61,8 @@ def datacite_mapper(xml):
     # Map title
     # In case of multiple primary titles, pick only the first one
     for title in xml.findall('.//title'):
-        titleType = xml.find('.//title').get('titleType')
-        if not titleType:
+        title_type = xml.find('.//title').get('titleType')
+        if not title_type:
             # Title is primary when there's no titleType
             package_dict['title'] = [{language: title.text}]
             break
@@ -79,14 +79,14 @@ def datacite_mapper(xml):
     package_dict['keyword'] = []
     package_dict['theme'] = []
     for subject in xml.findall('.//subject'):
-        subjectScheme = subject.get('subjectScheme')
-        schemeURI = subject.get('schemeURI')
-        valueURI = subject.get('valueURI')
-        if subjectScheme is None and schemeURI is None:
+        subject_scheme = subject.get('subjectScheme')
+        scheme_URI = subject.get('schemeURI')
+        value_URI = subject.get('valueURI')
+        if subject_scheme is None and scheme_URI is None:
             package_dict['keyword'].append(subject.text)
-        elif subjectScheme == "YSO" or "finto.fi/yso" in schemeURI:
-            if valueURI is not None:
-                package_dict['theme'].append({'identifier': valueURI})
+        elif subject_scheme == "YSO" or "finto.fi/yso" in scheme_URI:
+            if value_URI is not None:
+                package_dict['theme'].append({'identifier': value_URI})
             elif is_uri(subject.text):
                 package_dict['theme'].append({'identifier': subject.text})
 
@@ -95,27 +95,27 @@ def datacite_mapper(xml):
     package_dict['curator'] = []
     package_dict['rights_holder'] = []
     for contributor in xml.findall('.//contributor'):
-        contributorType = contributor.find('.//contributorType').text
-        if contributorType in ["DataCollector", "DataCurator", "DataManager", "Editor", "Producer", "ProjectLeader", "ProjectMember", "Researcher", "ResearchGroup", "Supervisor"]:
-            metaxContributorType = "contributor"
-        elif contributorType == "Distributor":
-            metaxContributorType = "publisher"
-        elif contributorType == "ContactPerson":
-            metaxContributorType = "curator"
-        elif contributorType == "RightsHolder":
-            metaxContributorType = "rights_holder"
+        contributor_type = contributor.find('.//contributorType').text
+        if contributor_type in ["DataCollector", "DataCurator", "DataManager", "Editor", "Producer", "ProjectLeader", "ProjectMember", "Researcher", "ResearchGroup", "Supervisor"]:
+            metax_contributor_type = "contributor"
+        elif contributor_type == "Distributor":
+            metax_contributor_type = "publisher"
+        elif contributor_type == "ContactPerson":
+            metax_contributor_type = "curator"
+        elif contributor_type == "RightsHolder":
+            metax_contributor_type = "rights_holder"
         else:
             continue
         person = _get_person(contributor)
         if not Person:
             continue
-        package_dict[metaxContributorType].append(person)
+        package_dict[metax_contributor_type].append(person)
 
     # Map date
     package_dict['provenance'] = []
     for date in xml.findall('.//date'):
-        dateType = date.get('dateType')
-        if dateType in ['todo: find correct reference data']:  # TODO
+        date_type = date.get('dateType')
+        if date_type in ['todo: find correct reference data']:  # TODO
             package_dict['provenance'].append({
                 'temporal': {
                     'start_date': date.text,
@@ -129,24 +129,24 @@ def datacite_mapper(xml):
 
     # Map alternate identifier
     package_dict['other_identifier'] = []
-    for alternateIdentifier in xml.findall('.//alternateIdentifier'):
-        alternateIdentifierType = alternateIdentifier.get(
+    for alternate_identifier in xml.findall('.//alternateIdentifier'):
+        alternate_identifier_type = alternate_identifier.get(
             'alternateIdentifierType')
-        if alternateIdentifierType == "URL":
+        if alternate_identifier_type == "URL":
             package_dict['other_identifier'].append({
-                'notation': alternateIdentifier.text,
-                'type': alternateIdentifierType,
+                'notation': alternate_identifier.text,
+                'type': alternate_identifierType,
             })
 
     # Map related identifier
     package_dict['related_entity'] = []
-    for relatedIdentifier in xml.findall('.//relatedIdentifier'):
-        relatedIdentifierType = relatedIdentifier.get('relatedIdentifierType')
-        if relatedIdentifierType == "URL":
-            relationType = relatedIdentifier.get('relationType')
+    for related_identifier in xml.findall('.//relatedIdentifier'):
+        related_identifier_type = related_identifier.get('relatedIdentifierType')
+        if related_identifier_type == "URL":
+            relation_type = related_identifier.get('relationType')
             package_dict['related_entity'].append({
-                "identifier": relatedIdentifier.text,
-                "description": relationType,
+                "identifier": related_identifier.text,
+                "description": relation_type,
             })
 
     # Map version
@@ -157,18 +157,18 @@ def datacite_mapper(xml):
     # Map rights
     package_dict['access_rights'] = []
     for right in xml.findall('.//rights'):
-        rightsURI = right.get('rightsURI')
+        rights_URI = right.get('rightsURI')
         package_dict['access_rights'].append({
             'description': right.text,
-            'license': {'identifier': rightsURI},
+            'license': {'identifier': rights_URI},
         })
 
     # Map description
-    fullDescription = ""
+    full_description = ""
     for description in xml.findall('.//description'):
-        fullDescription += description.get('descriptionType') + \
+        full_description += description.get('descriptionType') + \
             ': ' + description.text + ' '
-    package_dict['description'] = [{language: fullDescription}]
+    package_dict['description'] = [{language: full_description}]
 
     # Map geolocation
     package_dict['location'] = []
@@ -225,37 +225,33 @@ def _get_person(person):
     '''
     Input: LXML element that contains either DataCite creator or contributor.
     '''
-    personDict = {}
-    name = person.find('.//creatorName').text
-    if name is not None:
-        familyName = person.find('.//creatorName').get('familyName')
-        givenName = person.find('.//creatorName').get('givenName')
-    else:
-        name = person.find('.//contributorName').text
-        familyName = person.find('.//contributorName').get('familyName')
-        givenName = person.find('.//contributorName').get('givenName')
-    if name:
-        personDict['name'] = name
-    elif familyName:
-        personDict['name'] = familyName
-        if givenName:
-            personDict['name'] += ', ' + givenName
-    elif givenName:
-        personDict['name'] = givenName
+    person_dict = {}
+    name = person.find('.//creatorName')
+    if name is None:
+        name = person.find('.//contributorName')
+    family_name = name.get('familyName')
+    given_name = name.get('givenName')
+    if name is not None and name.text:
+        person_dict['name'] = name.text
+    elif family_name:
+        person_dict['name'] = family_name
+        if given_name:
+            person_dict['name'] += ', ' + given_name
+    elif given_name:
+        person_dict['name'] = given_name
     else:
         return {}
     if person.find('.//nameIdentifier') is not None:
-        identifier = person.find('.//nameIdentifier').text
-        identifierScheme = personfind(
-            './/nameIdentifier').get('nameIdentifierScheme')
+        identifier = person.find('.//nameIdentifier')
+        identifier_scheme = identifier.get('nameIdentifierScheme')
         # TODO: There are some more schemes we want to map. Waiting for the
         # list.
-        if identifier is not None and identifierScheme == "URL":
-            personDict['identifier'] = identifier
+        if identifier is not None and identifier_scheme == "URL":
+            person_dict['identifier'] = identifier.text
 
     if person.find('.//affiliation') is not None:
         affiliation = person.find('.//affiliation').text
         if affiliation is not None:
-            personDict['is_part_of'] = {
+            person_dict['is_part_of'] = {
                 "name": affiliation}
-    return personDict
+    return person_dict
