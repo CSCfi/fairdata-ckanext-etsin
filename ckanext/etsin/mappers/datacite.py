@@ -166,12 +166,38 @@ def datacite_mapper(xml):
     # Map description
     fullDescription = ""
     for description in xml.findall('.//description'):
-        fullDescription += description.get('descriptionType') + ': ' + description.text + ' '
+        fullDescription += description.get('descriptionType') + \
+            ': ' + description.text + ' '
     package_dict['description'] = [{language: fullDescription}]
 
-    # # GeoLocation to geograhic_coverage
-    # # TODO: map geoLocationPoint and geoLocationBox to extras, geoLocationPlace to
-    # # geographic_coverage
+    # Map geolocation
+    package_dict['location'] = []
+    for location in xml.findall('.//geoLocation'):
+        point = location.find('.//geoLocationPoint')
+        if point is not None:
+            longitude = point.find('.//pointLongitude').text
+            latitude = point.find('.//pointLatitude').text
+            package_dict['location'].append({
+                "as_wkt": "POINT (" + pointLongitude + " " + pointLatitude + ")"})
+        box = location.find('.//geoLocationBox')
+        if box is not None:
+            west = point.find('.//westBoundLongitude').text
+            east = point.find('.//eastBoundLongitude').text
+            north = point.find('.//northBoundLatitude').text
+            south = point.find('.//soundBoundLatitude').text
+            package_dict['location'].append({
+                "as_wkt": "POLYGON ((" + west + " " + south + ", " + west + " " + north + ", " + east + " " + north + ", " + east + " " + south + ", " + west + " " + south + "))"})
+        place = location.find('.//geoLocationPlace')
+        if place is not None:
+            package_dict['location'].append({"geographic_name": place.text})
+        polygon = location.find('.//geoLocationPolygon')
+        if polygon is not None:
+            polygon_string = "POLYGON (("
+            for point in xml.findall('.//polygonPoint'):
+                longitude = point.find('.//pointLongitude').text
+                latitude = point.find('.//pointLatitude').text
+                polygon_string += longitude + " " + latitude + ", "
+            polygon_string[-2:] = "))"  # replace last ", "
 
     return {
         "research_dataset": package_dict}
