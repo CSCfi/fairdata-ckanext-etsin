@@ -1,5 +1,9 @@
-from iso639 import languages
 import json
+import logging
+
+from iso639 import languages
+
+log = logging.getLogger(__name__)
 
 
 def convert_language(language):
@@ -18,6 +22,7 @@ def convert_language(language):
             lang_object = languages.get(part2b=language)
             return lang_object.terminology
         except KeyError as ke:
+            log.error('KeyError: key not found: {0}'.format(ke.args))
             return ''
 
 def convert_language_to_6391(language):
@@ -44,14 +49,13 @@ def convert_to_metax_dict(data_dict, context, metax_id=None):
     :return: data_dict that conforms with metax json format
     '''
 
-    import logging
-    log = logging.getLogger(__name__)
-
     if metax_id:
         data_dict['urn_identifier'] = metax_id
     try:
         data_catalog_id = context.pop('data_catalog_id')
         # Do json dumps - loads routine to get rid of problematic character encodings
         return json.loads(json.dumps({'research_dataset': data_dict, 'data_catalog': data_catalog_id}, ensure_ascii=True))
+    except KeyError as ke:
+        log.error('KeyError: key not found: {0}'.format(ke.args))
     except Exception as e:
         log.error(e)
