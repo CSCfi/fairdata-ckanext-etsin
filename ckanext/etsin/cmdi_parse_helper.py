@@ -122,8 +122,12 @@ class CmdiParseHelper:
 
         :return: list of languages
         """
-        return self._text_xpath(
+        lang_list = self._text_xpath(
             self.cmd, "//cmd:corpusInfo/cmd:corpusMediaType/cmd:corpusTextInfo/cmd:languageInfo/cmd:languageId/text()")
+        lang_list.extend(self._text_xpath(
+            self.cmd,
+            "//cmd:corpusInfo/cmd:corpusMediaType/cmd:corpusAudioInfo/cmd:languageInfo/cmd:languageId/text()"))
+        return [ l.lower() for l in lang_list ]
 
     def parse_descriptions(self):
         """ Find descriptions in each language
