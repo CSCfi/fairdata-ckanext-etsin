@@ -1,6 +1,9 @@
+import requests
+
 from iso639 import languages
 from json import dumps, loads
 from urlparse import urlparse
+
 
 def convert_language(language):
     '''
@@ -91,3 +94,27 @@ def is_uri(string):
         if [url.scheme, url.netloc, url.path]:
             return True
     return False
+
+
+# TODO This is probably not the only thing we'll be querying, so we should
+# refactor this to fetch all kinds of reference data instead of just
+# licenses
+def get_rights_identifier(rights_URI):
+    query = dumps({
+        "query": {
+            "match": {
+                "uri": rights_URI
+            },
+        },
+        "size": 1,
+    })
+    response = requests.get(
+        "https://metax-test.csc.fi/es/reference_data/license/_search", data=query)
+    results = loads(response.text)
+    try:
+        identifier = results['hits']['hits'][0]['_source']['id']
+        return identifier
+    except:
+        return None
+
+    return None

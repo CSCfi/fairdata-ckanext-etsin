@@ -85,10 +85,7 @@ class TestMappersDataCite(TestCase):
 
     def testRights(self):
         assert {
-            "description": "Open Access",
-            "license": {
-                "identifier": "info:eu-repo/semantics/openAccess"
-            }
+            "description": "Open Access"
         } in self.metax_dict['research_dataset']['access_rights']
 
     # TODO: current test file only has one description

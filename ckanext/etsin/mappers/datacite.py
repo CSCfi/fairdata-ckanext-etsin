@@ -4,7 +4,7 @@ Map Datacite 3.1 and 4.0 dicts to Metax values
 
 from lxml import objectify
 
-from ..utils import validate_6391, get_language_identifier, is_uri
+from ..utils import validate_6391, get_language_identifier, is_uri, get_rights_identifier
 
 import logging
 log = logging.getLogger(__name__)
@@ -158,10 +158,18 @@ def datacite_mapper(xml):
     package_dict['access_rights'] = []
     for right in xml.findall('.//rights'):
         rights_URI = right.get('rightsURI')
-        package_dict['access_rights'].append({
-            'description': right.text,
-            'license': {'identifier': rights_URI},
-        })
+
+        # Query reference data for identifier matching this URI
+        rights_identifier = get_rights_identifier(rights_URI)
+        if rights_identifier is not None:
+            package_dict['access_rights'].append({
+                'description': right.text,
+                'license': {'identifier': rights_identifier},
+            })
+        else:
+            package_dict['access_rights'].append({
+                'description': right.text
+            })
 
     # Map description
     full_description = ""
