@@ -122,7 +122,7 @@ def datacite_mapper(xml):
                     'end_date': date.text
                 },
                 'type': {
-                    'pref_label': dateType,
+                    'pref_label': date_type,
                     'identifier': 'TODO'  # TODO
                 }
             })
@@ -135,7 +135,7 @@ def datacite_mapper(xml):
         if alternate_identifier_type == "URL":
             package_dict['other_identifier'].append({
                 'notation': alternate_identifier.text,
-                'type': alternate_identifierType,
+                'type': alternate_identifier_type,
             })
 
     # Map related identifier
