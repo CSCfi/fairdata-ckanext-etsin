@@ -64,7 +64,7 @@ def datacite_mapper(xml):
         title_type = xml.find('.//title').get('titleType')
         if not title_type:
             # Title is primary when there's no titleType
-            package_dict['title'] = [{language: title.text}]
+            package_dict['title'] = {language: title.text}
             break
 
     # Map publisher
