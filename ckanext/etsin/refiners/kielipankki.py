@@ -19,6 +19,7 @@ class KielipankkiRefiner():
     LICENSE_CLARIN_ACA = "CLARIN_ACA"
     LICENSE_CLARIN_RES = "CLARIN_RES"
     LICENSE_CC_BY = "CC-BY"
+    LICENSE_UNDERNEG = "underNegotiation"
     PID_PREFIX_URN = "urn.fi"
 
     @classmethod
@@ -33,6 +34,8 @@ class KielipankkiRefiner():
         output = license
         if license.startswith(cls.LICENSE_CC_BY):
             output = output + "-4.0"
+        elif license.startswith(cls.LICENSE_UNDERNEG):
+            output = output.lower()
         return output
 
     @classmethod
@@ -131,12 +134,7 @@ def kielipankki_refiner(context, data_dict):
             }
 
     # Set field of science
-    # TODO: JPL: When implemented in Metax change 'discipline' -> 'field_of_science' & remove 'perf_label', 'definition'
-    package_dict['discipline'] = [{"identifier": "http://www.yso.fi/onto/okm-tieteenala/ta6121",
-                                   "pref_label": [{"en": "TODO: Remove this property"}],
-                                   "definition": [
-                                       {"en": "TODO: Remove this property. We already give identifier. Use it to "
-                                              "get rest from reference_data."}]}]
+    package_dict['field_of_science'] = [{"identifier": "http://www.yso.fi/onto/okm-tieteenala/ta6121"}]
 
     package_dict.setdefault('otherIdentifier', [])
     package_dict['otherIdentifier'].extend([{

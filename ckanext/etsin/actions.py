@@ -43,17 +43,18 @@ def package_create(context, data_dict):
         # Refine data_dict based on organization it belongs to
         data_dict = refine(context, data_dict)
 
-        log.info(data_dict)
-
         pref_id = data_dict.get('preferred_identifier', None)
         # Create the dataset in MetaX
         if pref_id:
             try:
                 log.info("Trying to create package to MetaX having preferred_identifier: %s", pref_id)
-                metax_id = metax_api.create_dataset(convert_to_metax_dict(data_dict, context))
+                md = convert_to_metax_dict(data_dict, context)
+                log.info("metax_dict: {0}".format(md))
+                metax_id = metax_api.create_dataset(md)
                 log.info("Created package to MetaX successfully. MetaX ID: %s", metax_id)
-            except HTTPError:
-                log.error("Failed to create package to MetaX for a package having package ID: %s and preferred_identifier: %s", package_id, pref_id)
+            except HTTPError as e:
+                log.error("Failed to create package to MetaX for a package having package ID: {0} "
+                          "and preferred_identifier: {1}, error: {2}".format(package_id, pref_id, repr(e)))
                 return False
         else:
             log.error("Package does not have a preferred identifier. Skipping.")
@@ -62,14 +63,13 @@ def package_create(context, data_dict):
         # Create the package in our CKAN database
         context['schema'] = package_schema
         log.info("Trying to Create package to CKAN database with id: %s and name: %s", package_id, metax_id)
-        package_dict = ckan.logic.action.create.package_create(context, _get_data_dict_for_ckan_db(package_id, metax_id))
+        output = ckan.logic.action.create.package_create(context, _get_data_dict_for_ckan_db(package_id, metax_id))
         log.info("Created package to CKAN database successfully with id: %s and name: %s", package_id, metax_id)
 
         # TODO: Do we need to index the package?
     else:
-        package_dict = ckan.logic.action.create.package_create(context, data_dict)
+        output = ckan.logic.action.create.package_create(context, data_dict)
 
-    output = package_dict['id'] if return_id_only else package_dict
     return output
 
 

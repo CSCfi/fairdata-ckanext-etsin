@@ -130,28 +130,30 @@ class CmdiParseHelper:
         return [ l.lower() for l in lang_list ]
 
     def parse_descriptions(self):
-        """ Find descriptions in each language
+        """ Find descriptions in each language. Option to give several different descriptions.
 
-        :return: list of dictionaries of format { language: description }
+        :return: list of dictionaries of format
+                 [{ language1: description, language2: description },
+                  { language1: additional_description, language2: additional_description}]
         """
-        description_list = []
+        description_list = [{}]
         for desc in self.xml.xpath("//cmd:identificationInfo/cmd:description", namespaces=CmdiParseHelper.namespaces):
             lang = desc.get(
                 '{http://www.w3.org/XML/1998/namespace}lang', 'undefined').strip()
-            description_list.append({lang: unicode(desc.text).strip()})
+            description_list[0][lang] = unicode(desc.text).strip()
         return description_list
 
     def parse_titles(self):
         """ Find titles in each language
 
-        :return: list of dictionaries of format { language: title }
+        :return: dictionary of titles in format { language: title }
         """
-        title_list = []
+        titles = {}
         for title in self.xml.xpath('//cmd:identificationInfo/cmd:resourceName', namespaces=CmdiParseHelper.namespaces):
             lang = title.get(
                 '{http://www.w3.org/XML/1998/namespace}lang', 'undefined').strip()
-            title_list.append({lang: title.text.strip()})
-        return title_list
+            titles[lang] = title.text.strip()
+        return titles
 
     def parse_modified(self):
         """ Find date when metadata was last modified """
@@ -159,7 +161,13 @@ class CmdiParseHelper:
 
     def parse_temporal_coverage(self):
         """ Find time coverage of the metadata """
-        return first(self._text_xpath(self.resource_info, "//cmd:corpusInfo/cmd:corpusMediaType/cmd:corpusTextInfo/cmd:timeCoverageInfo/cmd:timeCoverage/text()"))
+        tc = first(self._text_xpath(self.resource_info,
+                                    "//cmd:corpusInfo/cmd:corpusMediaType/cmd:corpusTextInfo/cmd:timeCoverageInfo/cmd"
+                                    ":timeCoverage/text()")) or \
+             first(self._text_xpath(self.resource_info,
+                                    "//cmd:corpusInfo/cmd:corpusMediaType/cmd:corpusAudioInfo/cmd:timeCoverageInfo/cmd"
+                                    ":timeCoverage/text()"))
+        return tc
 
     def parse_licence(self):
         """ Find the license for the metadata """
