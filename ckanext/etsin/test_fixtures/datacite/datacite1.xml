@@ -1,0 +1,54 @@
+<oai:metadata xmlns:oai="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <datacite:resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:datacite="http://datacite.org/schema/kernel-3" xsi:schemaLocation="http://datacite.org/schema/kernel-3 http://schema.datacite.org/meta/kernel-3/metadata.xsd">
+     <datacite:publisher>RepOD</datacite:publisher>
+     <datacite:resourceType resourceTypeGeneral="Dataset"/>
+     <datacite:publicationYear>2015</datacite:publicationYear>
+     <datacite:rightsList>
+        <datacite:rights rightsURI="info:eu-repo/semantics/openAccess">Open Access</datacite:rights>
+     </datacite:rightsList>
+     <datacite:creators>
+        <datacite:creator>
+           <datacite:creatorName>Drozdzal, Pawel</datacite:creatorName>
+        </datacite:creator>
+        <datacite:creator>
+           <datacite:creatorName>Kierzek, Ryszard</datacite:creatorName>
+        </datacite:creator>
+        <datacite:creator>
+           <datacite:creatorName>Gilski, Miroslaw</datacite:creatorName>
+        </datacite:creator>
+        <datacite:creator>
+           <datacite:creatorName>Jaskolski, Mariusz</datacite:creatorName>
+        </datacite:creator>
+     </datacite:creators>
+     <datacite:contributors/>
+     <datacite:relatedIdentifiers/>
+     <datacite:resourceType resourceTypeGeneral="Dataset"/>
+     <datacite:identifier identifierType="URL">http://dx.doi.org/10.18150/9887707</datacite:identifier>
+     <datacite:alternateIdentifiers>
+        <datacite:alternateIdentifier alternateIdentifierType="doi">10.18150/9887707</datacite:alternateIdentifier>
+        <datacite:alternateIdentifier alternateIdentifierType="doi">10.18150/9887707</datacite:alternateIdentifier>
+        <datacite:alternateIdentifier>10.18150/9887707</datacite:alternateIdentifier>
+        <datacite:alternateIdentifier>http://dx.doi.org/10.18150/9887707</datacite:alternateIdentifier>
+        <datacite:alternateIdentifier>10.18150/9887707</datacite:alternateIdentifier>
+     </datacite:alternateIdentifiers>
+     <datacite:titles>
+        <datacite:title>Raw X-ray diffraction data for DNA-RNA chimera crystals in complex with barium cations</datacite:title>
+     </datacite:titles>
+     <datacite:descriptions>
+        <datacite:description descriptionType="Abstract">X-Ray synchrotron diffraction data for the self-complementary dCrGdCrGdCrG chimeric hexanucleotide, crystallized in the presence of barium cations in the form of a left-handed Z-type duplex. The diffraction images were collected to the resolution of 1.09 &#197; at the BESSY beamline 14.2 in Berlin at 100K using a MAR225 detector. The data was recorded in two passes: subset 1 (low, 200 images to resolution of 1.36 &#197;) and subset 2 (high, 180 images to resolution of 1.09 &#197;) with crystal-to-detector distances: (low) 160mm; (high) 70mm. The direct beam position (x=1531px, y=1535px), oscillation angle (1&#176;) and X-ray wavelength (0.8266 &#197;) were the same for both passes.</datacite:description>
+     </datacite:descriptions>
+     <datacite:subjects>
+        <datacite:subject>DNA-RNA chimera</datacite:subject>
+        <datacite:subject>X-ray synchrotron diffraction images</datacite:subject>
+        <datacite:subject>left-handed Z-type duplex</datacite:subject>
+        <datacite:subject>multi-domain twinning</datacite:subject>
+        <datacite:subject>pseudosymmetry</datacite:subject>
+        <datacite:subject>twin detection</datacite:subject>
+        <datacite:subject>Natural and mathematical sciences</datacite:subject>
+     </datacite:subjects>
+     <datacite:dates>
+        <datacite:date dateType="Issued">2015-01-01</datacite:date>
+     </datacite:dates>
+     <datacite:sizes/>
+  </datacite:resource> 
+</oai:metadata>

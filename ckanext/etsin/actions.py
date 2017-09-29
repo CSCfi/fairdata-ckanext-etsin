@@ -47,8 +47,6 @@ def package_create(context, data_dict):
             log.error(e)
             return False
 
-        log.info(data_dict)
-
         pref_id = data_dict.get('preferred_identifier', None)
         # Create the dataset in MetaX
         if pref_id:

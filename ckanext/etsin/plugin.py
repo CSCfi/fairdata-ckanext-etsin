@@ -1,11 +1,13 @@
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
-from ckanext.etsin.mappers import iso_19139
-from ckanext.etsin.mappers import cmdi
+
+from ckanext.oaipmh.interfaces import IOAIPMHHarvester
+from ckanext.spatial.interfaces import ISpatialHarvester
 
 from ckanext.etsin import actions
-from ckanext.spatial.interfaces import ISpatialHarvester
-from ckanext.oaipmh.interfaces import IOAIPMHHarvester
+from ckanext.etsin.mappers import cmdi
+from ckanext.etsin.mappers import datacite
+from ckanext.etsin.mappers import iso_19139
 
 import logging
 log = logging.getLogger(__name__)
@@ -39,6 +41,8 @@ class EtsinPlugin(plugins.SingletonPlugin):
         # OAI-PMH comes in several formats
         if format == 'cmdi0571':
             return cmdi.cmdi_mapper(xml)
+        elif format == 'oai_datacite':
+            return datacite.datacite_mapper(xml)
         else:
             return {}
 
