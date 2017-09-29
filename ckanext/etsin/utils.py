@@ -41,7 +41,8 @@ def get_language_identifier(lang):
         lang = 'und'
 
     return 'http://lexvo.org/id/iso639-3/' + lang
-  
+
+
 def convert_to_metax_dict(data_dict, context, metax_id=None):
     '''
     :param data_dict: contains data that has come from harvester, mapped and refined
@@ -59,3 +60,7 @@ def convert_to_metax_dict(data_dict, context, metax_id=None):
         log.error('KeyError: key not found: {0}'.format(ke.args))
     except Exception as e:
         log.error(e)
+
+
+def convert_bbox_to_polygon(north, east, south, west):
+    return 'POLYGON(({s} {w},{s} {e},{n} {e},{n} {w},{s} {w}))'.format(n=north, e=east, s=south, w=west)
