@@ -1,5 +1,6 @@
 import json
 import logging
+import csv
 
 from iso639 import languages
 
@@ -64,3 +65,17 @@ def convert_to_metax_dict(data_dict, context, metax_id=None):
 
 def convert_bbox_to_polygon(north, east, south, west):
     return 'POLYGON(({s} {w},{s} {e},{n} {e},{n} {w},{s} {w}))'.format(n=north, e=east, s=south, w=west)
+
+
+def set_existing_kata_identifier_to_other_identifier(file_path, search_pid, package_dict):
+    package_dict['other_identifier'] = []
+    with open(file_path, 'rb') as f:
+        reader = csv.reader(f, delimiter=',')
+        for row in reader:
+            if row[0] == search_pid:
+                package_dict['other_identifier'].append({
+                    'notation': row[1],
+                    'type': {
+                         'identifier': 'http://purl.org/att/es/reference_data/identifier_type/identifier_type_urn'
+                    }
+                })
