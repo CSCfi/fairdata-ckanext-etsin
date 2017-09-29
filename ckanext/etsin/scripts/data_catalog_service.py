@@ -110,15 +110,16 @@ def main():
             "data_catalog_id=Y api_user=Z api_password=W'\n"
             "\n"
             "'api_user' and 'api_password' are compulsory.\n"
-            "'X' is the name of the data catalog json file located in resources\n"
-            "folder and 'Y' is the data catalog identifier. Z and W are\n"
-            "credentials for using metax API.\n"
+            "X:      the name of the data catalog json file in resources folder\n"
+            "Y:      the data catalog identifier\n"
+            "Z, W:   credentials for using metax API\n"
+            "\n"
             "Three use cases:\n"
-            "1) If both data_catalog_json_file_name and data_catalog_id are given,\n"
+            "1) If both 'data_catalog_json_file_name' and 'data_catalog_id' are given,\n"
             "an update operation is assumed.\n"
-            "2) If only data_catalog_json_file_name is given, a create operation\n"
+            "2) If only 'data_catalog_json_file_name' is given, a create operation\n"
             "is assumed.\n"
-            "3) If only data_catalog_id is given, a delete operation is assumed.\n")
+            "3) If only 'data_catalog_id' is given, a delete operation is assumed.\n")
         sys.exit(1)
 
     api_user = run_args[API_USER]
