@@ -10,7 +10,7 @@ import ckan.model as model
 import ckan.logic.action.create
 import ckan.logic.action.update
 from ckan.lib.navl.validators import not_empty
-from ckan.logic.validators import name_validator
+from ckanext.etsin.exceptions import DatasetFieldsMissingError
 
 from requests import HTTPError
 
@@ -41,7 +41,11 @@ def package_create(context, data_dict):
         package_id = data_dict.pop('id')
 
         # Refine data_dict based on organization it belongs to
-        data_dict = refine(context, data_dict)
+        try:
+            data_dict = refine(context, data_dict)
+        except DatasetFieldsMissingError as e:
+            log.error(e)
+            return False
 
         pref_id = data_dict.get('preferred_identifier', None)
         # Create the dataset in MetaX
@@ -87,7 +91,11 @@ def package_update(context, data_dict):
         package_id = data_dict.pop('id')
 
         # Refine data_dict based on organization it belongs to
-        data_dict = refine(context, data_dict)
+        try:
+            data_dict = refine(context, data_dict)
+        except DatasetFieldsMissingError as e:
+            log.error(e)
+            return False
 
         log.info(data_dict)
 

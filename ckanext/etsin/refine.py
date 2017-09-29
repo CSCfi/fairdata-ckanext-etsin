@@ -1,8 +1,9 @@
 import ckanext.etsin.refiners.kielipankki as kielipankki
 import ckanext.etsin.refiners.syke as syke
+from ckanext.etsin.exceptions import DatasetFieldsMissingError
 
 
-def refine(context, data_dict):
+def refine(context, package_dict):
     '''
     Chooses refiner function based on harvest source name.
     '''
@@ -10,8 +11,10 @@ def refine(context, data_dict):
     harvest_source_name = context.pop('harvest_source_name', '')
 
     if harvest_source_name == "kielipankki":
-        data_dict = kielipankki.kielipankki_refiner(context, data_dict)
+        package_dict = kielipankki.kielipankki_refiner(context, package_dict)
     elif harvest_source_name == "syke":
-        data_dict = syke.syke_refiner(context, data_dict)
+        package_dict = syke.syke_refiner(context, package_dict)
+    else:
+        raise DatasetFieldsMissingError(package_dict, "Unable to identify harvest source in refiner: %s", package_dict)
 
-    return data_dict
+    return package_dict

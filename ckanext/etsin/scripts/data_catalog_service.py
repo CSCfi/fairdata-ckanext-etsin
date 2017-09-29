@@ -16,7 +16,7 @@ class DataCatalogMetaxAPIService:
         self.api_password = api_password
 
     def create_data_catalog(self, data_catalog_json_file):
-        catalog = self._get_data_catalog_from_file(data_catalog_json_file)
+        catalog = get_data_catalog_from_file(data_catalog_json_file)
 
         pprint.pprint("Creating data catalog in Metax..")
         try:
@@ -27,7 +27,7 @@ class DataCatalogMetaxAPIService:
             sys.exit(1)
 
     def update_data_catalog(self, data_catalog_json_file, data_catalog_id):
-        catalog = self._get_data_catalog_from_file(data_catalog_json_file)
+        catalog = get_data_catalog_from_file(data_catalog_json_file)
         if not data_catalog_id:
             pprint.pprint("No data catalog id given for updating data catalog {file}".format(data_catalog_json_file))
             sys.exit(1)
@@ -83,14 +83,15 @@ class DataCatalogMetaxAPIService:
         response.raise_for_status()
         return response.text
 
-    def _get_data_catalog_from_file(self, data_catalog_json_file):
-        try:
-            file_path = os.path.dirname(os.path.realpath(__file__)) + '/resources/' + data_catalog_json_file
-            with open(file_path, 'r') as f:
-                return json.load(f)
-        except IOError:
-            pprint.pprint("No data catalog file found in path " + file_path)
-            raise
+
+def get_data_catalog_from_file(data_catalog_json_file):
+    try:
+        file_path = os.path.dirname(os.path.realpath(__file__)) + '/resources/' + data_catalog_json_file
+        with open(file_path, 'r') as f:
+            return json.load(f)
+    except IOError:
+        pprint.pprint("No data catalog file found in path " + file_path)
+        raise
 
 
 def main():

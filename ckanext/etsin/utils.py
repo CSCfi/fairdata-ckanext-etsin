@@ -83,6 +83,10 @@ def convert_to_metax_dict(data_dict, context, metax_id=None):
         log.error(e)
 
 
+def convert_bbox_to_polygon(north, east, south, west):
+    return 'POLYGON(({s} {w},{s} {e},{n} {e},{n} {w},{s} {w}))'.format(n=north, e=east, s=south, w=west)
+
+  
 def is_uri(string):
     '''
     Guess if given string is a URI.
