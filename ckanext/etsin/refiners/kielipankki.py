@@ -1,7 +1,9 @@
 '''
 Refine Kielipankki data_dict
 '''
+import os
 from ckanext.etsin.cmdi_parse_helper import CmdiParseHelper
+from ckanext.etsin.utils import set_existing_kata_identifier_to_other_identifier
 
 # For development use
 import logging
@@ -147,5 +149,9 @@ def kielipankki_refiner(context, data_dict):
 #
 #        ]
 #    }
+
+    set_existing_kata_identifier_to_other_identifier(
+            os.path.dirname(__file__) + '/resources/kielipankki_pid_to_kata_urn.csv',
+            package_dict['preferred_identifier'], package_dict)
 
     return package_dict
