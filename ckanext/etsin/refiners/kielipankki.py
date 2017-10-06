@@ -142,13 +142,6 @@ def kielipankki_refiner(context, data_dict):
     # Set field of science
     package_dict['field_of_science'] = [{"identifier": "http://www.yso.fi/onto/okm-tieteenala/ta6121"}]
 
-#    package_dict.setdefault('accessRights', {})
-#    package_dict['accessRights'] = {
-#        "available": [
-#
-#        ]
-#    }
-
     set_existing_kata_identifier_to_other_identifier(
             os.path.dirname(__file__) + '/resources/kielipankki_pid_to_kata_urn.csv',
             package_dict['preferred_identifier'], package_dict)
