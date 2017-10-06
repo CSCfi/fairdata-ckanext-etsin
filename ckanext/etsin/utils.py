@@ -17,6 +17,10 @@ def convert_language(language):
     if not language:
         return "und"
 
+    # Test if already correct form.
+    if len(language) == 3 and language[0].islower():
+        return language
+
     try:
         lang_object = languages.get(part1=language)
         return lang_object.terminology
@@ -59,12 +63,17 @@ def validate_6391(language):
 
 def get_language_identifier(language):
     '''
-    Returns a URI representing the given ISO 639-3 encoded language
+    Returns a URI representing the given ISO 639-3 encoded language.
+    Checks first ISO 639-5 definition assuming ISO 639-3 couldn't be found in that case.
     '''
     if not isinstance(language, basestring):
         language = 'und'
 
-    return 'http://lexvo.org/id/iso639-3/' + language
+    try:
+        languages.get(part5=language)
+        return 'http://lexvo.org/id/iso639-5/' + language
+    except KeyError:
+        return 'http://lexvo.org/id/iso639-3/' + language
 
 
 def convert_to_metax_dict(data_dict, context, metax_id=None):
