@@ -1,17 +1,17 @@
-from ckanext.etsin.scripts.data_catalog_service import get_data_catalog_from_file
-from ckanext.etsin.exceptions import DatasetFieldsMissingError
-
-import os
 import csv
-
 # For development use
 import logging
+import os
+
+from ckanext.etsin.data_catalog_service import DataCatalogMetaxAPIService as DCS
+from ckanext.etsin.exceptions import DatasetFieldsMissingError
+
 log = logging.getLogger(__name__)
 
 
 # Refines Syke data_dict
 def syke_refiner(context, package_dict):
-    data_catalog = get_data_catalog_from_file('syke_data_catalog.json')['catalog_json']
+    data_catalog = DCS.get_data_catalog_from_file('syke_data_catalog.json')['catalog_json']
 
     # Field of science
     field_of_science = data_catalog['field_of_science'][0]

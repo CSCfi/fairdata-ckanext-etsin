@@ -1,9 +1,8 @@
 import requests
-
 from iso639 import languages
 from json import dumps, loads
 from urlparse import urlparse
-
+from data_catalog_service import DataCatalogMetaxAPIService
 
 def convert_language(language):
     '''
@@ -75,7 +74,10 @@ def convert_to_metax_dict(data_dict, context, metax_id=None):
     if metax_id:
         data_dict['urn_identifier'] = metax_id
     try:
-        data_catalog_id = context.pop('data_catalog_id')
+        data_catalog_id = DataCatalogMetaxAPIService.get_data_catalog_id_from_file(
+            context.get('harvest_source_name', ''))
+        if not data_catalog_id:
+            raise Exception("No data catalog id can be set for metax dict")
         # Do json dumps - loads routine to get rid of problematic character
         # encodings
         return loads(dumps({'research_dataset': data_dict, 'data_catalog': data_catalog_id}, ensure_ascii=True))
