@@ -219,3 +219,8 @@ class CmdiParseHelper:
         """ Get the metadata identifiers. """
         return self._text_xpath(
             self.cmd, "//cmd:identificationInfo/cmd:identifier/text()")
+
+    def language_bank_fallback_identifier(self):
+        """ Get the metadata identifiers. """
+        return self._text_xpath(
+            self.cmd, "//cmd:identificationInfo/cmd:url/text()")

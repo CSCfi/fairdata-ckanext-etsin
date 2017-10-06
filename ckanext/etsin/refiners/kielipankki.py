@@ -93,31 +93,33 @@ def kielipankki_refiner(context, data_dict):
     package_dict['access_rights'] = {
         'license': [{'identifier': license_identifier}]}
 
-    pids = []
     preferred_identifier = None
     for pid in [KielipankkiRefiner._language_bank_urn_pid_enhancement(metadata_pid) for metadata_pid in cmdi.parse_metadata_identifiers()]:
         if 'urn' in pid and not preferred_identifier:
-            pids.append(dict(id=pid, provider=cmdi.provider, type='primary'))
             preferred_identifier = pid
     if preferred_identifier is None:
-        raise KielipankkiRefinerException("Could not find preferred identifier in the metadata")
+        fbpid = KielipankkiRefiner._language_bank_urn_pid_enhancement((cmdi.language_bank_fallback_identifier()[0]))
+        if 'urn' in fbpid:
+            preferred_identifier = fbpid
+        else:
+            raise KielipankkiRefinerException("Could not find preferred identifier in the metadata")
     package_dict['preferred_identifier'] = preferred_identifier
 
     # Set access URLs
-    package_dict.setdefault('remote_resources', [])
-    package_dict.setdefault('access_rights', {})
     if license_identifier.lower().strip() != 'undernegotiation':
         if availability == 'open_access':
             package_dict['remote_resources'] = [{
-                'type': [{'identifier': availability}],
-                'access_url': {'identifier': preferred_identifier}
+                'type': {'identifier': 'other'},
+                'access_url': {'identifier': preferred_identifier},
+                'title': 'View the resource in META-SHARE',
             }]
 
         if availability == 'restricted_access_permit' \
                 and license_identifier.startswith(KielipankkiRefiner.LICENSE_CLARIN_ACA):
             package_dict['remote_resources'] = [{
-                'type': [{'identifier': availability}],
-                'access_url': {'identifier': preferred_identifier}
+                'type': {'identifier': 'other'},
+                'access_url': {'identifier': preferred_identifier},
+                'title': 'View the resource in META-SHARE',
             }]
 
         if availability == 'restricted_access_permit':
@@ -125,9 +127,11 @@ def kielipankki_refiner(context, data_dict):
             if len(sliced_pid) >= 2:
                 package_dict['access_rights'] = {
                     'type': [{'identifier': availability}],
-                    'has_right_related_agent': [{'homepage': {
-                        'identifier': 'https://lbr.csc.fi/web/guest/catalogue?domain=LBR&target=basket&resource=' +
-                                      sliced_pid[1]}}]
+                    'has_right_related_agent': [{
+                        'homepage': {
+                            'identifier': 'https://lbr.csc.fi/web/guest/catalogue?domain=LBR&target=basket&resource=' +
+                                          sliced_pid[1]},
+                        'name': 'Language Bank Rights system'}]
                 }
         else:
             package_dict['access_rights'] = {
@@ -138,11 +142,6 @@ def kielipankki_refiner(context, data_dict):
     # Set field of science
     package_dict['field_of_science'] = [{"identifier": "http://www.yso.fi/onto/okm-tieteenala/ta6121"}]
 
-    package_dict.setdefault('otherIdentifier', [])
-    package_dict['otherIdentifier'].extend([{
-        "notation": pid['id'],
-        "localIdentifierType": "todo"
-    } for pid in pids if pid['type'] != 'primary'])
 #    package_dict.setdefault('accessRights', {})
 #    package_dict['accessRights'] = {
 #        "available": [
