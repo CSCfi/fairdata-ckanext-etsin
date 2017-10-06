@@ -35,7 +35,6 @@ def package_create(context, data_dict):
     """
 
     user = model.User.get(context['user'])
-    return_id_only = context.get('return_id_only', False)
 
     if user.name == "harvest":
         # Get the package_id for the dict. Corresponds to harvest_object's guid
@@ -90,7 +89,6 @@ def package_update(context, data_dict):
     """
 
     user = model.User.get(context['user'])
-    return_id_only = context.get('return_id_only', False)
 
     if user.name == "harvest":
         # Get the package_id for the dict. Corresponds to harvest_object's guid
@@ -103,7 +101,7 @@ def package_update(context, data_dict):
             log.error(e)
             return False
 
-        log.info(data_dict)
+        log.info("package_update, data dict after refine: {0}".format(data_dict))
 
         # Get metax_id from ckan database
         metax_id = _get_metax_id_from_ckan_db(package_id)
@@ -124,14 +122,13 @@ def package_update(context, data_dict):
         # Update the package in our CKAN database
         context['schema'] = package_schema
         log.info("Trying to update package to CKAN database with id: %s and name: %s", package_id, metax_id)
-        package_dict = ckan.logic.action.update.package_update(context, _get_data_dict_for_ckan_db(package_id, metax_id))
+        output = ckan.logic.action.update.package_update(context, _get_data_dict_for_ckan_db(package_id, metax_id))
         log.info("Updated package to CKAN database successfully with id: %s and name: %s", package_id, metax_id)
 
         # TODO: Do we need to index the package?
     else:
-        package_dict = ckan.logic.action.update.package_update(context, data_dict)
+        output = ckan.logic.action.update.package_update(context, data_dict)
 
-    output = package_dict['id'] if return_id_only else package_dict
     return output
 
 
@@ -191,7 +188,3 @@ def _get_data_dict_for_ckan_db(package_id, metax_id):
         'name': metax_id
     }
 
-
-def _dataset_exists_in_metax(data_dict):
-    dataset_id = data_dict['preferred_identifier']
-    return metax_api.check_dataset_exists(dataset_id)
