@@ -7,12 +7,10 @@
     "harvested": true,
     "language": [
       {
-        "identifier": "http://lexvo.org/id/iso639-3/fin",
-        "notation": "fin"
+        "identifier": "http://lexvo.org/id/iso639-3/fin"
       },
       {
-        "identifier": "http://lexvo.org/id/iso639-3/eng",
-        "notation": "eng"
+        "identifier": "http://lexvo.org/id/iso639-3/eng"
       }
     ],
     "homepage": [
@@ -24,19 +22,23 @@
         }
       }
     ],
-    "publisher": [{
+    "publisher": {
       "identifier": "http://urn.fi/urn:nbn:fi:research-infras-201607252",
       "name": {
         "fi": "FIN-CLARIN",
         "en": "FIN-CLARIN"
       },
       "homepage": [{
-        "identifier": "https://kitwiki.csc.fi/twiki/bin/view/FinCLARIN/FinClarinKonsortio"
+        "identifier": "https://kitwiki.csc.fi/twiki/bin/view/FinCLARIN/FinClarinKonsortio",
+        "title": {
+          "fi": "FinCLARIN-konsortion kotisivu",
+          "en": "Homepage of the FinCLARIN consortium"
+        }
       }]
-    }],
-   "rights": {
+    },
+   "access_rights": {
       "type": [{
-          "identifier": "http://purl.org/att/reference_data/access_type/access_type_open_access"
+          "identifier": "open_access"
       }],
       "license": [{
         "identifier": "https://creativecommons.org/licenses/by/4.0/"
@@ -44,11 +46,7 @@
     },
     "field_of_science": [
       {
-        "identifier": "http://www.yso.fi/onto/okm-tieteenala/ta6121",
-        "pref_label": {
-          "fi": "Kielitieteet",
-          "en": "Languages"
-        }
+        "identifier": "http://www.yso.fi/onto/okm-tieteenala/ta6121"
       }
     ],
     "research_dataset_schema": "harvester"

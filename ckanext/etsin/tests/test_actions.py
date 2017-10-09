@@ -23,7 +23,7 @@ class TestActions(TestCase):
 #            xml_string = helpers._get_file_as_string(
 #                'kielipankki_cmdi/cmdi_record_example.xml')
 #            context = {
-#                'xml': xml_string,
+#                'source_data': xml_string,
 #                'model': model,
 #                'session': model.Session,
 #                'user': "test"

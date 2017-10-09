@@ -1,8 +1,12 @@
+import logging
+import csv
 import requests
 
 from iso639 import languages
 from json import dumps, loads
 from urlparse import urlparse
+
+log = logging.getLogger(__name__)
 
 
 def convert_language(language):
@@ -13,6 +17,10 @@ def convert_language(language):
     if not language:
         return "und"
 
+    # Test if already correct form.
+    if len(language) == 3 and language[0].islower():
+        return language
+
     try:
         lang_object = languages.get(part1=language)
         return lang_object.terminology
@@ -21,6 +29,7 @@ def convert_language(language):
             lang_object = languages.get(part2b=language)
             return lang_object.terminology
         except KeyError as ke:
+            log.error('KeyError: key not found: {0}'.format(ke.args))
             return ''
 
 
@@ -54,12 +63,17 @@ def validate_6391(language):
 
 def get_language_identifier(language):
     '''
-    Returns a URI representing the given ISO 639-3 encoded language
+    Returns a URI representing the given ISO 639-3 encoded language.
+    Checks first ISO 639-5 definition assuming ISO 639-3 couldn't be found in that case.
     '''
     if not isinstance(language, basestring):
         language = 'und'
 
-    return 'http://lexvo.org/id/iso639-3/' + language
+    try:
+        languages.get(part5=language)
+        return 'http://lexvo.org/id/iso639-5/' + language
+    except KeyError:
+        return 'http://lexvo.org/id/iso639-3/' + language
 
 
 def convert_to_metax_dict(data_dict, context, metax_id=None):
@@ -69,16 +83,14 @@ def convert_to_metax_dict(data_dict, context, metax_id=None):
     :return: data_dict that conforms with metax json format
     '''
 
-    import logging
-    log = logging.getLogger(__name__)
-
     if metax_id:
         data_dict['urn_identifier'] = metax_id
     try:
         data_catalog_id = context.pop('data_catalog_id')
-        # Do json dumps - loads routine to get rid of problematic character
-        # encodings
+        # Do json dumps - loads routine to get rid of problematic character encodings
         return loads(dumps({'research_dataset': data_dict, 'data_catalog': data_catalog_id}, ensure_ascii=True))
+    except KeyError as ke:
+        log.error('KeyError: key not found: {0}'.format(ke.args))
     except Exception as e:
         log.error(e)
 
@@ -86,7 +98,7 @@ def convert_to_metax_dict(data_dict, context, metax_id=None):
 def convert_bbox_to_polygon(north, east, south, west):
     return 'POLYGON(({s} {w},{s} {e},{n} {e},{n} {w},{s} {w}))'.format(n=north, e=east, s=south, w=west)
 
-  
+
 def is_uri(string):
     '''
     Guess if given string is a URI.
@@ -122,3 +134,17 @@ def get_rights_identifier(rights_URI):
         return None
 
     return None
+
+
+def set_existing_kata_identifier_to_other_identifier(file_path, search_pid, package_dict):
+    package_dict['other_identifier'] = []
+    with open(file_path, 'rb') as f:
+        reader = csv.reader(f, delimiter=',')
+        for row in reader:
+            if row[0] == search_pid:
+                package_dict['other_identifier'].append({
+                    'notation': row[1],
+                    'type': {
+                         'identifier': 'http://purl.org/att/es/reference_data/identifier_type/identifier_type_urn'
+                    }
+                })

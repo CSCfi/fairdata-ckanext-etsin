@@ -1,7 +1,9 @@
 '''
 Refine Kielipankki data_dict
 '''
+import os
 from ckanext.etsin.cmdi_parse_helper import CmdiParseHelper
+from ckanext.etsin.utils import set_existing_kata_identifier_to_other_identifier
 
 # For development use
 import logging
@@ -19,6 +21,7 @@ class KielipankkiRefiner():
     LICENSE_CLARIN_ACA = "CLARIN_ACA"
     LICENSE_CLARIN_RES = "CLARIN_RES"
     LICENSE_CC_BY = "CC-BY"
+    LICENSE_UNDERNEG = "underNegotiation"
     PID_PREFIX_URN = "urn.fi"
 
     @classmethod
@@ -33,6 +36,8 @@ class KielipankkiRefiner():
         output = license
         if license.startswith(cls.LICENSE_CC_BY):
             output = output + "-4.0"
+        elif license.startswith(cls.LICENSE_UNDERNEG):
+            output = output.lower()
         return output
 
     @classmethod
@@ -52,13 +57,13 @@ class KielipankkiRefiner():
         """
 
         if license.startswith(cls.LICENSE_CLARIN_ACA):
-            return "access_request"
+            return "restricted_access_permit"
         elif license == cls.LICENSE_CLARIN_RES:
-            return "access_application_other"
+            return "restricted_access_permit"
         elif license == cls.LICENSE_CLARIN_PUB or license.startswith(cls.LICENSE_CC_BY):
-            return "direct_download"
+            return "open_access"
         else:
-            return "contact_owner"
+            return "restricted_access"
 
     @classmethod
     def _language_bank_urn_pid_enhancement(cls, pid):
@@ -76,7 +81,7 @@ def kielipankki_refiner(context, data_dict):
     """
 
     package_dict = data_dict
-    xml = context.get('xml')
+    xml = context.get('source_data')
 
     # Read lxml object passed in from CMDI mapper
     cmdi = CmdiParseHelper(xml)
@@ -85,51 +90,60 @@ def kielipankki_refiner(context, data_dict):
         cmdi.parse_licence() or 'notspecified')
     availability = KielipankkiRefiner._language_bank_availability_from_license(
         license_identifier)
+    package_dict['access_rights'] = {
+        'license': [{'identifier': license_identifier}]}
 
-    pids = []
-    primary_pid = None
+    preferred_identifier = None
     for pid in [KielipankkiRefiner._language_bank_urn_pid_enhancement(metadata_pid) for metadata_pid in cmdi.parse_metadata_identifiers()]:
-        if 'urn' in pid and not primary_pid:
-            pids.append(dict(id=pid, provider=cmdi.provider, type='primary'))
-            primary_pid = pid
-    if primary_pid is None:
-        raise KielipankkiRefinerException("Could not find primary pid in the metadata")
+        if 'urn' in pid and not preferred_identifier:
+            preferred_identifier = pid
+    if preferred_identifier is None:
+        fbpid = KielipankkiRefiner._language_bank_urn_pid_enhancement((cmdi.language_bank_fallback_identifier()[0]))
+        if 'urn' in fbpid:
+            preferred_identifier = fbpid
+        else:
+            raise KielipankkiRefinerException("Could not find preferred identifier in the metadata")
+    package_dict['preferred_identifier'] = preferred_identifier
 
-    direct_download_URL = ''
-    access_request_URL = ''
-    access_application_URL = ''
+    # Set access URLs
     if license_identifier.lower().strip() != 'undernegotiation':
-        if availability == 'direct_download':
-            direct_download_URL = primary_pid
-        if availability == 'access_request':
-            access_request_URL = primary_pid
-        if availability == 'access_application_other':
-            sliced_pid = primary_pid.rsplit('/', 1)
-            if len(sliced_pid) >= 2:
-                access_application_URL = 'https://lbr.csc.fi/web/guest/catalogue?domain=LBR&target=basket&resource=' + \
-                    sliced_pid[1]
+        if availability == 'open_access':
+            package_dict['remote_resources'] = [{
+                'type': {'identifier': 'other'},
+                'access_url': {'identifier': preferred_identifier},
+                'title': 'View the resource in META-SHARE',
+            }]
 
-    # Refine the data
-    package_dict['preferred_identifier'] = primary_pid
-    package_dict.setdefault('remoteResources', [])
-    package_dict['remoteResources'].append({
-        "accessURL": {
-            "identifier": "todo"    # TODO: access_request_URL or access_application_URL?
-        },
-        "downloadURL": {
-            "identifier": direct_download_URL
-        }
-    })
-    package_dict.setdefault('otherIdentifier', [])
-    package_dict['otherIdentifier'].extend([{
-        "notation": pid['id'],
-        "localIdentifierType": "todo"
-    } for pid in pids if pid['type'] != 'primary'])
-#    package_dict.setdefault('accessRights', {})
-#    package_dict['accessRights'] = {
-#        "available": [
-#
-#        ]
-#    }
+        if availability == 'restricted_access_permit' \
+                and license_identifier.startswith(KielipankkiRefiner.LICENSE_CLARIN_ACA):
+            package_dict['remote_resources'] = [{
+                'type': {'identifier': 'other'},
+                'access_url': {'identifier': preferred_identifier},
+                'title': 'View the resource in META-SHARE',
+            }]
+
+        if availability == 'restricted_access_permit':
+            sliced_pid = preferred_identifier.rsplit('/', 1)
+            if len(sliced_pid) >= 2:
+                package_dict['access_rights'] = {
+                    'type': [{'identifier': availability}],
+                    'has_right_related_agent': [{
+                        'homepage': {
+                            'identifier': 'https://lbr.csc.fi/web/guest/catalogue?domain=LBR&target=basket&resource=' +
+                                          sliced_pid[1]},
+                        'name': 'Language Bank Rights system'}]
+                }
+        else:
+            package_dict['access_rights'] = {
+                'type': [{
+                    'identifier': availability}]
+            }
+
+    # Set field of science
+    package_dict['field_of_science'] = [{"identifier": "http://www.yso.fi/onto/okm-tieteenala/ta6121"}]
+
+    set_existing_kata_identifier_to_other_identifier(
+            os.path.dirname(__file__) + '/resources/kielipankki_pid_to_kata_urn.csv',
+            package_dict['preferred_identifier'], package_dict)
 
     return package_dict
