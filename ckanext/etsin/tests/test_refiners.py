@@ -36,7 +36,7 @@ class TestKielipankkiRefiner(TestCase):
         xml = helpers._get_file_as_lxml(
             'kielipankki_cmdi/cmdi_record_example.xml')
         metax_dict = {}
-        context = {'xml': xml}
+        context = {'source_data': xml}
         refined_dict = kielipankki_refiner(context, metax_dict)
 
         # Check that refined fields exist

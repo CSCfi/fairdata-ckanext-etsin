@@ -81,7 +81,7 @@ def kielipankki_refiner(context, data_dict):
     """
 
     package_dict = data_dict
-    xml = context.get('xml')
+    xml = context.get('source_data')
 
     # Read lxml object passed in from CMDI mapper
     cmdi = CmdiParseHelper(xml)
