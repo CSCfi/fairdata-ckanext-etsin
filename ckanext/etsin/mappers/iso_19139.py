@@ -21,12 +21,12 @@ def iso_19139_mapper(context, data_dict):
     iso_values = data_dict['iso_values']
 
     # Find out metadata language
-    # Use fi/fin, if language code not given or isn't valid ISO 639-3
+    # Use und, if language code not given or isn't valid ISO 639-3
     try:
         lang = languages.get(part3=iso_values['metadata-language']).part3
         meta_lang = convert_language_to_6391(lang)
     except Exception:
-        meta_lang = 'fi'
+        meta_lang = 'und'
 
     try:
         # Use whatever id harvest source gives us
@@ -39,9 +39,9 @@ def iso_19139_mapper(context, data_dict):
 
     # Find title
     try:
-        package_dict['title'] = [{meta_lang: iso_values['title']}]
+        package_dict['title'] = {meta_lang: iso_values['title']}
     except KeyError:
-        package_dict['title'] = [{'und': ''}]
+        package_dict['title'] = {'und': ''}
 
     # Dataset language
     package_dict['language'] = []

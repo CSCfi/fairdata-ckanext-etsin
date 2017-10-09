@@ -16,7 +16,7 @@ class TestMappersISO19139(TestCase):
     def testMapper(self):
         dict = iso_19139_mapper({}, get_iso_values_dict_1())
         eq_(dict['preferred_identifier'], 'M28mitl:')
-        eq_(dict['title'], [{'fi': 'Testiaineisto'}])
+        eq_(dict['title'], {'fi': 'Testiaineisto'})
         assert {'email': 'tekija1@testi.fi', 'name': 'tekija1'} in dict['creator']
         assert {'email': 'tekija2@testi.fi', 'name': 'tekija2'} in dict['creator']
         assert {'email': 'omistaja@testi.fi', 'name': 'omistaja'} not in dict['creator']
