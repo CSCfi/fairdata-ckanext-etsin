@@ -52,11 +52,11 @@ def datacite_mapper(xml):
             language = get_language_identifier(language[0:2])
             package_dict['language'] = language
         else:
-            language = "default"
+            language = "und"
     else:
-        # Use "default" for title and description language codes, but don't
+        # Use "und" for title and description language codes, but don't
         # save it in language field
-        language = "default"
+        language = "und"
 
     # Map title
     # In case of multiple primary titles, pick only the first one

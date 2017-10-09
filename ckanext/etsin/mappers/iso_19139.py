@@ -41,7 +41,7 @@ def iso_19139_mapper(context, data_dict):
     try:
         package_dict['title'] = [{meta_lang: iso_values['title']}]
     except KeyError:
-        package_dict['title'] = [{'default': ''}]
+        package_dict['title'] = [{'und': ''}]
 
     # Dataset language
     package_dict['language'] = []

@@ -36,7 +36,7 @@ class TestMappersDataCite(TestCase):
         pass
 
     def testTitle(self):
-        assert self.metax_dict['research_dataset']['title'] == {"default": "Raw X-ray diffraction data for DNA-RNA chimera crystals in complex with barium cations"}
+        assert self.metax_dict['research_dataset']['title'] == {"und": "Raw X-ray diffraction data for DNA-RNA chimera crystals in complex with barium cations"}
 
     def testPublisher(self):
         assert {"name": "RepOD"} in self.metax_dict[
@@ -90,7 +90,7 @@ class TestMappersDataCite(TestCase):
 
     # TODO: current test file only has one description
     def testDescription(self):
-        assert {"default": u"Abstract: X-Ray synchrotron diffraction data for the self-complementary dCrGdCrGdCrG chimeric hexanucleotide, crystallized in the presence of barium cations in the form of a left-handed Z-type duplex. The diffraction images were collected to the resolution of 1.09 \xc5 at the BESSY beamline 14.2 in Berlin at 100K using a MAR225 detector. The data was recorded in two passes: subset 1 (low, 200 images to resolution of 1.36 \xc5) and subset 2 (high, 180 images to resolution of 1.09 \xc5) with crystal-to-detector distances: (low) 160mm; (high) 70mm. The direct beam position (x=1531px, y=1535px), oscillation angle (1\xb0) and X-ray wavelength (0.8266 \xc5) were the same for both passes. "} in self.metax_dict[
+        assert {"und": u"Abstract: X-Ray synchrotron diffraction data for the self-complementary dCrGdCrGdCrG chimeric hexanucleotide, crystallized in the presence of barium cations in the form of a left-handed Z-type duplex. The diffraction images were collected to the resolution of 1.09 \xc5 at the BESSY beamline 14.2 in Berlin at 100K using a MAR225 detector. The data was recorded in two passes: subset 1 (low, 200 images to resolution of 1.36 \xc5) and subset 2 (high, 180 images to resolution of 1.09 \xc5) with crystal-to-detector distances: (low) 160mm; (high) 70mm. The direct beam position (x=1531px, y=1535px), oscillation angle (1\xb0) and X-ray wavelength (0.8266 \xc5) were the same for both passes. "} in self.metax_dict[
             'research_dataset']['description']
 
     # TODO: current test file doesn't have location
