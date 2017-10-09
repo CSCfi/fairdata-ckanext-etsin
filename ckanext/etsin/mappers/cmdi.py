@@ -27,9 +27,8 @@ class CmdiMetaxMapper:
 
         languages = cmdi.parse_languages()
         language_list = [{'title': lang,
-                          'identifier': get_language_identifier(
-                              convert_language(lang))}
-                         for lang in languages]
+                          'identifier': get_language_identifier(convert_language(lang))
+                          } for lang in languages]
 
         description_list = cmdi.parse_descriptions()
         title_list = cmdi.parse_titles()
@@ -49,28 +48,26 @@ class CmdiMetaxMapper:
         distributor = cmdi.parse_distributor()
         curators = cmdi.parse_curators()
 
-        return {
-            "research_dataset": {
-                "preferred_identifier": preferred_identifier,
-                "creator": creators,
-                "distributor": distributor,
-                "modified": modified,
-                "title": title_list,
-                "curator": curators,
-                "description": description_list,
-                "language": language_list,
-                "provenance": [{
-                    "temporal": [{
-                        "startDate": [
-                            temporal_coverage_begin
-                        ],
-                        "endDate": [
-                            temporal_coverage_end
-                        ]
-                    }]
-                }]
+        package_dict = {
+            "preferred_identifier": preferred_identifier,
+            "creator": creators,
+            "publisher": distributor,
+            "modified": modified,
+            "title": title_list,
+            "curator": curators,
+            "description": description_list,
+            "language": language_list,
+            "provenance": [{
+                "temporal": [{
+                    "startDate": temporal_coverage_begin,
+                    "endDate": temporal_coverage_end}]}],
+            "access_rights": {
+                "available": "TODO: metadataCreationDate?",
+                "description": [{
+                    "en": "TODO: Free account of the rights. This could be licenceInfo/attributionText"}],
             }
         }
+        return package_dict
 
 
 def cmdi_mapper(xml):

@@ -1,6 +1,10 @@
 '''
 Action overrides
 '''
+import logging
+
+from requests import HTTPError
+from requests.exceptions import ReadTimeout
 
 import ckanext.etsin.metax_api as metax_api
 from ckanext.etsin.refine import refine
@@ -12,9 +16,6 @@ import ckan.logic.action.update
 from ckan.lib.navl.validators import not_empty
 from ckanext.etsin.exceptions import DatasetFieldsMissingError
 
-from requests import HTTPError
-
-import logging
 log = logging.getLogger(__name__)
 
 package_schema = {
@@ -34,7 +35,6 @@ def package_create(context, data_dict):
     """
 
     user = model.User.get(context['user'])
-    return_id_only = context.get('return_id_only', False)
 
     if user.name == "harvest":
         # Get the package_id for the dict. Corresponds to harvest_object's guid
@@ -52,10 +52,16 @@ def package_create(context, data_dict):
         if pref_id:
             try:
                 log.info("Trying to create package to MetaX having preferred_identifier: %s", pref_id)
-                metax_id = metax_api.create_dataset(convert_to_metax_dict(data_dict, context))
+                md = convert_to_metax_dict(data_dict, context)
+                log.info("metax_dict: {0}".format(md))
+                metax_id = metax_api.create_dataset(md)
                 log.info("Created package to MetaX successfully. MetaX ID: %s", metax_id)
-            except HTTPError:
-                log.error("Failed to create package to MetaX for a package having package ID: %s and preferred_identifier: %s", package_id, pref_id)
+            except HTTPError as e:
+                log.error("Failed to create package to MetaX for a package having package ID: {0} "
+                          "and preferred_identifier: {1}, error: {2}".format(package_id, pref_id, repr(e)))
+                return False
+            except ReadTimeout as e:
+                log.error("Connection timeout: {0}".format(repr(e)))
                 return False
         else:
             log.error("Package does not have a preferred identifier. Skipping.")
@@ -64,14 +70,13 @@ def package_create(context, data_dict):
         # Create the package in our CKAN database
         context['schema'] = package_schema
         log.info("Trying to Create package to CKAN database with id: %s and name: %s", package_id, metax_id)
-        package_dict = ckan.logic.action.create.package_create(context, _get_data_dict_for_ckan_db(package_id, metax_id))
+        output = ckan.logic.action.create.package_create(context, _get_data_dict_for_ckan_db(package_id, metax_id))
         log.info("Created package to CKAN database successfully with id: %s and name: %s", package_id, metax_id)
 
         # TODO: Do we need to index the package?
     else:
-        package_dict = ckan.logic.action.create.package_create(context, data_dict)
+        output = ckan.logic.action.create.package_create(context, data_dict)
 
-    output = package_dict['id'] if return_id_only else package_dict
     return output
 
 
@@ -84,7 +89,6 @@ def package_update(context, data_dict):
     """
 
     user = model.User.get(context['user'])
-    return_id_only = context.get('return_id_only', False)
 
     if user.name == "harvest":
         # Get the package_id for the dict. Corresponds to harvest_object's guid
@@ -97,7 +101,7 @@ def package_update(context, data_dict):
             log.error(e)
             return False
 
-        log.info(data_dict)
+        log.info("package_update, data dict after refine: {0}".format(data_dict))
 
         # Get metax_id from ckan database
         metax_id = _get_metax_id_from_ckan_db(package_id)
@@ -111,18 +115,20 @@ def package_update(context, data_dict):
             log.error("Failed to update package to MetaX for a package having package ID: %s and MetaX ID: %s",
                       package_id, metax_id)
             return False
+        except ReadTimeout as e:
+            log.error("Connection timeout: {0}".format(repr(e)))
+            return False
 
         # Update the package in our CKAN database
         context['schema'] = package_schema
         log.info("Trying to update package to CKAN database with id: %s and name: %s", package_id, metax_id)
-        package_dict = ckan.logic.action.update.package_update(context, _get_data_dict_for_ckan_db(package_id, metax_id))
+        output = ckan.logic.action.update.package_update(context, _get_data_dict_for_ckan_db(package_id, metax_id))
         log.info("Updated package to CKAN database successfully with id: %s and name: %s", package_id, metax_id)
 
         # TODO: Do we need to index the package?
     else:
-        package_dict = ckan.logic.action.update.package_update(context, data_dict)
+        output = ckan.logic.action.update.package_update(context, data_dict)
 
-    output = package_dict['id'] if return_id_only else package_dict
     return output
 
 
@@ -152,6 +158,9 @@ def package_delete(context, data_dict):
             log.error("Failed to delete package from MetaX for a package having package ID: %s and MetaX ID: %s",
                   package_id, metax_id)
             return False
+        except ReadTimeout as e:
+            log.error("Connection timeout: {0}".format(repr(e)))
+            return False
 
         package_dict = _get_data_dict_for_ckan_db(package_id, metax_id)
         log.info("Trying to delete package from CKAN database with id: %s and name: %s", package_id, metax_id)
@@ -179,7 +188,3 @@ def _get_data_dict_for_ckan_db(package_id, metax_id):
         'name': metax_id
     }
 
-
-def _dataset_exists_in_metax(data_dict):
-    dataset_id = data_dict['preferred_identifier']
-    return metax_api.check_dataset_exists(dataset_id)

@@ -1,10 +1,9 @@
-import csv
-# For development use
 import logging
 import os
 
 from ckanext.etsin.data_catalog_service import DataCatalogMetaxAPIService as DCS
 from ckanext.etsin.exceptions import DatasetFieldsMissingError
+from ckanext.etsin.utils import set_existing_kata_identifier_to_other_identifier
 
 log = logging.getLogger(__name__)
 
@@ -40,7 +39,9 @@ def syke_refiner(context, package_dict):
             'identifier': 'http://purl.org/att/es/reference_data/access_type/access_type_restricted_access'
         }]
 
-    _set_existing_kata_identifiers_to_other_identifiers(context, package_dict)
+    if 'guid' in context:
+        set_existing_kata_identifier_to_other_identifier(
+            os.path.dirname(__file__) + '/resources/syke_guid_to_kata_urn.csv', context['guid'], package_dict)
 
     _check_for_required_fields(package_dict)
 
@@ -54,21 +55,7 @@ def _check_for_required_fields(package_dict):
         raise DatasetFieldsMissingError(package_dict)
 
 
-def _set_existing_kata_identifiers_to_other_identifiers(context, package_dict):
-    if 'guid' not in context:
-        return
 
-    package_dict['other_identifier'] = []
-    with open(os.path.dirname(__file__) + '/resources/syke_guid_to_kata_urn.csv', 'rb') as f:
-        reader = csv.reader(f, delimiter=',')
-        for row in reader:
-            if row[0] == context.get('guid'):
-                package_dict['other_identifier'].append({
-                    'notation': row[1],
-                    'type': {
-                         'identifier': 'http://purl.org/att/es/reference_data/identifier_type/identifier_type_urn'
-                    }
-                })
 
 
 def _fix_email_address(package_dict, agent_type):

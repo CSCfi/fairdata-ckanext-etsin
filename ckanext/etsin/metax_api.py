@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 # requests_log = logging.getLogger("requests.packages.urllib3")
 # requests_log.setLevel(logging.DEBUG)
 # requests_log.propagate = True
-
+timeout = 30
 
 def json_or_empty(response):
     response_json = ""
@@ -32,7 +32,8 @@ def create_dataset(dataset_json):
               'Content-Type': 'application/json',
             },
             json=dataset_json,
-            auth=(config.get('metax.api_user'), config.get('metax.api_password')))
+            auth=(config.get('metax.api_user'), config.get('metax.api_password')),
+            timeout=timeout)
     try:
         r.raise_for_status()
     except HTTPError as e:
@@ -50,7 +51,8 @@ def replace_dataset(metax_id, dataset_json):
                 'Content-Type': 'application/json'
             },
             json=dataset_json,
-            auth=(config.get('metax.api_user'), config.get('metax.api_password')))
+            auth=(config.get('metax.api_user'), config.get('metax.api_password')),
+            timeout=timeout)
     try:
         r.raise_for_status()
     except HTTPError as e:
@@ -62,7 +64,7 @@ def replace_dataset(metax_id, dataset_json):
 def delete_dataset(metax_id):
     """ Delete a dataset from MetaX. """
     r = requests.delete('https://metax-test.csc.fi/rest/datasets/{id}'.format(id=metax_id),
-            auth=(config.get('metax.api_user'), config.get('metax.api_password')))
+            auth=(config.get('metax.api_user'), config.get('metax.api_password')), timeout=timeout)
     try:
         r.raise_for_status()
     except HTTPError as e:
@@ -77,7 +79,7 @@ def check_dataset_exists(preferred_id):
     :return: True/False
     """
     r = requests.get(
-        'https://metax-test.csc.fi/rest/datasets/{id}/exists'.format(id=preferred_id))
+        'https://metax-test.csc.fi/rest/datasets/{id}/exists'.format(id=preferred_id), timeout=timeout)
     try:
         r.raise_for_status()
     except HTTPError as e:
