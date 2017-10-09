@@ -4,15 +4,11 @@ Refine Kielipankki data_dict
 import os
 from ckanext.etsin.cmdi_parse_helper import CmdiParseHelper
 from ckanext.etsin.utils import set_existing_kata_identifier_to_other_identifier
+from ckanext.etsin.exceptions import DatasetFieldsMissingError
 
 # For development use
 import logging
 log = logging.getLogger(__name__)
-
-
-class KielipankkiRefinerException(Exception):
-    """ Reader exception is thrown on unexpected data or error. """
-    pass
 
 
 class KielipankkiRefiner():
@@ -102,7 +98,7 @@ def kielipankki_refiner(context, data_dict):
         if 'urn' in fbpid:
             preferred_identifier = fbpid
         else:
-            raise KielipankkiRefinerException("Could not find preferred identifier in the metadata")
+            raise DatasetFieldsMissingError(package_dict, msg="Could not find preferred identifier in the metadata")
     package_dict['preferred_identifier'] = preferred_identifier
 
     # Set access URLs

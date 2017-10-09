@@ -8,7 +8,7 @@ def refine(context, package_dict):
     Chooses refiner function based on harvest source name.
     '''
 
-    harvest_source_name = context.pop('harvest_source_name', '')
+    harvest_source_name = context.get('harvest_source_name', '')
 
     if harvest_source_name == "kielipankki":
         package_dict = kielipankki.kielipankki_refiner(context, package_dict)
