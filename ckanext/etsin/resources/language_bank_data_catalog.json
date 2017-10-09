@@ -49,6 +49,6 @@
         "identifier": "http://www.yso.fi/onto/okm-tieteenala/ta6121"
       }
     ],
-    "research_dataset_schema": "harvester"
+    "research_dataset_schema": "kielipankki_harvester"
   }
 }
