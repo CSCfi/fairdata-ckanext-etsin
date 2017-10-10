@@ -71,6 +71,8 @@ def get_language_identifier(language):
 
     try:
         languages.get(part5=language)
+        # TODO: In metax language reference data iso639-5 URIs do not get validated,
+        # TODO: so if the below is returned, it won't get stored to metax
         return 'http://lexvo.org/id/iso639-5/' + language
     except KeyError:
         return 'http://lexvo.org/id/iso639-3/' + language
