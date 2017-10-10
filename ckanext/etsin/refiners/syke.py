@@ -14,7 +14,7 @@ def syke_refiner(context, package_dict):
 
     # Field of science
     field_of_science = data_catalog['field_of_science'][0]
-    package_dict['field_of_science'] = {'identifier': field_of_science['identifier']}
+    package_dict['field_of_science'] = [{'identifier': field_of_science['identifier']}]
 
     # Fix email addresses
     # TODO: Verify from syke this is ok

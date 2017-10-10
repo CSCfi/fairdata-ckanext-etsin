@@ -124,7 +124,7 @@ def iso_19139_mapper(context, data_dict):
         for bbox in iso_values['bbox']:
             if 'north' in bbox and 'east' in bbox and 'south' in bbox and 'west' in bbox:
                 polygon = convert_bbox_to_polygon(bbox['north'], bbox['east'], bbox['south'], bbox['west'])
-                package_dict['spatial'].append({'as_wkt': polygon})
+                package_dict['spatial'].append({'as_wkt': [polygon]})
     except KeyError:
         pass
 
@@ -156,7 +156,7 @@ def iso_19139_mapper(context, data_dict):
     # Use lineage as description for provenance
     package_dict['provenance'] = []
     try:
-        package_dict['provenance'].append({'description': iso_values['lineage']})
+        package_dict['provenance'].append({'description': {meta_lang: iso_values['lineage']}})
     except KeyError:
         pass
 
