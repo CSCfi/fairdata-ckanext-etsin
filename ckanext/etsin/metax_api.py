@@ -1,5 +1,5 @@
 import requests
-from requests import HTTPError
+from requests import HTTPError, exceptions
 import json
 from pylons import config
 
@@ -12,6 +12,7 @@ log = logging.getLogger(__name__)
 # requests_log.setLevel(logging.DEBUG)
 # requests_log.propagate = True
 timeout = 30
+
 
 def json_or_empty(response):
     response_json = ""
@@ -73,19 +74,20 @@ def delete_dataset(metax_id):
         raise
 
 
-def check_dataset_exists(preferred_id):
-    """ Ask MetaX whether the dataset already exists in MetaX.
+def check_dataset_exists(metax_urn_id):
+    """ Ask MetaX whether the dataset already exists in MetaX by using metax urn_identifier.
 
     :return: True/False
     """
     r = requests.get(
-        'https://metax-test.csc.fi/rest/datasets/{id}/exists'.format(id=preferred_id), timeout=timeout)
+        'https://metax-test.csc.fi/rest/datasets/{id}/exists'.format(id=metax_urn_id), timeout=timeout)
     try:
         r.raise_for_status()
-    except HTTPError as e:
-        log.debug('Failed to check dataset {id} existance in metax: error={error}, json={json}'.format(
-            id=preferred_id, error=repr(e), json=json_or_empty(r)))
+    except (exceptions.ConnectionError, exceptions.Timeout, exceptions.ConnectTimeout, exceptions.ReadTimeout):
+        log.error("Connection error when connecting to MetaX dataset exists API")
         raise
-    log.debug('Checked dataset existence: ({code}) {json}'.format(
+    except HTTPError:
+        pass
+    log.debug('Checked dataset existence in MetaX: ({code}) {json}'.format(
         code=r.status_code, json=r.json()))
     return r.json()

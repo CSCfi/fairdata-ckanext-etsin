@@ -23,6 +23,28 @@ package_schema = {
     'name': [not_empty, unicode]
 }
 
+def _create_package_to_metax(context, data_dict, package_id):
+    pref_id = data_dict.get('preferred_identifier', None)
+    # Create the dataset in MetaX
+    if pref_id:
+        try:
+            log.info("Trying to create package to MetaX having preferred_identifier: %s", pref_id)
+            md = convert_to_metax_dict(data_dict, context)
+            log.info("metax_dict: {0}".format(md))
+            metax_urn_id = metax_api.create_dataset(md)
+            log.info("Created package to MetaX successfully. MetaX urn_identifier: %s", metax_urn_id)
+        except HTTPError as e:
+            log.error("Failed to create package to MetaX for a package having package ID: {0} "
+                      "and preferred_identifier: {1}, error: {2}".format(package_id, pref_id, repr(e)))
+            return None
+        except ReadTimeout as e:
+            log.error("Connection timeout: {0}".format(repr(e)))
+            return None
+    else:
+        log.error("Package does not have a preferred identifier. Skipping.")
+        return None
+    return metax_urn_id
+
 
 def package_create(context, data_dict):
     """
@@ -37,8 +59,12 @@ def package_create(context, data_dict):
     user = model.User.get(context['user'])
 
     if user.name == "harvest":
-        # Get the package_id for the dict. Corresponds to harvest_object's guid
+        # Get the package_id for the dict
         package_id = data_dict.pop('id')
+
+        if not package_id:
+            log.error("Package id not found in package_create from data_dict. Aborting..")
+            return False
 
         # Refine data_dict based on organization it belongs to
         try:
@@ -47,33 +73,15 @@ def package_create(context, data_dict):
             log.error(e)
             return False
 
-        pref_id = data_dict.get('preferred_identifier', None)
-        # Create the dataset in MetaX
-        if pref_id:
-            try:
-                log.info("Trying to create package to MetaX having preferred_identifier: %s", pref_id)
-                md = convert_to_metax_dict(data_dict, context)
-                log.info("metax_dict: {0}".format(md))
-                metax_id = metax_api.create_dataset(md)
-                log.info("Created package to MetaX successfully. MetaX ID: %s", metax_id)
-            except HTTPError as e:
-                log.error("Failed to create package to MetaX for a package having package ID: {0} "
-                          "and preferred_identifier: {1}, error: {2}".format(package_id, pref_id, repr(e)))
-                return False
-            except ReadTimeout as e:
-                log.error("Connection timeout: {0}".format(repr(e)))
-                return False
-        else:
-            log.error("Package does not have a preferred identifier. Skipping.")
+        metax_urn_id = _create_package_to_metax(context, data_dict, package_id)
+        if not metax_urn_id:
             return False
 
         # Create the package in our CKAN database
         context['schema'] = package_schema
-        log.info("Trying to Create package to CKAN database with id: %s and name: %s", package_id, metax_id)
-        output = ckan.logic.action.create.package_create(context, _get_data_dict_for_ckan_db(package_id, metax_id))
-        log.info("Created package to CKAN database successfully with id: %s and name: %s", package_id, metax_id)
-
-        # TODO: Do we need to index the package?
+        log.info("Trying to create package to CKAN database with id: %s and name: %s", package_id, metax_urn_id)
+        output = ckan.logic.action.create.package_create(context, _get_data_dict_for_ckan_db(package_id, metax_urn_id))
+        log.info("Created package to CKAN database successfully with id: %s and name: %s", package_id, metax_urn_id)
     else:
         output = ckan.logic.action.create.package_create(context, data_dict)
 
@@ -91,8 +99,12 @@ def package_update(context, data_dict):
     user = model.User.get(context['user'])
 
     if user.name == "harvest":
-        # Get the package_id for the dict. Corresponds to harvest_object's guid
+        # Get the package_id for the dict
         package_id = data_dict.pop('id')
+
+        if not package_id:
+            log.error("Package id not found in package_update from data_dict. Aborting..")
+            return False
 
         # Refine data_dict based on organization it belongs to
         try:
@@ -101,31 +113,37 @@ def package_update(context, data_dict):
             log.error(e)
             return False
 
-        log.info("package_update, data dict after refine: {0}".format(data_dict))
+        # Get metax urn_identifier from ckan database
+        metax_urn_id = _get_metax_id_from_ckan_db(package_id)
 
-        # Get metax_id from ckan database
-        metax_id = _get_metax_id_from_ckan_db(package_id)
+        if metax_api.check_dataset_exists(metax_urn_id):
 
-        # Update the dataset in MetaX
-        try:
-            log.info("Trying to update package to MetaX having MetaX ID: %s", metax_id)
-            metax_api.replace_dataset(metax_id, convert_to_metax_dict(data_dict, context, metax_id))
-            log.info("Updated package to MetaX successfully having MetaX ID: %s", metax_id)
-        except HTTPError:
-            log.error("Failed to update package to MetaX for a package having package ID: %s and MetaX ID: %s",
-                      package_id, metax_id)
-            return False
-        except ReadTimeout as e:
-            log.error("Connection timeout: {0}".format(repr(e)))
-            return False
+            # Update the dataset in MetaX
+            try:
+                log.info("Trying to update package to MetaX having MetaX ID: %s", metax_urn_id)
+                metax_api.replace_dataset(metax_urn_id, convert_to_metax_dict(data_dict, context, metax_urn_id))
+                log.info("Updated package to MetaX successfully having MetaX ID: %s", metax_urn_id)
+            except HTTPError:
+                log.error("Failed to update package to MetaX for a package having package ID: %s and MetaX ID: %s",
+                          package_id, metax_urn_id)
+                return False
+            except ReadTimeout as e:
+                log.error("Connection timeout: {0}".format(repr(e)))
+                return False
+        else:
+            # Dataset does not exist in Metax even though it has been stored to local db
+            # Most likely because the Metax target env has been emptied
+            log.warn("Dataset with metax_urn_id {0} was not found from MetaX even though it exists in CKAN database".format(metax_urn_id))
+            log.info("Trying to recreate package to MetaX and update package name into CKAN database to new metax_urn_id")
+            metax_urn_id = _create_package_to_metax(context, data_dict, package_id)
+            if not metax_urn_id:
+                return False
 
         # Update the package in our CKAN database
         context['schema'] = package_schema
-        log.info("Trying to update package to CKAN database with id: %s and name: %s", package_id, metax_id)
-        output = ckan.logic.action.update.package_update(context, _get_data_dict_for_ckan_db(package_id, metax_id))
-        log.info("Updated package to CKAN database successfully with id: %s and name: %s", package_id, metax_id)
-
-        # TODO: Do we need to index the package?
+        log.info("Trying to update package to CKAN database with id: %s and name: %s", package_id, metax_urn_id)
+        output = ckan.logic.action.update.package_update(context, _get_data_dict_for_ckan_db(package_id, metax_urn_id))
+        log.info("Updated package to CKAN database successfully with id: %s and name: %s", package_id, metax_urn_id)
     else:
         output = ckan.logic.action.update.package_update(context, data_dict)
 
@@ -144,30 +162,36 @@ def package_delete(context, data_dict):
     return_id_only = context.get('return_id_only', False)
 
     if user.name == "harvest":
-        # Get the package_id for the dict. Corresponds to harvest_object's guid
+        # Get the package_id for the dict
         package_id = data_dict.pop('id')
 
-        # Get metax_id from ckan database
-        metax_id = _get_metax_id_from_ckan_db(package_id)
-
-        try:
-            log.info("Trying to delete package from MetaX having MetaX ID: %s", metax_id)
-            metax_api.delete_dataset(metax_id)
-            log.info("Deleted package from MetaX successfully having MetaX ID: %s", metax_id)
-        except HTTPError:
-            log.error("Failed to delete package from MetaX for a package having package ID: %s and MetaX ID: %s",
-                  package_id, metax_id)
-            return False
-        except ReadTimeout as e:
-            log.error("Connection timeout: {0}".format(repr(e)))
+        if not package_id:
+            log.error("Package id not found in package_delete from data_dict. Aborting..")
             return False
 
-        package_dict = _get_data_dict_for_ckan_db(package_id, metax_id)
-        log.info("Trying to delete package from CKAN database with id: %s and name: %s", package_id, metax_id)
+        # Get metax urn_identifier from ckan database
+        metax_urn_id = _get_metax_id_from_ckan_db(package_id)
+
+        if metax_api.check_dataset_exists(metax_urn_id):
+            try:
+                log.info("Trying to delete package from MetaX having MetaX ID: %s", metax_urn_id)
+                metax_api.delete_dataset(metax_urn_id)
+                log.info("Deleted package from MetaX successfully having MetaX ID: %s", metax_urn_id)
+            except HTTPError:
+                log.error("Failed to delete package from MetaX for a package having package ID: %s and MetaX ID: %s",
+                      package_id, metax_urn_id)
+                return False
+            except ReadTimeout as e:
+                log.error("Connection timeout: {0}".format(repr(e)))
+                return False
+        else:
+            log.warn("Dataset with metax_urn_id {0} was not found from MetaX even though it exists in CKAN database".format(metax_urn_id))
+            log.info("Skipping delete operation in MetaX")
+
+        package_dict = _get_data_dict_for_ckan_db(package_id, metax_urn_id)
+        log.info("Trying to delete package from CKAN database with id: %s and name: %s", package_id, metax_urn_id)
         package_dict = ckan.logic.action.delete.package_delete(context, package_dict)
-        log.info("Deleted package from CKAN database successfully with id: %s and name: %s", package_id, metax_id)
-
-        # TODO: Do we need to index the package?
+        log.info("Deleted package from CKAN database successfully with id: %s and name: %s", package_id, metax_urn_id)
     else:
         package_dict = ckan.logic.action.delete.package_delete(context, data_dict)
 
