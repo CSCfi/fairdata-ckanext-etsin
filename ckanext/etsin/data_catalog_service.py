@@ -77,7 +77,7 @@ class DataCatalogMetaxAPIService:
         log.info("Checking if data catalog with identifier " + data_catalog_id + " already exists in Metax..")
         try:
             catalog_exists = json.loads(get(self.METAX_DATA_CATALOG_API_EXISTS_URL.format(id=data_catalog_id)).text)
-        except (exceptions.ConnectionError, exceptions.Timeout, exceptions.ConnectTimeout, exceptions.ReadTimeout):
+        except Exception:
             log.error("Checking existence failed for some reason most likely in Metax data catalog API. "
                       "Assuming it exists.")
             return True

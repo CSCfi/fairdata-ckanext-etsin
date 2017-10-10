@@ -83,11 +83,10 @@ def check_dataset_exists(metax_urn_id):
         'https://metax-test.csc.fi/rest/datasets/{id}/exists'.format(id=metax_urn_id), timeout=timeout)
     try:
         r.raise_for_status()
-    except (exceptions.ConnectionError, exceptions.Timeout, exceptions.ConnectTimeout, exceptions.ReadTimeout):
-        log.error("Connection error when connecting to MetaX dataset exists API")
-        raise
-    except HTTPError:
-        pass
+    except Exception as e:
+        log.error(e)
+        log.error("Error when connecting to MetaX dataset exists API")
+        raise e
     log.debug('Checked dataset existence in MetaX: ({code}) {json}'.format(
         code=r.status_code, json=r.json()))
     return r.json()
