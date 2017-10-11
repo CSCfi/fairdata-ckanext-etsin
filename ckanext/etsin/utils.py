@@ -4,6 +4,7 @@ import requests
 from iso639 import languages
 from json import dumps, loads
 from urlparse import urlparse
+from pylons import config
 
 log = logging.getLogger(__name__)
 
@@ -131,7 +132,7 @@ def get_rights_identifier(rights_URI):
         "size": 1,
     })
     response = requests.get(
-        "https://metax-test.csc.fi/es/reference_data/license/_search", data=query)
+        'https://{0}/es/reference_data/license/_search'.format(config.get('metax.host')), data=query)
     results = loads(response.text)
     try:
         identifier = results['hits']['hits'][0]['_source']['id']

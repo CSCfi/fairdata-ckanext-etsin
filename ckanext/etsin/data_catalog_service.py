@@ -8,9 +8,10 @@ log = logging.getLogger(__name__)
 
 class DataCatalogMetaxAPIService:
 
-    METAX_DATA_CATALOG_API_POST_URL = 'https://metax-test.csc.fi/rest/datacatalogs'
-    METAX_DATA_CATALOG_API_PUT_OR_DELETE_URL = 'https://metax-test.csc.fi/rest/datacatalogs' + "/{id}"
-    METAX_DATA_CATALOG_API_EXISTS_URL = METAX_DATA_CATALOG_API_POST_URL + "/{id}/exists"
+    METAX_HOST = config.get('metax.host')
+    METAX_DATA_CATALOG_API_POST_URL = 'https://{0}/rest/datacatalogs'.format(METAX_HOST)
+    METAX_DATA_CATALOG_API_PUT_OR_DELETE_URL = METAX_DATA_CATALOG_API_POST_URL + '/{id}'
+    METAX_DATA_CATALOG_API_EXISTS_URL = METAX_DATA_CATALOG_API_PUT_OR_DELETE_URL + '/exists'
 
     def __init__(self):
         self.api_user = config.get('metax.api_user')

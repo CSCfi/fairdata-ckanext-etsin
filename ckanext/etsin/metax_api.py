@@ -11,7 +11,9 @@ log = logging.getLogger(__name__)
 # requests_log = logging.getLogger("requests.packages.urllib3")
 # requests_log.setLevel(logging.DEBUG)
 # requests_log.propagate = True
-timeout = 30
+
+TIMEOUT = 30
+METAX_DATASETS_BASE_URL = 'https://{0}/rest/datasets'.format(config.get('metax.host'))
 
 
 def json_or_empty(response):
@@ -28,13 +30,13 @@ def create_dataset(dataset_json):
 
     :return: metax-id of the created dataset.
     """
-    r = requests.post('https://metax-test.csc.fi/rest/datasets/',
-            headers={
+    r = requests.post(METAX_DATASETS_BASE_URL,
+                      headers={
               'Content-Type': 'application/json',
             },
-            json=dataset_json,
-            auth=(config.get('metax.api_user'), config.get('metax.api_password')),
-            timeout=timeout)
+                      json=dataset_json,
+                      auth=(config.get('metax.api_user'), config.get('metax.api_password')),
+                      timeout=TIMEOUT)
     try:
         r.raise_for_status()
     except HTTPError as e:
@@ -45,32 +47,32 @@ def create_dataset(dataset_json):
     return json.loads(r.text)['research_dataset']['urn_identifier']
 
 
-def replace_dataset(metax_id, dataset_json):
+def replace_dataset(metax_urn_id, dataset_json):
     """ Replace existing dataset in MetaX with a new version. """
-    r = requests.put('https://metax-test.csc.fi/rest/datasets/{id}'.format(id=metax_id),
-            headers={
+    r = requests.put(METAX_DATASETS_BASE_URL + '/{id}'.format(id=metax_urn_id),
+                     headers={
                 'Content-Type': 'application/json'
             },
-            json=dataset_json,
-            auth=(config.get('metax.api_user'), config.get('metax.api_password')),
-            timeout=timeout)
+                     json=dataset_json,
+                     auth=(config.get('metax.api_user'), config.get('metax.api_password')),
+                     timeout=TIMEOUT)
     try:
         r.raise_for_status()
     except HTTPError as e:
         log.debug('Failed to replace dataset {id}: \ndataset={dataset}, \nerror={error}, \njson={json}'.format(
-            dataset=dataset_json, id=metax_id, error=repr(e), json=json_or_empty(r)))
+            dataset=dataset_json, id=metax_urn_id, error=repr(e), json=json_or_empty(r)))
         raise
 
 
-def delete_dataset(metax_id):
+def delete_dataset(metax_urn_id):
     """ Delete a dataset from MetaX. """
-    r = requests.delete('https://metax-test.csc.fi/rest/datasets/{id}'.format(id=metax_id),
-            auth=(config.get('metax.api_user'), config.get('metax.api_password')), timeout=timeout)
+    r = requests.delete(METAX_DATASETS_BASE_URL + '/{id}'.format(id=metax_urn_id),
+                        auth=(config.get('metax.api_user'), config.get('metax.api_password')), timeout=TIMEOUT)
     try:
         r.raise_for_status()
     except HTTPError as e:
         log.debug('Failed to delete dataset {id}: \nerror={error}, \njson={json}'.format(
-            id=metax_id, error=repr(e), json=json_or_empty(r)))
+            id=metax_urn_id, error=repr(e), json=json_or_empty(r)))
         raise
 
 
@@ -80,7 +82,7 @@ def check_dataset_exists(metax_urn_id):
     :return: True/False
     """
     r = requests.get(
-        'https://metax-test.csc.fi/rest/datasets/{id}/exists'.format(id=metax_urn_id), timeout=timeout)
+        METAX_DATASETS_BASE_URL + '/{id}/exists'.format(id=metax_urn_id), timeout=TIMEOUT)
     try:
         r.raise_for_status()
     except Exception as e:
