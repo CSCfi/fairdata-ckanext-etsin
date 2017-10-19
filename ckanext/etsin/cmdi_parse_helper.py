@@ -95,10 +95,11 @@ class CmdiParseHelper:
         :return: dictionary in the MetaX agent format
         """
         return {
+            "@type": "Person",
             "name": u"{} {}".format(person['given_name'], person['surname']),
             "email": person['email'],
             "phone": person['telephoneNumber'],
-            "isPartOf": cls._get_organization_as_agent(person['organization'])
+            "member_of": cls._get_organization_as_agent(person['organization'])
         }
 
     @staticmethod
@@ -112,6 +113,7 @@ class CmdiParseHelper:
             return {}
 
         return {
+            "@type": "Organization",
             "name": organization['name'],
             "email": organization['email'],
             "phone": organization['telephoneNumber'],

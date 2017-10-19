@@ -22,13 +22,13 @@ class TestMappersDataCite(TestCase):
 
     # TODO: test creators with identifiers and affiliations
     def testCreator(self):
-        assert {"name": "Drozdzal, Pawel"} in self.metax_dict[
+        assert {"@type": "Person", "name": "Drozdzal, Pawel"} in self.metax_dict[
             'research_dataset']['creator']
-        assert {"name": "Kierzek, Ryszard"} in self.metax_dict[
+        assert {"@type": "Person", "name": "Kierzek, Ryszard"} in self.metax_dict[
             'research_dataset']['creator']
-        assert {"name": "Gilski, Miroslaw"} in self.metax_dict[
+        assert {"@type": "Person", "name": "Gilski, Miroslaw"} in self.metax_dict[
             'research_dataset']['creator']
-        assert {"name": "Jaskolski, Mariusz"} in self.metax_dict[
+        assert {"@type": "Person", "name": "Jaskolski, Mariusz"} in self.metax_dict[
             'research_dataset']['creator']
 
     # TODO: current test file doesn't have language

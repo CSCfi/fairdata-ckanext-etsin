@@ -50,23 +50,32 @@ class CmdiMetaxMapper:
 
         package_dict = {
             "preferred_identifier": preferred_identifier,
-            "creator": creators,
-            "publisher": distributor,
             "modified": modified,
             "title": title_list,
-            "curator": curators,
             "description": description_list,
             "language": language_list,
             "provenance": [{
-                "temporal": [{
+                "temporal": {
                     "startDate": temporal_coverage_begin,
-                    "endDate": temporal_coverage_end}]}],
+                    "endDate": temporal_coverage_end
+                }
+            }],
             "access_rights": {
                 "available": "TODO: metadataCreationDate?",
                 "description": [{
                     "en": "TODO: Free account of the rights. This could be licenceInfo/attributionText"}],
             }
         }
+
+        if distributor:
+            package_dict.update({"publisher": distributor})
+
+        if creators:
+            package_dict.update({"creator": creators})
+
+        if curators:
+            package_dict.update({"curator": curators})
+
         return package_dict
 
 

@@ -55,9 +55,6 @@ def _check_for_required_fields(package_dict):
         raise DatasetFieldsMissingError(package_dict)
 
 
-
-
-
 def _fix_email_address(package_dict, agent_type):
     if isinstance(package_dict[agent_type], list):
         for agent in package_dict[agent_type]:
@@ -81,4 +78,4 @@ def _split_multi_email(package_dict, agent_type, agent):
     if len(multi_email) > 1:
         package_dict[agent_type] = []
         for email in multi_email:
-            package_dict[agent_type].append({'name': agent['name'], 'email': email})
+            package_dict[agent_type].append({'@type': agent['@type'], 'name': agent['name'], 'email': email})
