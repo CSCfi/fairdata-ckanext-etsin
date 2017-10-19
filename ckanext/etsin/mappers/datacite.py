@@ -69,7 +69,9 @@ def datacite_mapper(xml):
 
     # Map publisher
     publisher = xml.find('.//publisher').text
-    package_dict['publisher'] = [{'name': publisher}]
+    package_dict['publisher'] = []
+    if publisher:
+        package_dict['publisher'].append({'name': publisher})
 
     # Map publication year
     publication_year = xml.find('.//publicationYear').text
@@ -107,9 +109,21 @@ def datacite_mapper(xml):
         else:
             continue
         person = _get_person(contributor)
-        if not Person:
+        if not person:
             continue
         package_dict[metax_contributor_type].append(person)
+
+    if len(package_dict['publisher']) == 0:
+        del package_dict['publisher']
+
+    if len(package_dict['contributor']) == 0:
+        del package_dict['contributor']
+
+    if len(package_dict['curator']) == 0:
+        del package_dict['curator']
+
+    if len(package_dict['rights_holder']) == 0:
+        del package_dict['rights_holder']
 
     # Map date
     package_dict['provenance'] = []
@@ -233,7 +247,7 @@ def _get_person(person):
     '''
     Input: LXML element that contains either DataCite creator or contributor.
     '''
-    person_dict = {}
+    person_dict = {'@type': 'Person'}
     name = person.find('.//creatorName')
     if name is None:
         name = person.find('.//contributorName')
@@ -260,6 +274,7 @@ def _get_person(person):
     if person.find('.//affiliation') is not None:
         affiliation = person.find('.//affiliation').text
         if affiliation is not None:
-            person_dict['is_part_of'] = {
+            person_dict['member_of'] = {
+                "@type": 'Organization',
                 "name": affiliation}
     return person_dict

@@ -160,18 +160,53 @@ def iso_19139_mapper(context, data_dict):
     except KeyError:
         pass
 
+    if len(package_dict['creator']) == 0:
+        del package_dict['creator']
+
+    if len(package_dict['curator']) == 0:
+        del package_dict['curator']
+
     return package_dict
 
 
 def _set_agent_details_to_package_dict_field(package_dict, field, agent, is_array):
     try:
-        name = agent['organisation-name'] or agent.get('individual-name', '')
+        # Assuming that if individual-name exists in source data, the type is Person. Otherwise type is Organization.
+        # Nothing in source data indicates whether the email address is personal or not
+        # There is always organisation name included regardless of whether the email address is personal or not
+
+        if agent.get('individual-name', False):
+            type = 'Person'
+        else:
+            type = 'Organization'
+
+        name = agent.get('individual-name', '') or agent.get('organisation-name', '')
         email = agent['contact-info'].get('email', '') if 'contact-info' in agent else ''
+
+        member_of = None
+        if type == 'Person' and agent.get('organisation-name', ''):
+            member_of = {
+                '@type': 'Organization',
+                'name': agent.get('organisation-name')
+            }
+
+        agent_obj = {
+            '@type': type,
+            'name': name,
+            'email': email,
+        }
+
+        if member_of:
+            agent_obj.update({'member_of': member_of})
+
         if is_array:
             if field not in package_dict:
                 package_dict[field] = []
-            package_dict[field].append({'name': name, 'email': email})
+
+            package_dict[field].append(agent_obj)
+
         else:
-            package_dict[field] = {'name': name, 'email': email}
+            package_dict[field] = agent_obj
+
     except Exception:
         raise

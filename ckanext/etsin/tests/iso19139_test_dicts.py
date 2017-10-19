@@ -15,12 +15,13 @@ def _get_valid_iso_values_dict_1():
         'title': 'Testiaineisto',
         'responsible-organisation': [
             {
-                'organisation-name': 'omistaja',
+                'individual-name': "omistaja",
+                'organisation-name': 'omistaja_org',
                 'contact-info': {'email': 'omistaja@testi.fi'},
                 'role': ['owner']
             },
             {
-                'organisation-name': 'tekija1',
+                'individual-name': 'tekija1',
                 'contact-info': {'email': 'tekija1@testi.fi'
                                  },
                 'role': ['originator']
@@ -72,9 +73,16 @@ def _get_valid_iso_values_dict_1():
 
 def get_package_dict_1():
     return {'access_rights': {'description': [{'fi': 'joopajoo'}]},
-            'creator': [{'email': 'tekija1@testi.fi', 'name': 'tekija1'},
-                        {'email': 'tekija2[a]testi.fi', 'name': 'tekija2'}],
-            'curator': [{'email': 'kuratoija[at]testi.fi', 'name': 'kuratoija'}],
+            'creator': [{'@type': 'Person', 'email': 'tekija1@testi.fi', 'name': 'tekija1'},
+                        {'@type': 'Organization', 'email': 'tekija2[a]testi.fi', 'name': 'tekija2'}],
+            'curator': [{
+                '@type': 'Person',
+                'email': 'kuratoija[at]testi.fi',
+                'name': 'kuratoija',
+                'member_of': {
+                    'name': 'test_org',
+                    '@type': 'Organization'
+                }}],
             'description': [{'fi': 'kuvailuteksti'}],
             'issued': '2017-01-01',
             'keyword': ['testiavainsana'],
@@ -82,8 +90,8 @@ def get_package_dict_1():
             'modified': '2017-06-06',
             'preferred_identifier': 'M28mitl:',
             'provenance': [{'description': 'provenance'}],
-            'publisher': {'email': 'jakelija [a] testi.fi', 'name': 'jakelija'},
-            'rights_holder': {'email': 'omistaja [at] testi.fi', 'name': 'omistaja'},
+            'publisher': {'@type': 'Organization', 'email': 'jakelija [a] testi.fi', 'name': 'jakelija'},
+            'rights_holder': {'@type': 'Person', 'email': 'omistaja [at] testi.fi', 'name': 'omistaja'},
             'spatial': [{
                             'polygon': 'POLYGON((59.880178 21.193932,59.880178 23.154996,60.87458 23.154996,60.87458 21.193932,59.880178 21.193932))'}],
             'temporal': [{'end_date': '2001-01-01', 'start_date': '2000-01-01'}],

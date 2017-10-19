@@ -44,17 +44,21 @@ class TestCmdiMapper(TestCase):
 
     def testCreatorPerson(self):
         assert {
+            '@type': 'Person',
             'email': 'teija@tekija.fi',
             'name': u'Teija Tekij\xe4',
             'phone': '+358501234567',
-            'isPartOf': {'email': 'registry@utu.fi',
-                         'name': u'University of Turku',
-                         'phone': '',
-                         }
+            'member_of': {
+                '@type': 'Organization',
+                'email': 'registry@utu.fi',
+                'name': u'University of Turku',
+                'phone': '',
+            }
         } in self.metax_dict['creator']
 
     def testCreatorOrganization(self):
         assert {
+            '@type': 'Organization',
             'email': 'etunim.sukunimi@kotus.fi',
             'name': u'Kotimaisten kielten keskus, Institute for the Languages of Finland',
             'phone': '+358 295 333 200',
@@ -64,26 +68,35 @@ class TestCmdiMapper(TestCase):
 
     def testCuratorPerson1(self):
         assert {
+            '@type': 'Person',
             'email': 'nobufumi.inaba@utu.fi',
-            'isPartOf': {'email': 'registry@utu.fi',
-                         'name': u'University of Turku',
-                         'phone': ''},
+            'member_of': {
+                '@type': 'Organization',
+                'email': 'registry@utu.fi',
+                'name': u'University of Turku',
+                'phone': ''
+            },
             'name': u'Nobufumi Inaba',
             'phone': '+358 123 456 789',
         } in self.metax_dict['curator']
 
     def testCuratorPerson2(self):
         assert {
+            '@type': 'Person',
             'email': 'kaisa.hakkinen@utu.fi',
-            'isPartOf': {'email': 'registry@utu.fi',
-                         'name': u'University of Turku',
-                         'phone': ''},
+            'member_of': {
+                '@type': 'Organization',
+                'email': 'registry@utu.fi',
+                'name': u'University of Turku',
+                'phone': ''
+            },
             'name': u'Kaisa H\xe4kkinen',
             'phone': '',
         } in self.metax_dict['curator']
 
     def testCuratorOrganization1(self):
         assert {
+            '@type': 'Organization',
             'email': 'etunim.sukunimi@kotus.fi',
             'name': u'Kotimaisten kielten keskus, Institute for the Languages of Finland',
             'phone': '+358 295 333 200',
@@ -91,6 +104,7 @@ class TestCmdiMapper(TestCase):
 
     def testCuratorOrganization2(self):
         assert {
+            '@type': 'Organization',
             'email': 'registry@utu.fi',
             'name': u'University of Turku',
             'phone': '',
