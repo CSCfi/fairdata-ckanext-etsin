@@ -28,6 +28,10 @@ def iso_19139_mapper(context, data_dict):
     except Exception:
         meta_lang = 'und'
 
+    # Ensure meta_lang exists
+    if not meta_lang:
+        meta_lang = 'und'
+
     try:
         # Use whatever id harvest source gives us
         package_dict['preferred_identifier'] = data_dict['harvest_object'].guid
