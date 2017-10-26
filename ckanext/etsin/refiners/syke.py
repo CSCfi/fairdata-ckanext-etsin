@@ -55,15 +55,15 @@ def _check_for_required_fields(package_dict):
         raise DatasetFieldsMissingError(package_dict)
 
 
-def _fix_email_address(package_dict, agent_type):
-    if isinstance(package_dict[agent_type], list):
-        for agent in package_dict[agent_type]:
+def _fix_email_address(package_dict, agent_role):
+    if isinstance(package_dict[agent_role], list):
+        for agent in package_dict[agent_role]:
             _replace_with_at(agent)
-            _split_multi_email(package_dict, agent_type, agent)
-    elif isinstance(package_dict[agent_type], object):
-        agent = package_dict[agent_type]
+            _split_multi_email(package_dict, agent_role, agent, False)
+    elif isinstance(package_dict[agent_role], object):
+        agent = package_dict[agent_role]
         _replace_with_at(agent)
-        _split_multi_email(package_dict, agent_type, agent)
+        _split_multi_email(package_dict, agent_role, agent, True)
 
 
 def _replace_with_at(agent):
@@ -73,9 +73,18 @@ def _replace_with_at(agent):
         replace(' ', '')
 
 
-def _split_multi_email(package_dict, agent_type, agent):
+def _split_multi_email(package_dict, agent_role, agent, choose_first_in_multi_email):
     multi_email = agent['email'].split(';')
     if len(multi_email) > 1:
-        package_dict[agent_type] = []
+        if choose_first_in_multi_email:
+            package_dict[agent_role] = {}
+        else:
+            package_dict[agent_role] = []
+
         for email in multi_email:
-            package_dict[agent_type].append({'@type': agent['@type'], 'name': agent['name'], 'email': email})
+            new_agent = {'@type': agent['@type'], 'name': agent['name'], 'email': email}
+            if choose_first_in_multi_email:
+                package_dict[agent_role].update(new_agent)
+                break
+            else:
+                package_dict[agent_role].append(new_agent)
