@@ -276,5 +276,6 @@ def _get_person(person):
         if affiliation is not None:
             person_dict['member_of'] = {
                 "@type": 'Organization',
-                "name": affiliation}
+                "name": {"und": affiliation}
+            }
     return person_dict

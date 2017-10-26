@@ -67,7 +67,7 @@ def iso_19139_mapper(context, data_dict):
     try:
         creators = (org for org in iso_values['responsible-organisation'] if 'originator' in org['role'])
         for creator in creators:
-            _set_agent_details_to_package_dict_field(package_dict, 'creator', creator, True)
+            _set_agent_details_to_package_dict_field(package_dict, 'creator', creator, True, meta_lang)
     except KeyError:
         pass
 
@@ -76,7 +76,7 @@ def iso_19139_mapper(context, data_dict):
     try:
         curators = (org for org in iso_values['responsible-organisation'] if 'pointOfContact' in org['role'])
         for curator in curators:
-            _set_agent_details_to_package_dict_field(package_dict, 'curator', curator, True)
+            _set_agent_details_to_package_dict_field(package_dict, 'curator', curator, True, meta_lang)
     except KeyError:
         pass
 
@@ -84,7 +84,7 @@ def iso_19139_mapper(context, data_dict):
     try:
         for org in iso_values['responsible-organisation']:
             if 'distributor' in org['role']:
-                _set_agent_details_to_package_dict_field(package_dict, 'publisher', org, False)
+                _set_agent_details_to_package_dict_field(package_dict, 'publisher', org, False, meta_lang)
                 break
     except KeyError:
         pass
@@ -94,7 +94,7 @@ def iso_19139_mapper(context, data_dict):
         try:
             for org in iso_values['responsible-organisation']:
                 if 'publisher' in org['role']:
-                    _set_agent_details_to_package_dict_field(package_dict, 'publisher', org, False)
+                    _set_agent_details_to_package_dict_field(package_dict, 'publisher', org, False, meta_lang)
                     break
         except KeyError:
             pass
@@ -103,7 +103,7 @@ def iso_19139_mapper(context, data_dict):
     try:
         for org in iso_values['responsible-organisation']:
             if 'owner' in org['role']:
-                _set_agent_details_to_package_dict_field(package_dict, 'rights_holder', org, False)
+                _set_agent_details_to_package_dict_field(package_dict, 'rights_holder', org, False, meta_lang)
                 break
     except KeyError:
         pass
@@ -173,7 +173,7 @@ def iso_19139_mapper(context, data_dict):
     return package_dict
 
 
-def _set_agent_details_to_package_dict_field(package_dict, field, agent, is_array):
+def _set_agent_details_to_package_dict_field(package_dict, field, agent, is_array, meta_lang):
     try:
         # Assuming that if individual-name exists in source data, the type is Person. Otherwise type is Organization.
         # Nothing in source data indicates whether the email address is personal or not
@@ -191,9 +191,13 @@ def _set_agent_details_to_package_dict_field(package_dict, field, agent, is_arra
         if type == 'Person' and agent.get('organisation-name', ''):
             member_of = {
                 '@type': 'Organization',
-                'name': agent.get('organisation-name')
+                'name': {meta_lang: agent.get('organisation-name')}
             }
 
+        if type == 'Person':
+            name = name
+        else:
+            name = {meta_lang: name}
         agent_obj = {
             '@type': type,
             'name': name,

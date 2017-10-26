@@ -64,6 +64,7 @@ class CmdiParseHelper:
         """
         return [{'role': cls._strip_first(organization.xpath("cmd:role/text()", namespaces=cls.namespaces)),
                  'name': ", ".join(cls._text_xpath(organization, "cmd:organizationInfo/cmd:organizationName/text()")),
+                 'lang': organization.xpath("cmd:organizationInfo/cmd:organizationName", namespaces=cls.namespaces)[0].get('{http://www.w3.org/XML/1998/namespace}lang', 'und').strip(),
                  'short_name': cls._strip_first(organization.xpath("cmd:organizationInfo/cmd:organizationShortName/text()", namespaces=cls.namespaces)),
                  'email': cls._strip_first(organization.xpath("cmd:organizationInfo/cmd:communicationInfo/cmd:email/text()", namespaces=cls.namespaces)),
                  'telephoneNumber': cls._strip_first(organization.xpath("cmd:organizationInfo/cmd:communicationInfo/cmd:telephoneNumber/text()", namespaces=cls.namespaces)),
@@ -94,13 +95,18 @@ class CmdiParseHelper:
         :param person: dictionary produced by the _get_persons method
         :return: dictionary in the MetaX agent format
         """
-        return {
+        member_of_org = cls._get_organization_as_agent(person['organization'])
+        ret_obj = {
             "@type": "Person",
             "name": u"{} {}".format(person['given_name'], person['surname']),
             "email": person['email'],
             "phone": person['telephoneNumber'],
-            "member_of": cls._get_organization_as_agent(person['organization'])
         }
+
+        if member_of_org:
+            ret_obj.update({"member_of": member_of_org})
+
+        return ret_obj
 
     @staticmethod
     def _get_organization_as_agent(organization):
@@ -114,7 +120,7 @@ class CmdiParseHelper:
 
         return {
             "@type": "Organization",
-            "name": organization['name'],
+            "name": {organization.get('lang', 'und'): organization['name']},
             "email": organization['email'],
             "phone": organization['telephoneNumber'],
         }
@@ -141,7 +147,7 @@ class CmdiParseHelper:
         description_list = [{}]
         for desc in self.xml.xpath("//cmd:identificationInfo/cmd:description", namespaces=CmdiParseHelper.namespaces):
             lang = desc.get(
-                '{http://www.w3.org/XML/1998/namespace}lang', 'undefined').strip()
+                '{http://www.w3.org/XML/1998/namespace}lang', 'und').strip()
             description_list[0][lang] = unicode(desc.text).strip()
         return description_list
 
@@ -153,7 +159,7 @@ class CmdiParseHelper:
         titles = {}
         for title in self.xml.xpath('//cmd:identificationInfo/cmd:resourceName', namespaces=CmdiParseHelper.namespaces):
             lang = title.get(
-                '{http://www.w3.org/XML/1998/namespace}lang', 'undefined').strip()
+                '{http://www.w3.org/XML/1998/namespace}lang', 'und').strip()
             titles[lang] = title.text.strip()
         return titles
 

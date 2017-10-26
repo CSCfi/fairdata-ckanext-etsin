@@ -19,15 +19,15 @@ class TestMappersISO19139(TestCase):
         eq_(dict['preferred_identifier'], 'M28mitl:')
         eq_(dict['title'], {'fi': 'Testiaineisto'})
         assert {'@type': 'Person', 'email': 'tekija1@testi.fi', 'name': 'tekija1'} in dict['creator']
-        assert {'@type': 'Organization', 'email': 'tekija2@testi.fi', 'name': 'tekija2'} in dict['creator']
-        self.assertDictEqual({'email': 'omistaja@testi.fi', 'member_of': {'@type': 'Organization', 'name': 'omistaja_org'},
+        assert {'@type': 'Organization', 'email': 'tekija2@testi.fi', 'name': {'fi':'tekija2'}} in dict['creator']
+        self.assertDictEqual({'email': 'omistaja@testi.fi', 'member_of': {'@type': 'Organization', 'name': {'fi':'omistaja_org'}},
              '@type': 'Person', 'name': 'omistaja'}, dict['rights_holder'])
-        assert {'@type': 'Organization', 'email': 'jotainmuuta@testi.fi', 'name': 'jotainmuuta'} not in dict['creator']
-        assert {'@type': 'Organization', 'email': 'tekija1@testi.fi', 'name': 'tekija1'} not in dict['curator']
-        assert {'@type': 'Organization', 'email': 'tekija2@testi.fi', 'name': 'tekija2'} not in dict['curator']
-        assert {'@type': 'Organization', 'email': 'kuratoija@testi.fi', 'name': 'kuratoija'} in dict['curator']
-        self.assertDictEqual({'@type': 'Organization', 'email': 'jakelija@testi.fi', 'name': 'jakelija'}, dict['publisher'])
-        neq_({'@type': 'Organization', 'email': 'julkaisija@testi.fi', 'name': 'julkaisija'}, dict['publisher'])
+        assert {'@type': 'Organization', 'email': 'jotainmuuta@testi.fi', 'name': {'fi':'jotainmuuta'}} not in dict['creator']
+        assert {'@type': 'Organization', 'email': 'tekija1@testi.fi', 'name': {'fi':'tekija1'}} not in dict['curator']
+        assert {'@type': 'Organization', 'email': 'tekija2@testi.fi', 'name': {'fi':'tekija2'}} not in dict['curator']
+        assert {'@type': 'Organization', 'email': 'kuratoija@testi.fi', 'name': {'fi':'kuratoija'}} in dict['curator']
+        self.assertDictEqual({'@type': 'Organization', 'email': 'jakelija@testi.fi', 'name': {'fi':'jakelija'}}, dict['publisher'])
+        neq_({'@type': 'Organization', 'email': 'julkaisija@testi.fi', 'name': {'fi': 'julkaisija'}}, dict['publisher'])
         eq_(dict['language'], [{'identifier': 'http://lexvo.org/id/iso639-3/fin'}])
         assert 'testiavainsana' in dict['keyword']
         eq_(
