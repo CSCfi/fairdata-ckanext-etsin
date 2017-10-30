@@ -123,7 +123,7 @@ def kielipankki_refiner(context, data_dict):
             if len(sliced_pid) >= 2:
                 package_dict['access_rights'] = {
                     'type': [{'identifier': availability}],
-                    'has_right_related_agent': [{
+                    'has_rights_related_agent': [{
                         'homepage': {
                             'identifier': 'https://lbr.csc.fi/web/guest/catalogue?domain=LBR&target=basket&resource=' +
                                           sliced_pid[1]},
