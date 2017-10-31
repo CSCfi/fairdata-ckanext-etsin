@@ -26,9 +26,7 @@ class CmdiMetaxMapper:
         preferred_identifier = None
 
         languages = cmdi.parse_languages()
-        language_list = [{'title': lang,
-                          'identifier': get_language_identifier(convert_language(lang))
-                          } for lang in languages]
+        language_list = [{'identifier': get_language_identifier(convert_language(lang))} for lang in languages]
 
         description_list = cmdi.parse_descriptions()
         title_list = cmdi.parse_titles()
