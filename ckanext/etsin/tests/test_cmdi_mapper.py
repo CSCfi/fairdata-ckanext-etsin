@@ -29,8 +29,7 @@ class TestCmdiMapper(TestCase):
         import pprint
         pprint.pprint(self.metax_dict)
         assert {
-            'identifier': 'http://lexvo.org/id/iso639-3/fin',
-            'title': u'fi',
+            'identifier': 'http://lexvo.org/id/iso639-3/fin'
         } in self.metax_dict['language']
 
     # Test title
