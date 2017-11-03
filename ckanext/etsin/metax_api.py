@@ -40,8 +40,9 @@ def create_dataset(dataset_json):
     try:
         r.raise_for_status()
     except HTTPError as e:
-        log.debug('Failed to create dataset: \ndataset={dataset}, \nerror={error}, \njson={json}'.format(
+        log.error('Failed to create dataset: \ndataset={dataset}, \nerror={error}, \njson={json}'.format(
             dataset=dataset_json, error=repr(e), json=json_or_empty(r)))
+        log.error('Response text: %s', r.text)
         raise
     log.debug('Response text: %s', r.text)
     return json.loads(r.text)['research_dataset']['urn_identifier']
@@ -59,8 +60,9 @@ def replace_dataset(metax_urn_id, dataset_json):
     try:
         r.raise_for_status()
     except HTTPError as e:
-        log.debug('Failed to replace dataset {id}: \ndataset={dataset}, \nerror={error}, \njson={json}'.format(
+        log.error('Failed to replace dataset {id}: \ndataset={dataset}, \nerror={error}, \njson={json}'.format(
             dataset=dataset_json, id=metax_urn_id, error=repr(e), json=json_or_empty(r)))
+        log.error('Response text: %s', r.text)
         raise
 
 
@@ -71,7 +73,7 @@ def delete_dataset(metax_urn_id):
     try:
         r.raise_for_status()
     except HTTPError as e:
-        log.debug('Failed to delete dataset {id}: \nerror={error}, \njson={json}'.format(
+        log.error('Failed to delete dataset {id}: \nerror={error}, \njson={json}'.format(
             id=metax_urn_id, error=repr(e), json=json_or_empty(r)))
         raise
 
@@ -89,6 +91,7 @@ def check_dataset_exists(metax_urn_id):
         log.error(e)
         log.error("Error when connecting to MetaX dataset exists API")
         raise e
+
     log.debug('Checked dataset existence in MetaX: ({code}) {json}'.format(
         code=r.status_code, json=r.json()))
     return r.json()

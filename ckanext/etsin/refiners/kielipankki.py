@@ -124,10 +124,10 @@ def kielipankki_refiner(context, data_dict):
                 package_dict['access_rights'] = {
                     'type': [{'identifier': availability}],
                     'has_rights_related_agent': [{
-                        'homepage': {
-                            'identifier': 'https://lbr.csc.fi/web/guest/catalogue?domain=LBR&target=basket&resource=' +
-                                          sliced_pid[1]},
-                        'name': 'Language Bank Rights system'}]
+                        '@type': 'Agent',
+                        'identifier': 'https://lbr.csc.fi/web/guest/catalogue?domain=LBR&target=basket&resource=' +
+                                      sliced_pid[1],
+                        'name': 'Language Bank Rights System'}]
                 }
         else:
             package_dict['access_rights'] = {
