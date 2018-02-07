@@ -1,5 +1,5 @@
 '''
-Map CMDI based dicts to Metax values
+Map CMDI based xml to Metax values
 '''
 from ckanext.etsin.cmdi_parse_helper import CmdiParseHelper
 

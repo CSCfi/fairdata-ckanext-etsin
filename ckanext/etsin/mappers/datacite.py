@@ -1,5 +1,5 @@
 '''
-Map Datacite 3.1 and 4.0 dicts to Metax values
+Map Datacite 3.1 and 4.0 xml to Metax values
 '''
 
 from lxml import objectify

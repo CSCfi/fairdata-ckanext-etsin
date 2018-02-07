@@ -23,6 +23,7 @@ package_schema = {
     'name': [not_empty, unicode]
 }
 
+
 def _create_package_to_metax(context, data_dict, package_id):
     pref_id = data_dict.get('preferred_identifier', None)
     # Create the dataset in MetaX

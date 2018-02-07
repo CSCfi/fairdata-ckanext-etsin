@@ -8,6 +8,7 @@ from ckanext.etsin import actions
 from ckanext.etsin.mappers import cmdi
 from ckanext.etsin.mappers import datacite
 from ckanext.etsin.mappers import iso_19139
+from ckanext.etsin.mappers import ddi25
 
 import logging
 log = logging.getLogger(__name__)
@@ -43,6 +44,8 @@ class EtsinPlugin(plugins.SingletonPlugin):
             return cmdi.cmdi_mapper(xml)
         elif format == 'oai_datacite':
             return datacite.datacite_mapper(xml)
+        elif format == 'oai_ddi25':
+            return ddi25.ddi25_mapper(xml)
         else:
             return {}
 
