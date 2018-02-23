@@ -58,7 +58,7 @@
         "identifier": "http://www.yso.fi/onto/okm-tieteenala/ta1172"
       }
     ],
-    "research_dataset_schema": "syke_harvester",
+    "research_dataset_schema": "harvester",
     "logo": "/static/images/Logo_of_SYKE.svg.png"
   }
 }
