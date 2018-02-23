@@ -1,0 +1,55 @@
+{
+  "catalog_json": {
+    "title": {
+      "fi": "Yhteiskuntatieteellinen tietoarkisto Metatietopalvelu",
+      "en": "Finnish Social Science Data Archive Metadata portal"
+    },
+    "harvested": true,
+    "language": [
+      {
+        "identifier": "http://lexvo.org/id/iso639-3/fin"
+      },
+      {
+        "identifier": "http://lexvo.org/id/iso639-3/eng"
+      }
+    ],
+    "homepage": [
+      {
+        "identifier": "http://xxxx.fi/",
+        "title": {
+          "en": "XXX Metadata portal",
+          "fi": "XXX Metatietopalvelu"
+        }
+      }
+    ],
+    "publisher": {
+      "identifier": "http://urn.fi/urn:nbn:fi:research-infras-201607256",
+      "name": {
+        "fi": "Yhteiskuntatieteellinen tietoarkisto ja Euroopan tietoarkistojen konsortio",
+        "en": "Finnish Social Science Data Archive and Consortium of European Social Science Data Archives"
+      },
+      "homepage": [{
+        "identifier": "http://www.fsd.uta.fi/en/",
+        "title": {
+          "fi": "FSD kotisivu",
+          "en": "Homepage of the FSD"
+        }
+      }]
+    },
+   "access_rights": {
+      "type": [{
+          "identifier": "http://purl.org/att/es/reference_data/access_type/access_type_open_access"
+      }],
+      "license": [{
+        "identifier": "https://creativecommons.org/licenses/by/4.0/"
+      }]
+    },
+    "field_of_science": [
+      {
+        "identifier": "http://www.yso.fi/onto/okm-tieteenala/ta5"
+      }
+    ],
+    "research_dataset_schema": "kielipankki_harvester",
+    "logo": "/static/images/KIELIPANKKI_logotxt_SU_EN.png"
+  }
+}
