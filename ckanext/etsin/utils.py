@@ -10,10 +10,11 @@ log = logging.getLogger(__name__)
 
 from data_catalog_service import DataCatalogMetaxAPIService
 
+
 def convert_language(language):
-    '''
+    """
     Convert alpha2 language (eg. 'en') to terminology language (eg. 'eng')
-    '''
+    """
 
     if not language:
         return "und"
@@ -35,10 +36,10 @@ def convert_language(language):
 
 
 def convert_language_to_6391(language):
-    '''
+    """
     Convert ISO 639-2 and 639-3 language code ('fin') to ISO 639-1 ('fi'), if possible.
     Note that not all languages are included in ISO 639-1.
-    '''
+    """
     try:
         part1 = languages.get(part3=language).part1
     except:
@@ -48,9 +49,9 @@ def convert_language_to_6391(language):
 
 
 def validate_6391(language):
-    '''
+    """
     Check if language code is valid ISO 639-1.
-    '''
+    """
     if not isinstance(language, basestring):
         return False
 
@@ -63,10 +64,10 @@ def validate_6391(language):
 
 
 def get_language_identifier(language):
-    '''
+    """
     Returns a URI representing the given ISO 639-3 encoded language.
     Checks first ISO 639-5 definition assuming ISO 639-3 couldn't be found in that case.
-    '''
+    """
     if not isinstance(language, basestring):
         language = 'und'
 
@@ -80,11 +81,11 @@ def get_language_identifier(language):
 
 
 def convert_to_metax_dict(data_dict, context, metax_id=None):
-    '''
+    """
     :param data_dict: contains data that has come from harvester, mapped and refined
                         and about to be sent to metax
     :return: data_dict that conforms with metax json format
-    '''
+    """
 
     if metax_id:
         data_dict['urn_identifier'] = metax_id
@@ -107,9 +108,9 @@ def convert_bbox_to_polygon(north, east, south, west):
 
 
 def is_uri(string):
-    '''
+    """
     Guess if given string is a URI.
-    '''
+    """
     if string[0:4] == "urn:":
         return True
     else:
@@ -144,6 +145,16 @@ def get_rights_identifier(rights_URI):
 
 
 def set_existing_kata_identifier_to_other_identifier(file_path, search_pid, package_dict):
+    """
+    Set kata identifier to package dict (metax research dataset) other_identifier by reading a mapping file
+    which contains two columns: first column contains values to search for with search_pid and the other is the value
+    that should be set to package_dict other_identifier.
+
+    :param file_path:
+    :param search_pid:
+    :param package_dict:
+    :return:
+    """
     package_dict['other_identifier'] = []
     with open(file_path, 'rb') as f:
         reader = csv.reader(f, delimiter=',')

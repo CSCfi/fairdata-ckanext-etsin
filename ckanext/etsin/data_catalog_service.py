@@ -123,7 +123,7 @@ class DataCatalogMetaxAPIService:
             with open(file_path, 'r') as f:
                 return f.readline()
         except IOError:
-            log.warn("No file exists in path {0} related to harvest source {1}".format(file_path, harvest_source_name))
+            log.warning("No file exists in path {0} related to harvest source {1}".format(file_path, harvest_source_name))
             return None
 
     @staticmethod
@@ -160,7 +160,7 @@ def ensure_data_catalog_ok(harvest_source_name):
                 log.error("Unable to update the data catalog to metax. Aborting.")
                 return False
         else:
-            log.warn("Data catalog cannot be found from metax even though we have a data catalog id. Trying to "
+            log.warning("Data catalog cannot be found from metax even though we have a data catalog id. Trying to "
                      "recreate data catalog and overwrite the existing data catalog id")
             data_catalog_id = dcs.create_data_catalog(data_catalog_json_file)
             if data_catalog_id:

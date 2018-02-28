@@ -122,7 +122,7 @@ def package_update(context, data_dict):
             # Update the dataset in MetaX
             try:
                 log.info("Trying to update package to MetaX having MetaX ID: %s", metax_urn_id)
-                metax_api.replace_dataset(metax_urn_id, convert_to_metax_dict(data_dict, context, metax_urn_id))
+                metax_api.update_dataset(metax_urn_id, convert_to_metax_dict(data_dict, context, metax_urn_id))
                 log.info("Updated package to MetaX successfully having MetaX ID: %s", metax_urn_id)
             except HTTPError:
                 log.error("Failed to update package to MetaX for a package having package ID: %s and MetaX ID: %s",

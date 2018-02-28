@@ -48,8 +48,8 @@ def create_dataset(dataset_json):
     return json.loads(r.text)['research_dataset']['urn_identifier']
 
 
-def replace_dataset(metax_urn_id, dataset_json):
-    """ Replace existing dataset in MetaX with a new version. """
+def update_dataset(metax_urn_id, dataset_json):
+    """ Update existing dataset in MetaX """
     r = requests.put(METAX_DATASETS_BASE_URL + '/{id}'.format(id=metax_urn_id),
                      headers={
                 'Content-Type': 'application/json'
