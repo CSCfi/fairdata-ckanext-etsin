@@ -18,7 +18,8 @@ class KielipankkiRefiner():
     LICENSE_CLARIN_RES = "CLARIN_RES"
     LICENSE_CC_BY = "CC-BY"
     LICENSE_UNDERNEG = "underNegotiation"
-    PID_PREFIX_URN = "urn.fi"
+    PID_PREFIX_URN_FI = "urn.fi/"
+    PID_PREFIX_HTTP_URN_FI = "http://urn.fi/"
 
     @classmethod
     def _language_bank_license_enhancement(cls, license):
@@ -64,8 +65,8 @@ class KielipankkiRefiner():
     @classmethod
     def _language_bank_urn_pid_enhancement(cls, pid):
         output = pid
-        if pid.startswith(cls.PID_PREFIX_URN):
-            output = 'http://' + pid
+        if output.startswith(cls.PID_PREFIX_URN_FI) or output.startswith(cls.PID_PREFIX_HTTP_URN_FI):
+            output = output[(output.find(cls.PID_PREFIX_URN_FI) + len(cls.PID_PREFIX_URN_FI)):]
         return output
 
 
