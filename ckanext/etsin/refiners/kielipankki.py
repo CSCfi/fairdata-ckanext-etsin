@@ -1,6 +1,6 @@
-'''
+"""
 Refine Kielipankki data_dict
-'''
+"""
 import os
 from ckanext.etsin.cmdi_parse_helper import CmdiParseHelper
 from ckanext.etsin.utils import set_existing_kata_identifier_to_other_identifier
@@ -15,32 +15,50 @@ class KielipankkiRefiner():
 
     LICENSE_CLARIN_PUB = "CLARIN_PUB"
     LICENSE_CLARIN_ACA = "CLARIN_ACA"
+    LICENSE_CLARIN_ACA_NC = "CLARIN_ACA-NC"
     LICENSE_CLARIN_RES = "CLARIN_RES"
-    LICENSE_CC_BY = "CC-BY"
+    LICENSE_OTHER = "other"
     LICENSE_UNDERNEG = "underNegotiation"
+    LICENSE_PROPRIETARY = "proprietary"
+    LICENSE_CC_BY = "CC-BY"
+    LICENSE_CC_BY_ND = "CC-BY-ND"
+    LICENSE_CC_BY_SA = "CC-BY-SA"
+    LICENSE_CC_BY_NC = "CC-BY-NC"
+    LICENSE_CC_BY_NC_ND = "CC-BY-NC-ND"
+    LICENSE_CC_BY_NC_SA = "CC-BY-NC-SA"
+
+    license_mapping = {
+        LICENSE_CLARIN_PUB: "ClarinPUB-1.0",
+        LICENSE_CLARIN_ACA: "ClarinACA-1.0",
+        LICENSE_CLARIN_ACA_NC: "ClarinACA+NC-1.0",
+        LICENSE_CLARIN_RES: "ClarinRES-1.0",
+        LICENSE_OTHER: "other",
+        LICENSE_UNDERNEG: "undernegotiation",
+        LICENSE_PROPRIETARY: "other",
+        LICENSE_CC_BY: "CC-BY-4.0",
+        LICENSE_CC_BY_ND: "CC-BY-ND-4.0",
+        LICENSE_CC_BY_SA: "CC-BY-SA-4.0",
+        LICENSE_CC_BY_NC: "CC-BY-NC-4.0",
+        LICENSE_CC_BY_NC_ND: "CC-BY-NC-ND-4.0",
+        LICENSE_CC_BY_NC_SA: "CC-BY-NC-SA-4.0"
+    }
+
     PID_PREFIX_URN_FI = "urn.fi/"
     PID_PREFIX_HTTP_URN_FI = "http://urn.fi/"
 
     @classmethod
-    def _language_bank_license_enhancement(cls, license):
+    def get_license(cls, license):
         """
-        Enhance language bank licenses due to lacking source data
-        so that Etsin understands them better.
 
-        :param license: License
-        :return:
+        :param license: License from source data
+        :return: License code Metax can understand
         """
-        output = license
-        if license.startswith(cls.LICENSE_CC_BY):
-            output = output + "-4.0"
-        elif license.startswith(cls.LICENSE_UNDERNEG):
-            output = output.lower()
-        return output
+        return cls.license_mapping.get(license, 'other')
 
     @classmethod
-    def _language_bank_availability_from_license(cls, license):
+    def access_type_from_license(cls, license):
         """
-        Get availability from license for datasets harvested
+        Get access type from license for datasets harvested
         from language bank interface using the following rules:
 
         CLARIN_ACA-NC -> downloadable after registration / identification
@@ -49,11 +67,11 @@ class KielipankkiRefiner():
         Otherwise -> only by contacting the distributor
 
 
-        :param license: string value for the license
-        :return: string value for availability
+        :param license: string value for the license in the source data
+        :return: string value for access type as it is in metax access_type reference data code field
         """
 
-        if license.startswith(cls.LICENSE_CLARIN_ACA):
+        if license == cls.LICENSE_CLARIN_ACA or license == cls.LICENSE_CLARIN_ACA_NC:
             return "restricted_access_permit"
         elif license == cls.LICENSE_CLARIN_RES:
             return "restricted_access_permit"
@@ -63,7 +81,7 @@ class KielipankkiRefiner():
             return "restricted_access"
 
     @classmethod
-    def _language_bank_urn_pid_enhancement(cls, pid):
+    def urn_pid_enhancement(cls, pid):
         output = pid
         if output.startswith(cls.PID_PREFIX_URN_FI) or output.startswith(cls.PID_PREFIX_HTTP_URN_FI):
             output = output[(output.find(cls.PID_PREFIX_URN_FI) + len(cls.PID_PREFIX_URN_FI)):]
@@ -83,64 +101,38 @@ def kielipankki_refiner(context, data_dict):
     # Read lxml object passed in from CMDI mapper
     cmdi = CmdiParseHelper(xml)
 
-    license_identifier = KielipankkiRefiner._language_bank_license_enhancement(
-        cmdi.parse_licence() or 'notspecified')
-    availability = KielipankkiRefiner._language_bank_availability_from_license(
-        license_identifier)
-    package_dict['access_rights'] = {
-        'license': [{'identifier': license_identifier}]}
+    package_dict['access_rights'] = {}
+    # License
+    license_in_source_data = cmdi.parse_license() or 'notspecified'
+    license_identifier = KielipankkiRefiner.get_license(license_in_source_data)
+    package_dict['access_rights'].update({'license': [{'identifier': license_identifier}]})
 
+    # Access type
+    access_type_identifier = KielipankkiRefiner.access_type_from_license(license_in_source_data)
+    if license_identifier.lower().strip() != 'undernegotiation':
+        package_dict['access_rights'].update({'access_type': {'identifier': access_type_identifier}})
+
+    # Preferred identifier
     preferred_identifier = None
-    for pid in [KielipankkiRefiner._language_bank_urn_pid_enhancement(metadata_pid) for metadata_pid in cmdi.parse_metadata_identifiers()]:
+    for pid in [KielipankkiRefiner.urn_pid_enhancement(metadata_pid) for metadata_pid in cmdi.parse_metadata_identifiers()]:
         if 'urn' in pid and not preferred_identifier:
             preferred_identifier = pid
     if preferred_identifier is None:
-        fbpid = KielipankkiRefiner._language_bank_urn_pid_enhancement((cmdi.language_bank_fallback_identifier()[0]))
+        fbpid = KielipankkiRefiner.urn_pid_enhancement((cmdi.language_bank_fallback_identifier()[0]))
         if 'urn' in fbpid:
             preferred_identifier = fbpid
         else:
             raise DatasetFieldsMissingError(package_dict, msg="Could not find preferred identifier in the metadata")
     package_dict['preferred_identifier'] = preferred_identifier
 
-    # Set access URLs
-    if license_identifier.lower().strip() != 'undernegotiation':
-        if availability == 'open_access':
-            package_dict['remote_resources'] = [{
-                'type': {'identifier': 'other'},
-                'access_url': {'identifier': preferred_identifier},
-                'title': 'View the resource in META-SHARE',
-            }]
-
-        if availability == 'restricted_access_permit' \
-                and license_identifier.startswith(KielipankkiRefiner.LICENSE_CLARIN_ACA):
-            package_dict['remote_resources'] = [{
-                'type': {'identifier': 'other'},
-                'access_url': {'identifier': preferred_identifier},
-                'title': 'View the resource in META-SHARE',
-            }]
-
-        if availability == 'restricted_access_permit':
-            sliced_pid = preferred_identifier.rsplit('/', 1)
-            if len(sliced_pid) >= 2:
-                package_dict['access_rights'] = {
-                    'type': [{'identifier': availability}],
-                    'has_rights_related_agent': [{
-                        '@type': 'Agent',
-                        'identifier': 'https://lbr.csc.fi/web/guest/catalogue?domain=LBR&target=basket&resource=' +
-                                      sliced_pid[1],
-                        'name': 'Language Bank Rights System'}]
-                }
-        else:
-            package_dict['access_rights'] = {
-                'type': [{
-                    'identifier': availability}]
-            }
-
     # Set field of science
     package_dict['field_of_science'] = [{"identifier": "http://www.yso.fi/onto/okm-tieteenala/ta6121"}]
 
     set_existing_kata_identifier_to_other_identifier(
             os.path.dirname(__file__) + '/resources/kielipankki_pid_to_kata_urn.csv',
-            package_dict['preferred_identifier'], package_dict)
+            'http://urn.fi/{0}'.format(package_dict['preferred_identifier']), package_dict)
+
+    # TODO: Lanuguage bank metadatas also have some relationInfo/(relationType/relatedResource)
+    # If we are interested in enriching it with relation data
 
     return package_dict
