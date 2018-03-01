@@ -70,6 +70,10 @@ def package_create(context, data_dict):
         # Refine data_dict based on organization it belongs to
         try:
             data_dict = refine(context, data_dict)
+            # log.error("!!!!!!!!!!!!!!!!")
+            # log.error(data_dict)
+            # log.error("????????????????")
+            # return False
         except DatasetFieldsMissingError as e:
             log.error(e)
             return False
@@ -110,6 +114,9 @@ def package_update(context, data_dict):
         # Refine data_dict based on organization it belongs to
         try:
             data_dict = refine(context, data_dict)
+            # log.error("!!!!!!!!!!!!!!!!")
+            # log.error(data_dict)
+            # log.error("????????????????")
         except DatasetFieldsMissingError as e:
             log.error(e)
             return False
