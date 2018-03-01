@@ -27,8 +27,9 @@ def syke_refiner(context, package_dict):
     if 'rights_holder' in package_dict:
         _fix_email_address(package_dict, 'rights_holder')
 
-    if 'access_rights' in package_dict and 'description' in len(package_dict['access_rights'].get('description', [])):
-        access_rights_descr = package_dict['access_rights']['description']
+    if 'access_rights' in package_dict and len(package_dict['access_rights'].get('description', [])):
+        log.error(package_dict['access_rights']['description'][0].values()[0])
+        access_rights_descr = package_dict['access_rights']['description'][0].values()[0]
 
         # Set license to "other" since only access rights description is available in the source metadata
         # Unless we can find certain words from the description
