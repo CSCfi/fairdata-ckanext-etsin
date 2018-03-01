@@ -63,12 +63,12 @@ class CmdiParseHelper:
         :return: list of organization dictionaries
         """
         return [{'role': cls._strip_first(organization.xpath("cmd:role/text()", namespaces=cls.namespaces)),
-                 'name': ", ".join(cls._text_xpath(organization, "cmd:organizationInfo/cmd:organizationName/text()")),
-                 'lang': organization.xpath("cmd:organizationInfo/cmd:organizationName", namespaces=cls.namespaces)[0].get('{http://www.w3.org/XML/1998/namespace}lang', 'und').strip(),
+                 'name': cls._text_xpath(organization, "cmd:organizationInfo/cmd:organizationName/text()"),
+                 'lang': [lang.get('{http://www.w3.org/XML/1998/namespace}lang', 'und').strip() for lang in organization.xpath("cmd:organizationInfo/cmd:organizationName", namespaces=cls.namespaces)],
                  'short_name': cls._strip_first(organization.xpath("cmd:organizationInfo/cmd:organizationShortName/text()", namespaces=cls.namespaces)),
                  'email': cls._strip_first(organization.xpath("cmd:organizationInfo/cmd:communicationInfo/cmd:email/text()", namespaces=cls.namespaces)),
                  'telephoneNumber': cls._strip_first(organization.xpath("cmd:organizationInfo/cmd:communicationInfo/cmd:telephoneNumber/text()", namespaces=cls.namespaces)),
-                 'url': cls._strip_first(organization.xpath("cmd:organizationInfo/cmd:communicationInfo/cmd:email/text()", namespaces=cls.namespaces))}
+                 'url': cls._strip_first(organization.xpath("cmd:organizationInfo/cmd:communicationInfo/cmd:url/text()", namespaces=cls.namespaces))}
 
                 for organization in root.xpath(xpath, namespaces=cls.namespaces)]
 
@@ -85,6 +85,7 @@ class CmdiParseHelper:
                  'given_name': cls._strip_first(person.xpath("cmd:personInfo/cmd:givenName/text()", namespaces=cls.namespaces)),
                  'email': cls._strip_first(person.xpath("cmd:personInfo/cmd:communicationInfo/cmd:email/text()", namespaces=cls.namespaces)),
                  'telephoneNumber': cls._strip_first(person.xpath("cmd:personInfo/cmd:communicationInfo/cmd:telephoneNumber/text()", namespaces=cls.namespaces)),
+                 'url': cls._strip_first(person.xpath("cmd:personInfo/cmd:communicationInfo/cmd:url/text()", namespaces=cls.namespaces)),
                  'organization': first(cls._get_organizations(person, "cmd:personInfo/cmd:affiliation"))}
                 for person in root.xpath(xpath, namespaces=cls.namespaces)]
 
@@ -99,9 +100,14 @@ class CmdiParseHelper:
         ret_obj = {
             "@type": "Person",
             "name": u"{} {}".format(person['given_name'], person['surname']),
-            "email": person['email'],
-            "phone": person['telephoneNumber'],
+            "email": person['email']
         }
+
+        if len(person['telephoneNumber']):
+            ret_obj.update({"phone": person['telephoneNumber']})
+
+        if len(person['url']):
+            ret_obj.update({"identifier": person['url']})
 
         if member_of_org:
             ret_obj.update({"member_of": member_of_org})
@@ -118,24 +124,47 @@ class CmdiParseHelper:
         if not organization:
             return {}
 
-        return {
+        name_obj = {}
+        org_langs = organization.get('lang', [])
+        org_names = organization.get('name', [])
+        if len(org_langs) == len(org_names):
+            for idx, name in enumerate(org_names):
+                name_obj.update({org_langs[idx]: name})
+        elif len(org_langs) == 1:
+            for name in org_names:
+                name_obj.update({org_langs[0]: name})
+        else:
+            for name in org_names:
+                name_obj.update({'und': name})
+
+        ret_obj = {
             "@type": "Organization",
-            "name": {organization.get('lang', 'und'): organization['name']},
-            "email": organization['email'],
-            "phone": organization['telephoneNumber'],
+            "name": name_obj,
+            "email": organization['email']
         }
 
-    def parse_languages(self):
+        if len(organization['telephoneNumber']):
+            ret_obj.update({"phone": organization['telephoneNumber']})
+        if len(organization['url']):
+            ret_obj.update({"homepage": {"identifier": organization['url']}})
+
+        return ret_obj
+
+    def parse_dataset_languages(self):
         """ Find languages as defined in language info
 
         :return: list of languages
         """
         lang_list = self._text_xpath(
             self.cmd, "//cmd:corpusInfo/cmd:corpusMediaType/cmd:corpusTextInfo/cmd:languageInfo/cmd:languageId/text()")
-        lang_list.extend(self._text_xpath(
-            self.cmd,
-            "//cmd:corpusInfo/cmd:corpusMediaType/cmd:corpusAudioInfo/cmd:languageInfo/cmd:languageId/text()"))
-        return [ l.lower() for l in lang_list ]
+
+        audioLang = self._text_xpath(
+            self.cmd, "//cmd:corpusInfo/cmd:corpusMediaType/cmd:corpusAudioInfo/cmd:languageInfo/cmd:languageId/text()")
+        for audiolang in audioLang:
+            if audiolang not in lang_list:
+                lang_list.extend(audiolang)
+
+        return [l.lower() for l in lang_list]
 
     def parse_descriptions(self):
         """ Find descriptions in each language. Option to give several different descriptions.
@@ -177,7 +206,7 @@ class CmdiParseHelper:
                                     ":timeCoverage/text()"))
         return tc
 
-    def parse_licence(self):
+    def parse_license(self):
         """ Find the license for the metadata """
         return first(self._text_xpath(
             self.resource_info, "//cmd:distributionInfo/cmd:licenceInfo/cmd:licence/text()"))
