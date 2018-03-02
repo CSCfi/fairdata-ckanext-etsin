@@ -15,11 +15,6 @@ def iso_19139_mapper(context, data_dict):
     # Start with an empty slate
     package_dict = {}
 
-    # log.error(data_dict.get('package_dict'))
-    # log.error("#################")
-    # log.error(data_dict.get('iso_values'))
-    # return {}
-
     if 'iso_values' not in data_dict:
         return {}
 

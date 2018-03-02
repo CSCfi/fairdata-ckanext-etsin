@@ -28,7 +28,6 @@ def syke_refiner(context, package_dict):
         _fix_email_address(package_dict, 'rights_holder')
 
     if 'access_rights' in package_dict and len(package_dict['access_rights'].get('description', [])):
-        log.error(package_dict['access_rights']['description'][0].values()[0])
         access_rights_descr = package_dict['access_rights']['description'][0].values()[0]
 
         # Set license to "other" since only access rights description is available in the source metadata
@@ -39,9 +38,12 @@ def syke_refiner(context, package_dict):
             package_dict['access_rights']['license'] = [{'identifier': 'other'}]
 
     # Set access type to "restricted" ALWAYS, since it is the only safe bet. Unless someone tells otherwise
-    package_dict['access_rights']['type'] = [{
+    package_dict['access_rights']['access_type'] = {
         'identifier': 'http://purl.org/att/es/reference_data/access_type/access_type_restricted_access'
-    }]
+    }
+
+    # Set a restriction grounds stating "Saatavuutta rajoitettu muulla perusteella"
+    package_dict['access_rights']['restriction_grounds'] = {'identifier': 'http://purl.org/att/es/reference_data/restriction_grounds/restriction_grounds_11'}
 
     if 'guid' in context:
         set_existing_kata_identifier_to_other_identifier(

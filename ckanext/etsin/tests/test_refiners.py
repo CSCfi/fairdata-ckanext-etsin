@@ -60,14 +60,14 @@ class TestSykeRefiner(TestCase):
             self.fail("email address invalid: {0}".format(refined_dict['publisher']['email']))
         if 'identifier' not in refined_dict['field_of_science'][0] or not refined_dict['field_of_science'][0]['identifier']:
             self.fail("Missing field of science information")
-        if 'type' not in refined_dict['access_rights'] \
-                or 'identifier' not in refined_dict['access_rights']['type'][0]:
+        if 'access_type' not in refined_dict['access_rights'] \
+                or 'identifier' not in refined_dict['access_rights']['access_type']:
             self.fail("Missing access type information")
         if 'license' not in refined_dict['access_rights'] \
-                or 'identifier' not in refined_dict['access_rights']['license'][0]:
+                or 'identifier' not in refined_dict['access_rights']['li cense'][0]:
             self.fail("Missing license information")
 
-        assert refined_dict['access_rights']['type'][0]['identifier'] == \
+        assert refined_dict['access_rights']['access_type']['identifier'] == \
                'http://purl.org/att/es/reference_data/access_type/access_type_restricted_access'
 
         assert refined_dict['access_rights']['license'][0]['identifier'] == 'other'

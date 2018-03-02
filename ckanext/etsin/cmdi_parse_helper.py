@@ -155,16 +155,28 @@ class CmdiParseHelper:
 
         :return: list of languages
         """
-        lang_list = self._text_xpath(
-            self.cmd, "//cmd:corpusInfo/cmd:corpusMediaType/cmd:corpusTextInfo/cmd:languageInfo/cmd:languageId/text()")
+        text_langs = self._text_xpath(
+            self.cmd, "//cmd:corpusInfo/cmd:corpusMediaType/cmd:corpusTextInfo/cmd:languageInfo/cmd:languageId/text()") or []
+        audio_langs = self._text_xpath(
+            self.cmd, "//cmd:corpusInfo/cmd:corpusMediaType/cmd:corpusAudioInfo/cmd:languageInfo/cmd:languageId/text()") or []
 
-        audioLang = self._text_xpath(
-            self.cmd, "//cmd:corpusInfo/cmd:corpusMediaType/cmd:corpusAudioInfo/cmd:languageInfo/cmd:languageId/text()")
-        for audiolang in audioLang:
-            if audiolang not in lang_list:
-                lang_list.extend(audiolang)
+        for lang in audio_langs:
+            if lang not in text_langs:
+                text_langs.append(lang)
 
-        return [l.lower() for l in lang_list]
+        # In some cases (e.g. yrk-tun)
+        ret_val = []
+        for lang in text_langs:
+            if '-' in lang:
+                splitted = lang.split('-')
+                if splitted[0]:
+                    ret_val.append(splitted[0])
+                if splitted[1]:
+                    ret_val.append(splitted[1])
+            else:
+                ret_val.append(lang)
+
+        return [l.lower() for l in ret_val]
 
     def parse_descriptions(self):
         """ Find descriptions in each language. Option to give several different descriptions.
