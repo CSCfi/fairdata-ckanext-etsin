@@ -1,4 +1,5 @@
 from ckanext.etsin.mappers.cmdi import cmdi_mapper
+import pprint
 import unittest
 from unittest import TestCase
 from .helpers import _get_file_as_lxml
@@ -18,15 +19,9 @@ class TestCmdiMapper(TestCase):
     # Right now we're basically just checking that it does
     # not throw an error with the input
 
-    # Test preferred identifier
-    # Note that the identifier will be assigned by refiner, not mapper
-    def testPreferredIdentifier(self):
-        assert 'preferred_identifier' in self.metax_dict
-
     # Test language
 
     def testLanguage(self):
-        import pprint
         pprint.pprint(self.metax_dict)
         assert {
             'identifier': 'http://lexvo.org/id/iso639-3/fin'
@@ -41,6 +36,7 @@ class TestCmdiMapper(TestCase):
     # Test creators
 
     def testCreatorPerson(self):
+        pprint.pprint(self.metax_dict['creator'])
         assert {
             '@type': 'Person',
             'email': 'teija@tekija.fi',
@@ -49,17 +45,18 @@ class TestCmdiMapper(TestCase):
             'member_of': {
                 '@type': 'Organization',
                 'email': 'registry@utu.fi',
-                'name': {'en': u'University of Turku'},
-                'phone': '',
+                'homepage': {'identifier': 'http://www.utu.fi/en/'},
+                'name': {'en': u'University of Turku'}
             }
         } in self.metax_dict['creator']
 
     def testCreatorOrganization(self):
-        print(self.metax_dict['creator'])
+        pprint.pprint(self.metax_dict['creator'])
         assert {
             '@type': 'Organization',
             'email': 'etunim.sukunimi@kotus.fi',
-            'name': {'fi': u'Kotimaisten kielten keskus, Institute for the Languages of Finland'},
+            'homepage': {'identifier': 'http://www.kotus.fi'},
+            'name': {'fi': u'Kotimaisten kielten keskus', 'en': u'Institute for the Languages of Finland'},
             'phone': '+358 295 333 200',
         } in self.metax_dict['creator']
 
@@ -72,8 +69,8 @@ class TestCmdiMapper(TestCase):
             'member_of': {
                 '@type': 'Organization',
                 'email': 'registry@utu.fi',
-                'name': {'en': u'University of Turku'},
-                'phone': ''
+                'homepage': {'identifier': 'http://www.utu.fi/en/'},
+                'name': {'en': u'University of Turku'}
             },
             'name': u'Nobufumi Inaba',
             'phone': '+358 123 456 789',
@@ -86,27 +83,28 @@ class TestCmdiMapper(TestCase):
             'member_of': {
                 '@type': 'Organization',
                 'email': 'registry@utu.fi',
-                'name': {'en': u'University of Turku'},
-                'phone': ''
+                'homepage': {'identifier': 'http://www.utu.fi/en/'},
+                'name': {'en': u'University of Turku'}
             },
-            'name': u'Kaisa H\xe4kkinen',
-            'phone': '',
+            'name': u'Kaisa H\xe4kkinen'
         } in self.metax_dict['curator']
 
     def testCuratorOrganization1(self):
         assert {
             '@type': 'Organization',
             'email': 'etunim.sukunimi@kotus.fi',
-            'name': {'fi': u'Kotimaisten kielten keskus, Institute for the Languages of Finland'},
+            'homepage': {'identifier': 'http://www.kotus.fi'},
+            'name': {'fi': u'Kotimaisten kielten keskus', 'en': u'Institute for the Languages of Finland'},
             'phone': '+358 295 333 200',
         } in self.metax_dict['curator']
 
     def testCuratorOrganization2(self):
+        pprint.pprint(self.metax_dict['curator'])
         assert {
             '@type': 'Organization',
             'email': 'registry@utu.fi',
-            'name': {'en': u'University of Turku'},
-            'phone': '',
+            'homepage': {'identifier': 'http://www.utu.fi/en/'},
+            'name': {'en': u'University of Turku'}
         } in self.metax_dict['curator']
 
 

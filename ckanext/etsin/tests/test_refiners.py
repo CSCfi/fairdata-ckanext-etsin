@@ -70,8 +70,7 @@ class TestSykeRefiner(TestCase):
         assert refined_dict['access_rights']['type'][0]['identifier'] == \
                'http://purl.org/att/es/reference_data/access_type/access_type_restricted_access'
 
-        assert refined_dict['access_rights']['license'][0]['identifier'] == \
-               'http://purl.org/att/es/reference_data/license/license_other'
+        assert refined_dict['access_rights']['license'][0]['identifier'] == 'other'
 
     def testMissingFields(self):
         test_dict = get_package_dict_1()
