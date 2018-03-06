@@ -64,7 +64,7 @@ class TestSykeRefiner(TestCase):
                 or 'identifier' not in refined_dict['access_rights']['access_type']:
             self.fail("Missing access type information")
         if 'license' not in refined_dict['access_rights'] \
-                or 'identifier' not in refined_dict['access_rights']['li cense'][0]:
+                or 'identifier' not in refined_dict['access_rights']['license'][0]:
             self.fail("Missing license information")
 
         assert refined_dict['access_rights']['access_type']['identifier'] == \
