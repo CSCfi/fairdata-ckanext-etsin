@@ -5,6 +5,7 @@
       "en": "Kielipankki Metadata portal"
     },
     "harvested": true,
+    "dataset_versioning": false,
     "language": [
       {
         "identifier": "http://lexvo.org/id/iso639-3/fin"
@@ -37,7 +38,7 @@
       }]
     },
    "access_rights": {
-      "type": [{
+      "access_type": [{
           "identifier": "http://purl.org/att/es/reference_data/access_type/access_type_open_access"
       }],
       "license": [{
