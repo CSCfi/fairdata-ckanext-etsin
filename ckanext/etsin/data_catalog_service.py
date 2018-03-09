@@ -25,7 +25,8 @@ class DataCatalogMetaxAPIService:
         catalog = self.get_data_catalog_from_file(data_catalog_json_file)
         log.info("Creating data catalog into Metax..")
         try:
-            response_text = self._do_post_request(self.METAX_DATA_CATALOG_API_POST_URL, catalog, self.api_user, self.api_password)
+            response_text = self._do_post_request(self.METAX_DATA_CATALOG_API_POST_URL, catalog, self.api_user,
+                                                  self.api_password)
             data_catalog_id = json.loads(response_text)['catalog_json']['identifier']
             log.info("Data catalog created in Metax with identifier: {0}".format(data_catalog_id))
             return data_catalog_id
@@ -60,8 +61,8 @@ class DataCatalogMetaxAPIService:
 
         log.info("Deleting data catalog in Metax..")
         try:
-            self._do_delete_request(self.METAX_DATA_CATALOG_API_PUT_OR_DELETE_URL.format(id=data_catalog_id), self.api_user,
-                                                  self.api_password)
+            self._do_delete_request(self.METAX_DATA_CATALOG_API_PUT_OR_DELETE_URL.format(id=data_catalog_id),
+                                    self.api_user, self.api_password)
             log.info("Data catalog deleted from Metax for identifier: {id}".format(id=data_catalog_id))
         except exceptions.HTTPError as e:
             log.error(e)
@@ -123,7 +124,8 @@ class DataCatalogMetaxAPIService:
             with open(file_path, 'r') as f:
                 return f.readline()
         except IOError:
-            log.warning("No file exists in path {0} related to harvest source {1}".format(file_path, harvest_source_name))
+            log.warning("No file exists in path {0} related to harvest source {1}"
+                        .format(file_path, harvest_source_name))
             return None
 
     @staticmethod
@@ -146,6 +148,8 @@ def ensure_data_catalog_ok(harvest_source_name):
         data_catalog_json_file = 'syke_data_catalog.json'
     elif harvest_source_name == 'kielipankki':
         data_catalog_json_file = 'language_bank_data_catalog.json'
+    elif harvest_source_name == 'fsd':
+        data_catalog_json_file = 'fsd_data_catalog.json'
     else:
         log.error("Unknown harvest source name, unable to do any data catalog related operations. Aborting")
         return False
@@ -161,7 +165,7 @@ def ensure_data_catalog_ok(harvest_source_name):
                 return False
         else:
             log.warning("Data catalog cannot be found from metax even though we have a data catalog id. Trying to "
-                     "recreate data catalog and overwrite the existing data catalog id")
+                        "recreate data catalog and overwrite the existing data catalog id")
             data_catalog_id = dcs.create_data_catalog(data_catalog_json_file)
             if data_catalog_id:
                 if not dcs.set_data_catalog_id_to_file(data_catalog_id, harvest_source_name):
