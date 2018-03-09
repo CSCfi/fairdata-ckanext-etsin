@@ -88,7 +88,7 @@ def convert_to_metax_dict(data_dict, context, metax_id=None):
     """
 
     if metax_id:
-        data_dict['urn_identifier'] = metax_id
+        data_dict['metadata_version_identifier'] = metax_id
     try:
         data_catalog_id = DataCatalogMetaxAPIService.get_data_catalog_id_from_file(
             context.get('harvest_source_name', ''))
