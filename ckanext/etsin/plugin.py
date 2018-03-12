@@ -44,7 +44,7 @@ class EtsinPlugin(plugins.SingletonPlugin):
             return cmdi.cmdi_mapper(xml)
         elif format == 'oai_datacite':
             return datacite.datacite_mapper(xml)
-        elif format == 'oai_ddi25':
+        elif format == 'ddi_c':
             return ddi25.ddi25_mapper(xml)
         else:
             return {}
