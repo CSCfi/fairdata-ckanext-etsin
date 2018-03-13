@@ -39,7 +39,7 @@ def _create_catalog_record_to_metax(context, metax_rd_dict, ckan_package_id):
     if pref_id:
         try:
             log.info("Trying to create a catalog record (CR) to MetaX with preferred_identifier {0} for a CKAN "
-                     "package ID {1}".format(ckan_package_id, pref_id))
+                     "package ID {1}".format(pref_id, ckan_package_id))
             md = convert_to_metax_dict(metax_rd_dict, context)
             log.info("Payload to be sent to MetaX: {0}".format(md))
             metax_mvid = metax_api.create_catalog_record(md)
@@ -92,9 +92,9 @@ def package_create(context, metax_rd_dict):
 
         # Create the package to CKAN database linking ckan_package_id and metax_mvid together
         context['schema'] = package_schema
-        log.info("Trying to create package to CKAN database with id: %s and name: %s", ckan_package_id, metax_mvid)
+        log.info("Trying to create package to CKAN database with ID: %s and name: %s", ckan_package_id, metax_mvid)
         output = ckan.logic.action.create.package_create(context, _get_data_dict_for_ckan_db(ckan_package_id, metax_mvid))
-        log.info("Created package to CKAN database successfully with id: %s and name: %s", ckan_package_id, metax_mvid)
+        log.info("Created package to CKAN database successfully with ID: %s and name: %s", ckan_package_id, metax_mvid)
     else:
         output = ckan.logic.action.create.package_create(context, metax_rd_dict)
 
@@ -147,7 +147,7 @@ def package_update(context, metax_rd_dict):
                 log.error("Connection timeout: {0}".format(repr(e)))
                 return False
         else:
-            # CR does not exist in Metax even though it has been stored to local db
+            # CR does not exist in Metax even though it has been stored to local CKAN database
             # Most likely because the Metax target env has been emptied
             log.warning("CR with metadata_version_identifier {0} was not found from MetaX even though it "
                         "exists in CKAN database".format(metax_mvid))
@@ -159,9 +159,9 @@ def package_update(context, metax_rd_dict):
 
         # Update the package into CKAN database
         context['schema'] = package_schema
-        log.info("Trying to update package to CKAN database with id: %s and name: %s", ckan_package_id, metax_mvid)
+        log.info("Trying to update package to CKAN database with ID: %s and name: %s", ckan_package_id, metax_mvid)
         output = ckan.logic.action.update.package_update(context, _get_data_dict_for_ckan_db(ckan_package_id, metax_mvid))
-        log.info("Updated package to CKAN database successfully with id: %s and name: %s", ckan_package_id, metax_mvid)
+        log.info("Updated package to CKAN database successfully with ID: %s and name: %s", ckan_package_id, metax_mvid)
     else:
         output = ckan.logic.action.update.package_update(context, metax_rd_dict)
 
@@ -197,7 +197,7 @@ def package_delete(context, data_dict):
                 metax_api.delete_catalog_record(metax_mvid)
                 log.info("Successfully deleted package from MetaX!")
             except HTTPError:
-                log.error("Failed to delete package from MetaX for a CR having package ID: %s and "
+                log.error("Failed to delete package from MetaX for a CR having CKAN package ID: %s and "
                           "MetaX metadata version identifier: %s", ckan_package_id, metax_mvid)
                 return False
             except ReadTimeout as e:
@@ -209,9 +209,9 @@ def package_delete(context, data_dict):
             log.info("Skipping delete operation in MetaX")
 
         package_dict = _get_data_dict_for_ckan_db(ckan_package_id, metax_mvid)
-        log.info("Trying to delete package from CKAN database with id: %s and name: %s", ckan_package_id, metax_mvid)
+        log.info("Trying to delete package from CKAN database with ID: %s and name: %s", ckan_package_id, metax_mvid)
         package_dict = ckan.logic.action.delete.package_delete(context, package_dict)
-        log.info("Successfully deleted package from CKAN database with id: %s and name: %s",
+        log.info("Successfully deleted package from CKAN database with ID: %s and name: %s",
                  ckan_package_id, metax_mvid)
     else:
         package_dict = ckan.logic.action.delete.package_delete(context, data_dict)
