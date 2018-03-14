@@ -134,10 +134,6 @@ def datacite_mapper(xml):
                 'temporal': {
                     'start_date': date.text,
                     'end_date': date.text
-                },
-                'type': {
-                    'pref_label': date_type,
-                    'identifier': 'TODO'  # TODO
                 }
             })
 
