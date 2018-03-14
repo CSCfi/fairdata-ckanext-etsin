@@ -21,10 +21,10 @@ class TestMetaxAPI(TestCase):
             eq_(id, '123')
 
     def testReplaceDatasetSuccess(self):
-        ''' Test that replace_dataset does a put request and checks for http errors '''
+        ''' Test that update_dataset does a put request and checks for http errors '''
         with patch('requests.put') as mock_put:
             mock_put.return_value = Mock()
-            api.replace_dataset('123', {})
+            api.update_dataset('123', {})
             ok_(mock_put.called)
             ok_(mock_put.return_value.raise_for_status.called)
 

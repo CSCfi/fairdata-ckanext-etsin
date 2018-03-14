@@ -27,17 +27,25 @@ def syke_refiner(context, package_dict):
     if 'rights_holder' in package_dict:
         _fix_email_address(package_dict, 'rights_holder')
 
-    # Set license to "other" since only access rights description is available in the source metadata
-    if 'access_rights' in package_dict and 'description' in package_dict['access_rights']:
-        package_dict['access_rights']['license'] = [{
-            'identifier': 'http://purl.org/att/es/reference_data/license/license_other'
-        }]
+    if 'access_rights' not in package_dict:
+        package_dict['access_rights'] = {}
 
-    # Set access type to "restricted" since it is the only safe bet. Unless someone tells otherwise
-    if 'access_rights' in package_dict and 'description' in package_dict['access_rights']:
-        package_dict['access_rights']['type'] = [{
+    if 'description' in package_dict and len(package_dict.get('description', [])):
+        description = package_dict['description'][0].values()[0]
+
+        if 'CC BY 4.0' in description:
+            package_dict['access_rights']['license'] = [{'identifier': 'CC-BY-4.0'}]
+            package_dict['access_rights']['access_type'] = {
+                'identifier': 'http://purl.org/att/es/reference_data/access_type/access_type_open_access'
+            }
+
+    if 'license' not in package_dict['access_rights']:
+        package_dict['access_rights']['license'] = [{'identifier': 'other'}]
+
+    if 'access_type' not in package_dict['access_rights']:
+        package_dict['access_rights']['access_type'] = {
             'identifier': 'http://purl.org/att/es/reference_data/access_type/access_type_restricted_access'
-        }]
+        }
 
     if 'guid' in context:
         set_existing_kata_identifier_to_other_identifier(

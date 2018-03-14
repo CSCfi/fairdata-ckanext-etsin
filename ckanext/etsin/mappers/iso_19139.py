@@ -72,13 +72,23 @@ def iso_19139_mapper(context, data_dict):
         pass
 
     # Dataset curator
+    # TODO: Find out what is the iso_values['metadata-point-of-contact'] w.r.t. iso_values['responsible-organization']
+    # Most of the times they have the same object, but sometimes metadata-point-of-contact is empty
     package_dict['curator'] = []
-    try:
-        curators = (org for org in iso_values['responsible-organisation'] if 'pointOfContact' in org['role'])
-        for curator in curators:
-            _set_agent_details_to_package_dict_field(package_dict, 'curator', curator, True, meta_lang)
-    except KeyError:
-        pass
+    # try:
+    #     metadata_point_of_contacts = (org for org in iso_values['metadata-point-of-contact'])
+    #     for item in metadata_point_of_contacts:
+    #         _set_agent_details_to_package_dict_field(package_dict, 'curator', item, True, meta_lang)
+    # except KeyError:
+    #     pass
+
+    if not len(package_dict['curator']):
+        try:
+            curators = (org for org in iso_values['responsible-organisation'] if 'pointOfContact' in org['role'])
+            for curator in curators:
+                _set_agent_details_to_package_dict_field(package_dict, 'curator', curator, True, meta_lang)
+        except KeyError:
+            pass
 
     # Use distributor as metax publisher
     try:
@@ -108,9 +118,11 @@ def iso_19139_mapper(context, data_dict):
     except KeyError:
         pass
 
-    # When dataset was last time modified
+    # Last known time when a research dataset or metadata about the research dataset has been significantly modified.
+    # TODO: This needs to be verified which field to use in iso19139 metadata:
+    # date-released, metadata-date, dataset-reference-date[0]['value'], date-created, date-updated
     try:
-        package_dict['modified'] = iso_values['date-updated']
+        package_dict['modified'] = iso_values['date-updated'] or iso_values['metadata-date']
     except KeyError:
         package_dict['modified'] = ''
 
@@ -145,10 +157,13 @@ def iso_19139_mapper(context, data_dict):
         pass
 
     # Date of formal issuance for the dataset
+    # TODO: This needs to be verified which field to use in iso19139 metadata:
+    # date-released, metadata-date, dataset-reference-date[0]['value'], date-created, date-updated
     try:
         package_dict['issued'] = iso_values['date-released']
     except KeyError:
-        pass
+        if 'dataset-reference-date' in iso_values and len(iso_values['dataset-reference-date']):
+            package_dict['issued'] = iso_values['dataset-reference-date'][0].get('value', '')
 
     # Access rights description as a text
     if 'use-constraints' in iso_values and len(iso_values['use-constraints']):
