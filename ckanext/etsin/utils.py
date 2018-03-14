@@ -80,15 +80,16 @@ def get_language_identifier(language):
         return 'http://lexvo.org/id/iso639-3/' + language
 
 
-def convert_to_metax_dict(data_dict, context, metax_id=None):
+def convert_to_metax_dict(data_dict, context, metax_mv_id=None):
     """
     :param data_dict: contains data that has come from harvester, mapped and refined
                         and about to be sent to metax
+    :param metax_mv_id: Metax metadata version identifier for the catalog record. Should be given when updating a cr.
     :return: data_dict that conforms with metax json format
     """
 
-    if metax_id:
-        data_dict['urn_identifier'] = metax_id
+    if metax_mv_id:
+        data_dict['metadata_version_identifier'] = metax_mv_id
     try:
         data_catalog_id = DataCatalogMetaxAPIService.get_data_catalog_id_from_file(
             context.get('harvest_source_name', ''))
