@@ -24,7 +24,7 @@ package_schema = {
 }
 
 
-def _create_catalog_record_to_metax(context, metax_rd_dict, ckan_package_id):
+def _create_catalog_record_to_metax(context, metax_rd_dict):
     """
 
     :param context:
@@ -38,15 +38,15 @@ def _create_catalog_record_to_metax(context, metax_rd_dict, ckan_package_id):
 
     if pref_id:
         try:
-            log.info("Trying to create a catalog record (CR) to MetaX with preferred_identifier {0} for a CKAN "
-                     "package ID {1}".format(pref_id, ckan_package_id))
+            log.info("Trying to create a catalog record (CR) to MetaX having preferred_identifier {0}"
+                     .format(pref_id))
             md = convert_to_metax_dict(metax_rd_dict, context)
             log.info("Payload to be sent to MetaX: {0}".format(md))
             metax_mvid = metax_api.create_catalog_record(md)
             log.info("Successfully created a CR to MetaX. Returned CR metadata_version_identifier: %s", metax_mvid)
         except HTTPError as e:
-            log.error("Failed to create a CR to MetaX with preferred_identifier {0} for a CKAN package ID: {1}, "
-                      "error: {2}".format(pref_id, ckan_package_id, repr(e)))
+            log.error("Failed to create a CR to MetaX having preferred_identifier {0}, error: {1}"
+                      .format(pref_id, repr(e)))
             return None
         except ReadTimeout as e:
             log.error("Connection timeout: {0}".format(repr(e)))
@@ -86,7 +86,7 @@ def package_create(context, metax_rd_dict):
             return False
 
         # Creating catalog record to MetaX should return catalog record metadata version identifier
-        metax_mvid = _create_catalog_record_to_metax(context, metax_rd_dict, ckan_package_id)
+        metax_mvid = _create_catalog_record_to_metax(context, metax_rd_dict)
         if not metax_mvid:
             return False
 
@@ -153,7 +153,7 @@ def package_update(context, metax_rd_dict):
                         "exists in CKAN database".format(metax_mvid))
             log.info("Trying to recreate package to MetaX and update package name into CKAN database with a new "
                      "MetaX metadata_version_identifier value")
-            metax_mvid = _create_catalog_record_to_metax(context, metax_rd_dict, ckan_package_id)
+            metax_mvid = _create_catalog_record_to_metax(context, metax_rd_dict)
             if not metax_mvid:
                 return False
 
