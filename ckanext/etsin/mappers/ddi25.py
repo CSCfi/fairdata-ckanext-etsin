@@ -13,7 +13,6 @@ def ddi25_mapper(xml):
 
     namespaces = {'oai': "http://www.openarchives.org/OAI/2.0/",
                   'ddi': "ddi:codebook:2_5"}
-    package_dict = {}
 
     cb = first(xml.xpath('//oai:record/oai:metadata/ddi:codeBook', namespaces=namespaces))
     stdy = cb.find('ddi:stdyDscr', namespaces)
@@ -22,9 +21,14 @@ def ddi25_mapper(xml):
     # Preferred identifier will be added in refinement
     preferred_identifier = None
 
+    # Modified
+    ver_stmt = stdy.find('ddi:citation/ddi:verStmt/ddi:version', namespaces)
+    if ver_stmt:
+        modified = ver_stmt.get('date')
+
     package_dict = {
         "preferred_identifier": preferred_identifier,
-        "modified": "",
+        "modified": modified,
         "title": [],
         "description": [],
         "language": [],
