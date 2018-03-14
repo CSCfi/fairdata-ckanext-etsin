@@ -45,7 +45,7 @@
       "description": [
         {"fi": "Joihinkin SYKEn jakamiin aineistoihin sovelletaan eri käyttöehtoja. Avoimen tietoaineiston käyttöluvasta poikkeavat käyttöehdot on kuvattu kunkin järjestelmän ja rajapinnan yhteydessä ja aineistojen metatiedoissa. SYKE pyrkii tarjoamaan palvelussa virheetöntä tietoa keskeytyksettä. Käyttäjä käyttää palvelua ja sen sisältämiä tietoja omalla vastuullaan eikä SYKE vastaa mistään välittömistä tai välillisistä vahingoista, jotka aiheutuvat esimerkiksi palvelun tai sen sisältämän aineiston virheistä, puutteista, aineiston käyttämisestä, kolmannen osapuolen vaatimuksista, toimintakatkoksista, aineiston sisällön muuttamisesta tai järjestelmän ylläpidon lopettamisesta tai siitä, että palvelu ei toimi tai että se ei sovi tiettyyn tarkoitukseen."}
       ],
-      "type": [
+      "access_type": [
         {
           "identifier": "http://purl.org/att/es/reference_data/access_type/access_type_open_access"
         }
