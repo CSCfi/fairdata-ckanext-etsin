@@ -16,18 +16,22 @@ def ddi25_mapper(xml):
 
     cb = first(xml.xpath('//oai:record/oai:metadata/ddi:codeBook', namespaces=namespaces))
     stdy = cb.find('ddi:stdyDscr', namespaces)
-    stdy = cb.xpath('//ddi:stdyDscr', namespaces=namespaces)[0]
 
-    # Preferred identifier will be added in refinement
-    preferred_identifier = None
+    # Preferred identifier
+    pref_id = None
+    id_nos = stdy.findall('ddi:citation/ddi:titlStmt/ddi:IDNo', namespaces)
+    id_no = first(filter(lambda x: x.get('agency') == 'Kansalliskirjasto', id_nos))
+    if id_no is not None:
+        pref_id = id_no.text
 
     # Modified
+    modified = ''
     ver_stmt = stdy.find('ddi:citation/ddi:verStmt/ddi:version', namespaces)
-    if ver_stmt:
+    if ver_stmt is not None:
         modified = ver_stmt.get('date')
 
     package_dict = {
-        "preferred_identifier": preferred_identifier,
+        "preferred_identifier": pref_id,
         "modified": modified,
         "title": [],
         "description": [],
