@@ -80,6 +80,17 @@ def get_language_identifier(language):
         return 'http://lexvo.org/id/iso639-3/' + language
 
 
+def get_tag_lang(tag):
+    """Get language of an lxml element
+
+    :param tag: a tag of in an xml tree
+    :type  tag: lxml.etree._Element
+    :return a language string
+    """
+    xml_ns = '{http://www.w3.org/XML/1998/namespace}'
+    return tag.get(xml_ns + 'lang', 'und')
+
+
 def convert_to_metax_catalog_record(data_dict, context, metax_cr_id=None):
     """
     :param data_dict: contains data that has come from harvester, mapped and refined

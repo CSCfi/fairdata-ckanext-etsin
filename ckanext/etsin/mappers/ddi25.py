@@ -1,5 +1,7 @@
 from functionally import first
 
+from ..utils import get_tag_lang
+
 # For development use
 import logging
 log = logging.getLogger(__name__)
@@ -24,6 +26,13 @@ def ddi25_mapper(xml):
     if id_no is not None:
         pref_id = id_no.text
 
+    # Title
+    title = {}
+    titl = stdy.findall('ddi:citation/ddi:titlStmt/ddi:titl', namespaces)
+    if len(titl):
+        for t in titl:
+            title[get_tag_lang(t)] = t.text
+
     # Modified
     modified = ''
     ver_stmt = stdy.find('ddi:citation/ddi:verStmt/ddi:version', namespaces)
@@ -33,7 +42,7 @@ def ddi25_mapper(xml):
     package_dict = {
         "preferred_identifier": pref_id,
         "modified": modified,
-        "title": [],
+        "title": title,
         "description": [],
         "language": [],
         "provenance": [{
