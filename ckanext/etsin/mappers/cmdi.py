@@ -67,8 +67,8 @@ class CmdiMetaxMapper:
         if temporal_coverage:
             package_dict.update({"provenance": [{
                 "temporal": {
-                    "startDate": temporal_coverage_begin,
-                    "endDate": temporal_coverage_end
+                    "start_date": temporal_coverage_begin,
+                    "end_date": temporal_coverage_end
                 }
             }]})
 
