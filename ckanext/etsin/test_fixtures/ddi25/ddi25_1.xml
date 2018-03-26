@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <responseDate>2018-03-26T08:48:44Z</responseDate>
+  <request identifier="oai:fsd.uta.fi:FSD3092" verb="GetRecord">http://services.fsd.uta.fi/v0/oai</request>
+  <GetRecord>
+    <record>
+      <header>
+        <identifier>oai:fsd.uta.fi:FSD3092</identifier>
+        <datestamp>2018-03-15T11:12:27Z</datestamp>
+        <setSpec>study_groups:yks</setSpec>
+        <setSpec>language:en</setSpec>
+        <setSpec>language:fi</setSpec>
+      </header>
+      <metadata>
+        <codeBook xmlns="ddi:codebook:2_5" version="2.5"
+                  xsi:schemaLocation="ddi:codebook:2_5 http://www.ddialliance.org/Specification/DDI-Codebook/2.5/XMLSchema/codebook.xsd">
+          <docDscr>
+            <citation>
+              <titlStmt>
+                <titl/>
+              </titlStmt>
+              <prodStmt>
+                <producer xml:lang="en" abbr="FSD">Finnish Social Science Data Archive</producer>
+                <producer xml:lang="fi" abbr="FSD">Yhteiskuntatieteellinen tietoarkisto</producer>
+                <copyright xml:lang="en">Finnish Social Science Data Archive</copyright>
+                <copyright xml:lang="fi">Yhteiskuntatieteellinen tietoarkisto</copyright>
+              </prodStmt>
+              <holdings xml:lang="en" URI="http://urn.fi/urn:nbn:fi:fsd:T-FSD3092"
+                        location="Finnish Social Science Data Archive FSD"></holdings>
+              <holdings xml:lang="fi" URI="http://urn.fi/urn:nbn:fi:fsd:T-FSD3092"
+                        location="Yhteiskuntatieteellinen tietoarkisto FSD"></holdings>
+            </citation>
+          </docDscr>
+          <stdyDscr>
+            <citation xml:lang="en">
+              <titlStmt>
+                <titl xml:lang="en">Values of University of Tampere Students 2015</titl>
+                <parTitl xml:lang="en">Values of University of Tampere Students 2015</parTitl>
+                <IDNo xml:lang="en" agency="FSD">FSD3092</IDNo>
+                <IDNo xml:lang="en" agency="The National Library of Finland">urn:nbn:fi:fsd:T-FSD3092
+                </IDNo>
+              </titlStmt>
+              <rspStmt>
+                <AuthEnty affiliation="University of Tampere. School of Management" xml:lang="en">
+                  Avonius, Marja
+                </AuthEnty>
+                <AuthEnty affiliation="University of Tampere. School of Management" xml:lang="en">
+                  Kaunisvaara, Johanna
+                </AuthEnty>
+                <AuthEnty affiliation="University of Tampere. School of Management" xml:lang="en">
+                  Kestilä-Kekkonen, Elina
+                </AuthEnty>
+                <AuthEnty affiliation="University of Tampere. School of Management" xml:lang="en">
+                  Koivisto, Tuomas
+                </AuthEnty>
+                <AuthEnty affiliation="University of Tampere. School of Management" xml:lang="en">
+                  Leinonen, Nelli
+                </AuthEnty>
+                <AuthEnty affiliation="University of Tampere. School of Management" xml:lang="en">
+                  Rantala, Ville
+                </AuthEnty>
+                <AuthEnty affiliation="University of Tampere. School of Management" xml:lang="en">
+                  Ruotsalainen, Taru
+                </AuthEnty>
+                <AuthEnty affiliation="University of Tampere. School of Management" xml:lang="en">
+                  Tiihonen, Aino
+                </AuthEnty>
+                <AuthEnty affiliation="University of Tampere. School of Management" xml:lang="en">
+                  Vahvelainen, Saana
+                </AuthEnty>
+                <AuthEnty affiliation="Åbo Akademi University" xml:lang="en">Westinen, Jussi</AuthEnty>
+              </rspStmt>
+              <prodStmt>
+                <prodDate xml:lang="en">2016-06-15</prodDate>
+              </prodStmt>
+              <distStmt>
+                <distDate xml:lang="en" date="2016-06-15"/>
+                <distrbtr abbr="FSD" URI="http://www.fsd.uta.fi/" xml:lang="en">Finnish Social Science
+                  Data Archive
+                </distrbtr>
+              </distStmt>
+              <serStmt>
+                <serName ID="yks" xml:lang="en">Individual datasets</serName>
+              </serStmt>
+              <verStmt>
+                <version date="2016-05-31" xml:lang="en"/>
+              </verStmt>
+            </citation>
+            <citation xml:lang="fi">
+              <titlStmt>
+                <titl xml:lang="fi">Tampereen yliopiston opiskelijoiden yhteiskunnalliset arvot 2015
+                </titl>
+                <parTitl xml:lang="fi">Tampereen yliopiston opiskelijoiden yhteiskunnalliset arvot
+                  2015
+                </parTitl>
+                <IDNo xml:lang="fi" agency="FSD">FSD3092</IDNo>
+                <IDNo xml:lang="fi" agency="Kansalliskirjasto">urn:nbn:fi:fsd:T-FSD3092</IDNo>
+              </titlStmt>
+              <rspStmt>
+                <AuthEnty affiliation="Tampereen yliopisto. Johtamiskorkeakoulu" xml:lang="fi">Avonius,
+                  Marja
+                </AuthEnty>
+                <AuthEnty affiliation="Tampereen yliopisto. Johtamiskorkeakoulu" xml:lang="fi">
+                  Kaunisvaara, Johanna
+                </AuthEnty>
+                <AuthEnty affiliation="Tampereen yliopisto. Johtamiskorkeakoulu" xml:lang="fi">
+                  Kestilä-Kekkonen, Elina
+                </AuthEnty>
+                <AuthEnty affiliation="Tampereen yliopisto. Johtamiskorkeakoulu" xml:lang="fi">Koivisto,
+                  Tuomas
+                </AuthEnty>
+                <AuthEnty affiliation="Tampereen yliopisto. Johtamiskorkeakoulu" xml:lang="fi">Leinonen,
+                  Nelli
+                </AuthEnty>
+                <AuthEnty affiliation="Tampereen yliopisto. Johtamiskorkeakoulu" xml:lang="fi">Rantala,
+                  Ville
+                </AuthEnty>
+                <AuthEnty affiliation="Tampereen yliopisto. Johtamiskorkeakoulu" xml:lang="fi">
+                  Ruotsalainen, Taru
+                </AuthEnty>
+                <AuthEnty affiliation="Tampereen yliopisto. Johtamiskorkeakoulu" xml:lang="fi">Tiihonen,
+                  Aino
+                </AuthEnty>
+                <AuthEnty affiliation="Tampereen yliopisto. Johtamiskorkeakoulu" xml:lang="fi">
+                  Vahvelainen, Saana
+                </AuthEnty>
+                <AuthEnty affiliation="Åbo Akademi" xml:lang="fi">Westinen, Jussi</AuthEnty>
+              </rspStmt>
+              <prodStmt>
+                <prodDate xml:lang="fi">2016-06-13</prodDate>
+              </prodStmt>
+              <distStmt>
+                <distDate xml:lang="fi" date="2016-06-13"/>
+                <distrbtr abbr="FSD" URI="http://www.fsd.uta.fi/" xml:lang="fi">Yhteiskuntatieteellinen
+                  tietoarkisto
+                </distrbtr>
+              </distStmt>
+              <serStmt>
+                <serName ID="yks" xml:lang="fi">Aineistot, jotka eivät kuulu sarjaan</serName>
+              </serStmt>
+              <verStmt>
+                <version date="2016-05-31" xml:lang="fi"/>
+              </verStmt>
+            </citation>
+            <stdyInfo>
+              <subject>
+                <keyword xml:lang="en" vocab="ELSST" ID="higher_education_institutions">higher education
+                  institutions
+                </keyword>
+                <keyword xml:lang="en" vocab="ELSST" ID="political_attitudes">political attitudes
+                </keyword>
+                <keyword xml:lang="en" vocab="ELSST" ID="political_influence">political influence
+                </keyword>
+                <keyword xml:lang="en" vocab="ELSST" ID="social_attitudes">social attitudes</keyword>
+                <keyword xml:lang="en" vocab="ELSST" ID="social_values">social values</keyword>
+                <keyword xml:lang="en" vocab="ELSST" ID="students_college">students (college)</keyword>
+                <keyword xml:lang="en" vocab="ELSST" ID="values">values</keyword>
+                <keyword xml:lang="fi" vocab="YSA" vocabURI="http://www.yso.fi/onto/ysa/"
+                         ID="poliittiset_asenteet">poliittiset asenteet
+                </keyword>
+                <keyword xml:lang="fi" vocab="YSA" vocabURI="http://www.yso.fi/onto/ysa/"
+                         ID="talouspolitiikka">talouspolitiikka
+                </keyword>
+                <keyword xml:lang="fi" vocab="YSA" vocabURI="http://www.yso.fi/onto/ysa/" ID="arvot">
+                  arvot
+                </keyword>
+                <keyword xml:lang="fi" vocab="YSA" vocabURI="http://www.yso.fi/onto/ysa/" ID="asenteet">
+                  asenteet
+                </keyword>
+                <keyword xml:lang="fi" vocab="YSA" vocabURI="http://www.yso.fi/onto/ysa/"
+                         ID="opiskelijat">opiskelijat
+                </keyword>
+                <keyword xml:lang="fi" vocab="YSA" vocabURI="http://www.yso.fi/onto/ysa/" ID="moraali">
+                  moraali
+                </keyword>
+                <keyword xml:lang="fi" vocab="YSA" vocabURI="http://www.yso.fi/onto/ysa/"
+                         ID="luottamus">luottamus
+                </keyword>
+                <keyword xml:lang="fi" vocab="YSA" vocabURI="http://www.yso.fi/onto/ysa/"
+                         ID="mielipiteet">mielipiteet
+                </keyword>
+                <keyword xml:lang="fi" vocab="YSA" vocabURI="http://www.yso.fi/onto/ysa/"
+                         ID="yleinen_mielipide">yleinen mielipide
+                </keyword>
+                <topcClas xml:lang="en" vocab="OKM"
+                          vocabURI="http://www.yso.fi/onto/okm-tieteenala/conceptscheme"
+                          ID="social_sciences">social sciences
+                </topcClas>
+                <topcClas xml:lang="en" vocab="CESSDA Topic Classification"
+                          ID="political_behaviour_and_attitudes">political behaviour and attitudes
+                </topcClas>
+                <topcClas xml:lang="fi" vocab="OKM"
+                          vocabURI="http://www.yso.fi/onto/okm-tieteenala/conceptscheme"
+                          ID="yhteiskuntatieteet">yhteiskuntatieteet
+                </topcClas>
+                <topcClas xml:lang="fi" vocab="CESSDA Topic Classification"
+                          ID="poliittinen_kaeyttaeytyminen_poliittiset_asenteet_ja_mielipiteet">
+                  poliittinen käyttäytyminen, poliittiset asenteet ja mielipiteet
+                </topcClas>
+              </subject>
+              <abstract xml:lang="en">The data were collected as part of a project conducted by university
+                students during an advanced studies course in political science. The survey charted the
+                values and social attitudes of students in the University of Tampere. The respondents'
+                political interest, participation and awareness were surveyed as well as their views of
+                citizens' ability to influence politics. Values and attitudes were investigated by
+                presenting the respondents several statements relating to, for example, same-sex
+                marriage, nuclear power, income disparity, the European Union, sentences for violent
+                crime, NATO membership, refugees and immigration, privatisation of public services, cuts
+                to public spending, taxation, abortion, and use of fossil fuels. Background variables
+                included the respondent's gender, year of birth, marital status, field of study, school
+                (faculty), membership in a student association, satisfaction with own financial
+                circumstances as well as type of accommodation, type of municipality of residence,
+                parents' political party choice in R's childhood, and type of degree R was doing during
+                the survey (e.g. Bachelor's, Master's, PhD).
+              </abstract>
+              <abstract xml:lang="fi">Aineistossa kartoitetaan Tampereen yliopiston opiskelijoiden
+                yhteiskunnallisia arvoja ja asenteita sekä esimerkiksi talouspoliittisia ja moraalisia
+                näkemyksiä. Kysely on toteutettu opiskelijaprojektina osana syventävää maisterivaiheen
+                kurssia. Kyselyssä tiedusteltiin aluksi poliittista kiinnostusta ja osallistumista sekä
+                demokratian toimivuutta ja luottamusta poliitikkoihin. Lisäksi kysyttiin, mitä puoluetta
+                vastaaja äänestäisi vuoden 2015 eduskuntavaaleissa. Seuraavaksi esitettiin erilaisia
+                Suomea koskevia väittämiä, jotka liittyivät erityisesti vastaajan moraalisiin
+                käsityksiin. Opiskelijoilta kysyttiin muun muassa samaa sukupuolta olevien avioliitosta,
+                valtion sääntelystä, ydinvoimasta, kannabiksen rangaistavuudesta, Euroopan unionista,
+                tuloeroista ja monikulttuurisuudesta. Kyselyssä kartoitettiin myös mielipiteitä koskien
+                toimeentuloa ja sosiaaliturvaa, tasa-arvoa, turvapaikanhakijoita ja maahanmuuttoa,
+                alkoholilainsäädäntöä, verotusta ja fossiilisten polttoaineiden käyttöä. Taustamuuttujia
+                ovat muun muassa sukupuoli, syntymävuosi, siviilisääty, asumismuoto ja koti- ja
+                asuinpaikka. Lisäksi taustatietoina on kysytty tutkintoa, tieteenalayksikköä,
+                koulutusalaa, ainejärjestöön kuulumista, elämäntilannetta ja taloudellista tilannetta
+                sekä vanhempien äänestyskäyttäytymistä opiskelijan lapsuudessa.
+              </abstract>
+              <sumDscr>
+                <collDate xml:lang="en" date="2015-04-07" event="start"/>
+                <collDate xml:lang="en" date="2015-04-14" event="end"/>
+                <collDate xml:lang="fi" date="2015-04-07" event="start"/>
+                <collDate xml:lang="fi" date="2015-04-14" event="end"/>
+                <nation xml:lang="en" abbr="FI">Finland</nation>
+                <nation xml:lang="fi" abbr="FI">Suomi</nation>
+                <anlyUnit xml:lang="en">Individual
+                  <concept>Individual</concept>
+                </anlyUnit>
+                <anlyUnit xml:lang="fi">Henkilö
+                  <concept>Individual</concept>
+                </anlyUnit>
+                <universe xml:lang="en" clusion="I">Students enrolled at the University of Tampere
+                </universe>
+                <universe xml:lang="fi" clusion="I">Tampereen yliopiston kirjoilla olevat opiskelijat
+                </universe>
+              </sumDscr>
+            </stdyInfo>
+            <method>
+              <dataColl>
+                <timeMeth xml:lang="en">Cross-section
+                  <concept>CrossSection</concept>
+                </timeMeth>
+                <timeMeth xml:lang="fi">Poikkileikkausaineisto
+                  <concept>CrossSection</concept>
+                </timeMeth>
+              </dataColl>
+            </method>
+            <dataAccs>
+              <useStmt>
+                <restrctn xml:lang="en">The dataset is (B) available for research, teaching and study.
+                </restrctn>
+                <restrctn xml:lang="fi">Aineisto on käytettävissä (B) tutkimukseen, opetukseen ja
+                  opiskeluun.
+                </restrctn>
+              </useStmt>
+            </dataAccs>
+            <othrStdyMat>
+            </othrStdyMat>
+          </stdyDscr>
+          <fileDscr>
+            <fileTxt>
+              <fileName xml:lang="fi">daF3092.por</fileName>
+            </fileTxt>
+          </fileDscr>
+          <dataDscr>
+            <var name="FSD_NO">
+              <labl xml:lang="fi">[fsd_no] Aineistonumero (lisätty FSD:ssä)</labl>
+              <qstn ID="FSD3092-FSD_NO-qstn_0">
+                <qstnLit xml:lang="fi">Aineistonumero (lisätty FSD:ssä)</qstnLit>
+              </qstn>
+            </var>
+            <var name="FSD_VR">
+              <labl xml:lang="fi">[fsd_vr] Aineistoversio (lisätty FSD:ssä)</labl>
+              <qstn ID="FSD3092-FSD_VR-qstn_0">
+                <qstnLit xml:lang="fi">Aineistoversio (lisätty FSD:ssä)</qstnLit>
+              </qstn>
+            </var>
+            <var name="FSD_ID">
+              <labl xml:lang="fi">[fsd_id] Havaintotunnus (lisätty FSD:ssä)</labl>
+              <qstn ID="FSD3092-FSD_ID-qstn_0">
+                <qstnLit xml:lang="fi">Havaintotunnus (lisätty FSD:ssä)</qstnLit>
+              </qstn>
+            </var>
+            <var name="TALLID">
+              <labl xml:lang="fi">[tallid] Alkuperäinen havaintotunnus</labl>
+              <qstn ID="FSD3092-TALLID-qstn_0">
+                <qstnLit xml:lang="fi">Alkuperäinen havaintotunnus</qstnLit>
+              </qstn>
+            </var>
+            <var name="Q1_1">
+              <labl xml:lang="fi">[q1_1] Olen kiinnostunut poliittisista kysymyksistä</labl>
+              <qstn ID="FSD3092-Q1_1-qstn_0">
+                <qstnLit xml:lang="fi">Olen kiinnostunut poliittisista kysymyksistä</qstnLit>
+              </qstn>
+              <catgry ID="FSD3092-Q1_1-cat_0" missing="N">
+                <labl xml:lang="fi">Täysin eri mieltä</labl>
+              </catgry>
+              <catgry ID="FSD3092-Q1_1-cat_1" missing="N">
+                <labl xml:lang="fi"></labl>
+              </catgry>
+              <catgry ID="FSD3092-Q1_1-cat_2" missing="N">
+                <labl xml:lang="fi"></labl>
+              </catgry>
+              <catgry ID="FSD3092-Q1_1-cat_3" missing="N">
+                <labl xml:lang="fi"></labl>
+              </catgry>
+              <catgry ID="FSD3092-Q1_1-cat_4" missing="N">
+                <labl xml:lang="fi"></labl>
+              </catgry>
+              <catgry ID="FSD3092-Q1_1-cat_5" missing="N">
+                <labl xml:lang="fi">Ei samaa eikä eri mieltä</labl>
+              </catgry>
+              <catgry ID="FSD3092-Q1_1-cat_6" missing="N">
+                <labl xml:lang="fi"></labl>
+              </catgry>
+              <catgry ID="FSD3092-Q1_1-cat_7" missing="N">
+                <labl xml:lang="fi"></labl>
+              </catgry>
+              <catgry ID="FSD3092-Q1_1-cat_8" missing="N">
+                <labl xml:lang="fi"></labl>
+              </catgry>
+              <catgry ID="FSD3092-Q1_1-cat_9" missing="N">
+                <labl xml:lang="fi"></labl>
+              </catgry>
+              <catgry ID="FSD3092-Q1_1-cat_10" missing="N">
+                <labl xml:lang="fi">Täysin samaa mieltä</labl>
+              </catgry>
+              <catgry ID="FSD3092-Q1_1-cat_11" missing="Y">
+                <labl xml:lang="fi"></labl>
+              </catgry>
+            </var>
+          </dataDscr>
+        </codeBook>
+      </metadata>
+    </record>
+  </GetRecord>
+</OAI-PMH>
