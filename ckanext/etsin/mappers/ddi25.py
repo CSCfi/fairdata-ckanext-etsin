@@ -33,6 +33,38 @@ def ddi25_mapper(xml):
         for t in titl:
             title[get_tag_lang(t)] = t.text
 
+    # Creator
+    # Assume that 'AuthEnty' tags for different language 'citations' are in same order
+    creators = []
+    try:
+        for i, citation in enumerate(stdy.findall('ddi:citation', namespaces)):
+            for j, author in enumerate(citation.findall('ddi:rspStmt/ddi:AuthEnty', namespaces)):
+                agent_obj = {'name': None}
+                if 'affiliation' in author.keys():
+                    org = author.get('affiliation')
+                    if i == 0:
+                        agent_obj['@type'] = 'Person'
+                        if org is not None:
+                            agent_obj['member_of'] = {
+                                'name': {
+                                    get_tag_lang(author): org},
+                                '@type': 'Organization'}
+                        agent_obj['name'] = author.text.strip()
+                        creators.append(agent_obj)
+                    elif org is not None:
+                        creators[j]['member_of']['name'][get_tag_lang(author)] = org
+                else:
+                    if i == 0:
+                        agent_obj['@type'] = 'Organization'
+                        agent_obj['name'] = {get_tag_lang(author): author.text.strip()}
+                        creators.append(agent_obj)
+                    else:
+                        creators[j]['name'][get_tag_lang(author)] = author.text.strip()
+    except Exception as e:
+        log.error('Error parsing "creators": {0}: {1}. Check that different '
+                  'language elements match at the source.'.format(e.__class__.__name__, e))
+        raise
+
     # Modified
     modified = ''
     ver_stmt = stdy.find('ddi:citation/ddi:verStmt/ddi:version', namespaces)
@@ -43,6 +75,7 @@ def ddi25_mapper(xml):
         "preferred_identifier": pref_id,
         "modified": modified,
         "title": title,
+        "creator": creators,
         "description": [],
         "language": [],
         "provenance": [{

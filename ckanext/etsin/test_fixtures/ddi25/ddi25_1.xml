@@ -42,6 +42,12 @@
                 </IDNo>
               </titlStmt>
               <rspStmt>
+                <AuthEnty affiliation="University of Monty. School of Python" xml:lang="en">
+                  Tutkija, Teijo
+                </AuthEnty>
+                <AuthEnty xml:lang="en">
+                  Test organisation author
+                </AuthEnty>
                 <AuthEnty affiliation="University of Tampere. School of Management" xml:lang="en">
                   Avonius, Marja
                 </AuthEnty>
@@ -98,6 +104,12 @@
                 <IDNo xml:lang="fi" agency="Kansalliskirjasto">urn:nbn:fi:fsd:T-FSD3092</IDNo>
               </titlStmt>
               <rspStmt>
+                <AuthEnty affiliation="Montyn yliopisto. Python-korkeakoulu" xml:lang="fi">
+                  Tutkija, Teijo
+                </AuthEnty>
+                <AuthEnty xml:lang="fi">
+                  Testattava organisaatioluoja
+                </AuthEnty>
                 <AuthEnty affiliation="Tampereen yliopisto. Johtamiskorkeakoulu" xml:lang="fi">Avonius,
                   Marja
                 </AuthEnty>
