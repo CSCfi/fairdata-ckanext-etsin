@@ -64,13 +64,15 @@ class CmdiMetaxMapper:
             "language": language_list
         }
 
-        if temporal_coverage:
-            package_dict.update({"provenance": [{
-                "temporal": {
-                    "start_date": temporal_coverage_begin,
-                    "end_date": temporal_coverage_end
-                }
-            }]})
+        temporal_obj = {}
+        if temporal_coverage_begin:
+            temporal_obj.update({"start_date": temporal_coverage_begin})
+
+        if temporal_coverage_end:
+            temporal_obj.update({"end_date": temporal_coverage_end})
+
+        if temporal_obj:
+            package_dict.update({"temporal": [temporal_obj]})
 
         if distributor:
             package_dict.update({"publisher": distributor})
