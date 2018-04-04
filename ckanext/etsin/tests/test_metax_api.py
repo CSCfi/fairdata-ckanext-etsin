@@ -13,8 +13,8 @@ class TestMetaxAPI(TestCase):
         ''' Test that create_catalog_record returns identifier on successful get request '''
         with patch('requests.post') as mock_post:
             mock_post.return_value = Mock()
-            mock_post.return_value.text = '{"research_dataset": {"metadata_version_identifier": "123"}}'
-            mock_post.return_value.json.return_value = {'research_dataset': {'metadata_version_identifier': '123'}}
+            mock_post.return_value.text = '{"identifier": "123"}'
+            mock_post.return_value.json.return_value = {'identifier': '123'}
             id = api.create_catalog_record({})
             ok_(mock_post.called)
             ok_(mock_post.return_value.raise_for_status.called)

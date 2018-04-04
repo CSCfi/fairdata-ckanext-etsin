@@ -80,24 +80,30 @@ def get_language_identifier(language):
         return 'http://lexvo.org/id/iso639-3/' + language
 
 
-def convert_to_metax_dict(data_dict, context, metax_mv_id=None):
+def convert_to_metax_catalog_record(data_dict, context, metax_cr_id=None):
     """
     :param data_dict: contains data that has come from harvester, mapped and refined
                         and about to be sent to metax
-    :param metax_mv_id: Metax metadata version identifier for the catalog record. Should be given when updating a cr.
-    :return: data_dict that conforms with metax json format
+    :param metax_cr_id: Metax catalog record identifier for the catalog record. Should be given when updating a cr.
+    :return: dictionary that conforms with metax json format
     """
 
-    if metax_mv_id:
-        data_dict['metadata_version_identifier'] = metax_mv_id
+    metax_cr = {}
     try:
         data_catalog_id = DataCatalogMetaxAPIService.get_data_catalog_id_from_file(
             context.get('harvest_source_name', ''))
         if not data_catalog_id:
             raise Exception("No data catalog id can be set for metax dict")
+
+        metax_cr['data_catalog'] = data_catalog_id
+        if metax_cr_id:
+            metax_cr['identifier'] = metax_cr_id
+        if data_dict:
+            metax_cr['research_dataset'] = data_dict
+
         # Do json dumps - loads routine to get rid of problematic character
         # encodings
-        return loads(dumps({'research_dataset': data_dict, 'data_catalog': data_catalog_id}, ensure_ascii=True))
+        return loads(dumps(metax_cr, ensure_ascii=True))
     except KeyError as ke:
         log.error('KeyError: key not found: {0}'.format(ke.args))
     except Exception as e:
