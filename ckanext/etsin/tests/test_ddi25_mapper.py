@@ -41,3 +41,6 @@ class TestMappersDDI25(TestCase):
 
     def testModified(self):
         assert self.metax_dict['modified'] == '2016-05-31'
+
+    def testDescription(self):
+        assert self.metax_dict['description'][0].get('fi').startswith('Aineistossa kartoitetaan')
