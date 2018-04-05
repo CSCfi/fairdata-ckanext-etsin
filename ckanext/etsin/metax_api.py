@@ -90,15 +90,5 @@ def check_catalog_record_exists(metax_cr_id):
     :param metax_cr_id: MetaX catalog record identifier
     :return: True/False
     """
-    r = requests.get(
-        METAX_DATASETS_BASE_URL + '/{id}/exists'.format(id=metax_cr_id), timeout=TIMEOUT)
-    try:
-        r.raise_for_status()
-    except Exception as e:
-        log.error(e)
-        log.error("Error when connecting to MetaX dataset exists API")
-        raise e
-
-    log.debug('Checked dataset existence in MetaX: ({code}) {json}'.format(
-        code=r.status_code, json=r.json()))
-    return r.json()
+    r = requests.head(METAX_DATASETS_BASE_URL + '/{id}'.format(id=metax_cr_id), timeout=TIMEOUT)
+    return r.status_code == requests.codes.ok

@@ -1,5 +1,6 @@
 import os
-from requests import exceptions, get, put, post, delete
+import requests
+from requests import exceptions, get, put, post, delete, head
 import json
 from pylons import config
 import logging
@@ -11,7 +12,6 @@ class DataCatalogMetaxAPIService:
     METAX_HOST = config.get('metax.host')
     METAX_DATA_CATALOG_API_POST_URL = 'https://{0}/rest/datacatalogs'.format(METAX_HOST)
     METAX_DATA_CATALOG_API_PUT_OR_DELETE_URL = METAX_DATA_CATALOG_API_POST_URL + '/{id}'
-    METAX_DATA_CATALOG_API_EXISTS_URL = METAX_DATA_CATALOG_API_PUT_OR_DELETE_URL + '/exists'
 
     def __init__(self):
         self.api_user = config.get('metax.api_user')
@@ -78,12 +78,12 @@ class DataCatalogMetaxAPIService:
             return True
         log.info("Checking if data catalog with identifier " + data_catalog_id + " already exists in Metax..")
         try:
-            catalog_exists = json.loads(get(self.METAX_DATA_CATALOG_API_EXISTS_URL.format(id=data_catalog_id)).text)
+            r = head(self.METAX_DATA_CATALOG_API_PUT_OR_DELETE_URL.format(id=data_catalog_id))
+            return r.status_code == requests.codes.ok
         except Exception:
             log.error("Checking existence failed for some reason most likely in Metax data catalog API. "
                       "Assuming it exists.")
-            return True
-        return catalog_exists
+        return True
 
     def _do_put_request(self, url, data, api_user, api_password):
         return self._handle_request_response_with_raise(put(url, json=data, auth=(api_user, api_password)))
