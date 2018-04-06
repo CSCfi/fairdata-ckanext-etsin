@@ -86,7 +86,6 @@ def ddi25_mapper(xml):
         "title": title,
         "creator": creators,
         "description": description,
-        "language": [],
         "provenance": [{
             "temporal": {
                 "startDate": "",

@@ -1,6 +1,7 @@
 from ckanext.etsin.refine import refine
 from ckanext.etsin.refiners.kielipankki import kielipankki_refiner
 from ckanext.etsin.refiners.syke import syke_refiner
+from ckanext.etsin.refiners.fsd import fsd_refiner
 from iso19139_test_dicts import get_package_dict_1
 from ckanext.etsin.exceptions import DatasetFieldsMissingError
 
@@ -24,6 +25,13 @@ class TestRefine(TestCase):
     def testRefineSyke(self):
         with patch('ckanext.etsin.refiners.syke.syke_refiner') as mock_refiner:
             context = {'harvest_source_name': 'syke'}
+            data_dict = {}
+            refine(context, data_dict)
+            ok_(mock_refiner.called)
+
+    def testRefineFSD(self):
+        with patch('ckanext.etsin.refiners.fsd.fsd_refiner') as mock_refiner:
+            context = {'harvest_source_name': 'fsd'}
             data_dict = {}
             refine(context, data_dict)
             ok_(mock_refiner.called)
@@ -78,3 +86,18 @@ class TestSykeRefiner(TestCase):
         context = {}
         with self.assertRaises(DatasetFieldsMissingError):
             syke_refiner(context, test_dict)
+
+
+class TestFSDRefiner(TestCase):
+    """ Tests for fsd.py """
+
+    def testRefiner(self):
+        xml = helpers._get_file_as_lxml('ddi25/ddi25_1.xml')
+        metax_dict = {}
+        context = {'source_data': xml}
+        refined_dict = fsd_refiner(context, metax_dict)
+        # Check that refined fields exist
+        ok_('language' in refined_dict)
+
+        assert refined_dict['language'][0] ==\
+               {u'identifier': u'http://lexvo.org/id/iso639-3/fin'}
