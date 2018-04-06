@@ -80,12 +80,18 @@ def ddi25_mapper(xml):
         log.error('Error parsing "description": {0}: {1}'.format(e.__class__.__name__, e))
         raise
 
+    # Keywords
+    keywords = []
+    for kw in stdy.findall('ddi:stdyInfo/ddi:subject/ddi:keyword', namespaces):
+        keywords.append(kw.text.strip())
+
     package_dict = {
         "preferred_identifier": pref_id,
         "modified": modified,
         "title": title,
         "creator": creators,
         "description": description,
+        "keywords": keywords,
         "provenance": [{
             "temporal": {
                 "startDate": "",
