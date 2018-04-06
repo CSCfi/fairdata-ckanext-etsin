@@ -36,16 +36,6 @@ class TestMetaxAPI(TestCase):
             ok_(mock_delete.called)
             ok_(mock_delete.return_value.raise_for_status.called)
 
-    def testCheckDatasetExists(self):
-        ''' Test that check_catalog_record_exists does a get request and checks for http errors '''
-        with patch('requests.get') as mock_get:
-            mock_get.return_value = Mock()
-            mock_get.return_value.json.return_value = True
-            result = api.check_catalog_record_exists('123')
-            ok_(mock_get.called)
-            ok_(mock_get.return_value.raise_for_status.called)
-            eq_(result, True)
-
 
 if __name__ == '__main__':
     unittest.main()
