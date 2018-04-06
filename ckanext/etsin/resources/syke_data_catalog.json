@@ -60,6 +60,7 @@
       }
     ],
     "research_dataset_schema": "harvester",
-    "logo": "/static/images/Logo_of_SYKE.svg.png"
+    "logo": "/static/images/Logo_of_SYKE.svg.png",
+    "identifier": "urn:nbn:fi:att:f555f094-35ca-429a-844f-82b3c3ac1a11"
   }
 }

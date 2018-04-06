@@ -51,6 +51,7 @@
       }
     ],
     "research_dataset_schema": "harvester",
-    "logo": "/static/images/KIELIPANKKI_logotxt_SU_EN.png"
+    "logo": "/static/images/KIELIPANKKI_logotxt_SU_EN.png",
+    "identifier": "urn:nbn:fi:att:ef2278a6-f946-4700-9c32-22d7a9e2cbd2"
   }
 }

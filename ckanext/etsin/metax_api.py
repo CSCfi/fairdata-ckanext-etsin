@@ -90,5 +90,5 @@ def check_catalog_record_exists(metax_cr_id):
     :param metax_cr_id: MetaX catalog record identifier
     :return: True/False
     """
-    r = requests.head(METAX_DATASETS_BASE_URL + '/{id}'.format(id=metax_cr_id), timeout=TIMEOUT)
+    r = requests.head(METAX_DATASETS_BASE_URL + '/{id}'.format(id=metax_cr_id))
     return r.status_code == requests.codes.ok

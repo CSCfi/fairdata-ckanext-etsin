@@ -8,7 +8,7 @@ from pylons import config
 
 log = logging.getLogger(__name__)
 
-from data_catalog_service import DataCatalogMetaxAPIService
+from data_catalog_service import DataCatalogMetaxAPIService, get_data_catalog_filename_for_harvest_source
 
 
 def convert_language(language):
@@ -91,7 +91,7 @@ def convert_to_metax_catalog_record(data_dict, context, metax_cr_id=None):
     metax_cr = {}
     try:
         data_catalog_id = DataCatalogMetaxAPIService.get_data_catalog_id_from_file(
-            context.get('harvest_source_name', ''))
+            get_data_catalog_filename_for_harvest_source(context.get('harvest_source_name', '')))
         if not data_catalog_id:
             raise Exception("No data catalog id can be set for metax dict")
 
