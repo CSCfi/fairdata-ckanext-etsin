@@ -1,3 +1,4 @@
+# coding=UTF8
 """Tests for mappers/ddi25.py."""
 import pprint
 from unittest import TestCase
@@ -47,6 +48,9 @@ class TestMappersDDI25(TestCase):
 
     def testKeywords(self):
         assert 'talouspolitiikka' in self.metax_dict['keywords']
+
+    def testFieldOfScience(self):
+        assert {'identifier': 'ta5'} in self.metax_dict['field_of_science']
 
     def testPublisher(self):
         pprint.pprint(self.metax_dict['publisher'])

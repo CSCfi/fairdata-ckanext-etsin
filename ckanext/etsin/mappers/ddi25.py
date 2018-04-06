@@ -1,5 +1,6 @@
 from functionally import first
 
+from ..metax_api import get_ref_data
 from ..utils import get_tag_lang
 
 # For development use
@@ -84,6 +85,20 @@ def ddi25_mapper(xml):
     keywords = []
     for kw in stdy.findall('ddi:stdyInfo/ddi:subject/ddi:keyword', namespaces):
         keywords.append(kw.text.strip())
+    vocab = 'CESSDA Topic Classification'
+    for cterm in stdy.findall("ddi:stdyInfo/ddi:subject/ddi:topcClas[@vocab='{0}']".format(vocab), namespaces):
+        keywords.append(cterm.text.strip())
+
+    # Field of science
+    codes = set()
+    for fos in stdy.findall("ddi:stdyInfo/ddi:subject/ddi:topcClas[@vocab='OKM']", namespaces):
+        field = 'label.' + get_tag_lang(fos)
+        codes.add(get_ref_data('field_of_science', field, fos.text.strip(), 'code'))
+    field_of_science = [{'identifier': c} for c in codes ]
+    if not len(field_of_science):
+        log.debug("No 'field of science' found.")
+        field_of_science.append({'identifier': 'ta5',
+                                 'definition': [{'en': 'Fallback field of science'}]})
 
     # Publisher
     publisher = {
@@ -107,14 +122,12 @@ def ddi25_mapper(xml):
         "creator": creators,
         "description": description,
         "keywords": keywords,
+        "field_of_science": field_of_science,
         "publisher": publisher,
         "provenance": [{
             "temporal": {
                 "startDate": "",
                 "endDate": ""}}],
-        "access_rights": {
-            "available": "TODO: metadataCreationDate?",
-            "description": [{
-                "en": "TODO: Free account of the rights. This could be licenceInfo/attributionText"}], }}
+    }
 
     return package_dict
