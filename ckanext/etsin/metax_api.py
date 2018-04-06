@@ -24,7 +24,7 @@ def create_catalog_record(cr_json):
     Create a catalog record in MetaX.
 
     :param cr_json: MetaX catalog record json
-    :return: metadata version identifier of the created catalog record.
+    :return: catalog record identifier of the created catalog record.
     """
     r = requests.post(METAX_DATASETS_BASE_URL,
                       headers={
@@ -41,17 +41,17 @@ def create_catalog_record(cr_json):
         log.error('Response text: %s', r.text)
         raise
     log.debug('Response text: %s', r.text)
-    return json.loads(r.text)['research_dataset']['metadata_version_identifier']
+    return json.loads(r.text)['identifier']
 
 
-def update_catalog_record(metax_mvid, cr_json):
+def update_catalog_record(metax_cr_id, cr_json):
     """
     Update existing catalog record in MetaX
 
-    :param metax_mvid: MetaX metadata version identifier
+    :param metax_cr_id: MetaX catalog record identifier
     :param cr_json: MetaX catalog record json
     """
-    r = requests.put(METAX_DATASETS_BASE_URL + '/{id}'.format(id=metax_mvid),
+    r = requests.put(METAX_DATASETS_BASE_URL + '/{id}'.format(id=metax_cr_id),
                      headers={
                 'Content-Type': 'application/json'
             },
@@ -62,43 +62,33 @@ def update_catalog_record(metax_mvid, cr_json):
         r.raise_for_status()
     except HTTPError as e:
         log.error('Failed to update catalog record {id}: \ndataset={dataset}, \nerror={error}, \njson={json}'.format(
-            dataset=cr_json, id=metax_mvid, error=repr(e), json=json_or_empty(r)))
+            dataset=cr_json, id=metax_cr_id, error=repr(e), json=json_or_empty(r)))
         log.error('Response text: %s', r.text)
         raise
 
 
-def delete_catalog_record(metax_mvid):
+def delete_catalog_record(metax_cr_id):
     """
     Delete a catalog record from MetaX.
 
-    :param metax_mvid: MetaX metadata version identifier
+    :param metax_cr_id: MetaX catalog record identifier
     """
-    r = requests.delete(METAX_DATASETS_BASE_URL + '/{id}'.format(id=metax_mvid),
+    r = requests.delete(METAX_DATASETS_BASE_URL + '/{id}'.format(id=metax_cr_id),
                         auth=(config.get('metax.api_user'), config.get('metax.api_password')), timeout=TIMEOUT)
     try:
         r.raise_for_status()
     except HTTPError as e:
         log.error('Failed to delete catalog record {id}: \nerror={error}, \njson={json}'.format(
-            id=metax_mvid, error=repr(e), json=json_or_empty(r)))
+            id=metax_cr_id, error=repr(e), json=json_or_empty(r)))
         raise
 
 
-def check_catalog_record_exists(metax_mvid):
+def check_catalog_record_exists(metax_cr_id):
     """
-    Ask MetaX whether the catalog record already exists in MetaX by using metax metadata_version_identifier.
+    Ask MetaX whether the catalog record already exists in MetaX by using metax catalog record identifier.
 
-    :param metax_mvid: MetaX metadata version identifier
+    :param metax_cr_id: MetaX catalog record identifier
     :return: True/False
     """
-    r = requests.get(
-        METAX_DATASETS_BASE_URL + '/{id}/exists'.format(id=metax_mvid), timeout=TIMEOUT)
-    try:
-        r.raise_for_status()
-    except Exception as e:
-        log.error(e)
-        log.error("Error when connecting to MetaX dataset exists API")
-        raise e
-
-    log.debug('Checked dataset existence in MetaX: ({code}) {json}'.format(
-        code=r.status_code, json=r.json()))
-    return r.json()
+    r = requests.head(METAX_DATASETS_BASE_URL + '/{id}'.format(id=metax_cr_id))
+    return r.status_code == requests.codes.ok
