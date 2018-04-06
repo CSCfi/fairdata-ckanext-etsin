@@ -85,6 +85,21 @@ def ddi25_mapper(xml):
     for kw in stdy.findall('ddi:stdyInfo/ddi:subject/ddi:keyword', namespaces):
         keywords.append(kw.text.strip())
 
+    # Publisher
+    publisher = {
+                    'name': {},
+                    '@type': 'Organization',
+                    "homepage": {
+                        "title": {
+                            "en": "Publisher website",
+                            "fi": "Julkaisijan kotisivu"},
+                        "identifier": ""}
+    }
+    for dist in stdy.findall('ddi:citation/ddi:distStmt', namespaces):
+        distr = dist.find('ddi:distrbtr', namespaces)
+        publisher['name'][get_tag_lang(distr)] = distr.text.strip()
+        publisher['homepage']['identifier'] = distr.get('URI')
+
     package_dict = {
         "preferred_identifier": pref_id,
         "modified": modified,
@@ -92,6 +107,7 @@ def ddi25_mapper(xml):
         "creator": creators,
         "description": description,
         "keywords": keywords,
+        "publisher": publisher,
         "provenance": [{
             "temporal": {
                 "startDate": "",

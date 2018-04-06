@@ -47,3 +47,10 @@ class TestMappersDDI25(TestCase):
 
     def testKeywords(self):
         assert 'talouspolitiikka' in self.metax_dict['keywords']
+
+    def testPublisher(self):
+        pprint.pprint(self.metax_dict['publisher'])
+        assert self.metax_dict['publisher']['name']['en']\
+            == 'Finnish Social Science Data Archive'
+        assert self.metax_dict['publisher']['homepage']['identifier']\
+            == 'http://www.fsd.uta.fi/'

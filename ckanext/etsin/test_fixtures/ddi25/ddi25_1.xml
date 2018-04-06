@@ -82,8 +82,8 @@
               </prodStmt>
               <distStmt>
                 <distDate xml:lang="en" date="2016-06-15"/>
-                <distrbtr abbr="FSD" URI="http://www.fsd.uta.fi/" xml:lang="en">Finnish Social Science
-                  Data Archive
+                <distrbtr abbr="FSD" URI="http://www.fsd.uta.fi/" xml:lang="en">
+                  Finnish Social Science Data Archive
                 </distrbtr>
               </distStmt>
               <serStmt>
@@ -144,8 +144,8 @@
               </prodStmt>
               <distStmt>
                 <distDate xml:lang="fi" date="2016-06-13"/>
-                <distrbtr abbr="FSD" URI="http://www.fsd.uta.fi/" xml:lang="fi">Yhteiskuntatieteellinen
-                  tietoarkisto
+                <distrbtr abbr="FSD" URI="http://www.fsd.uta.fi/" xml:lang="fi">
+                  Yhteiskuntatieteellinen tietoarkisto
                 </distrbtr>
               </distStmt>
               <serStmt>
