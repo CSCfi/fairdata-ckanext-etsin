@@ -101,3 +101,6 @@ class TestFSDRefiner(TestCase):
 
         assert refined_dict['language'][0] ==\
                {u'identifier': u'http://lexvo.org/id/iso639-3/fin'}
+
+        assert refined_dict['access_rights']['description'][0]['en']\
+            .startswith('The dataset is (B) available for')

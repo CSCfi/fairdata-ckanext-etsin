@@ -34,4 +34,13 @@ def fsd_refiner(context, data_dict):
 
     package_dict['language'] = language_list
 
+    # Licence
+    restriction = {}
+    for res in cb.findall('ddi:stdyDscr/ddi:dataAccs/ddi:useStmt/ddi:restrctn',
+                          namespaces):
+        restriction[get_tag_lang(res)] = res.text.strip()
+    if 'access_rights' not in package_dict:
+        package_dict['access_rights'] = {}
+    package_dict['access_rights']['description'] = [restriction]
+
     return package_dict
