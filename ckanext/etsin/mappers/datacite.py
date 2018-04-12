@@ -4,7 +4,8 @@ Map Datacite 3.1 and 4.0 xml to Metax values
 
 from lxml import objectify
 
-from ..utils import validate_6391, get_language_identifier, is_uri, get_rights_identifier
+from ..metax_api import get_ref_data
+from ..utils import validate_6391, get_language_identifier, is_uri
 
 import logging
 log = logging.getLogger(__name__)
@@ -170,7 +171,7 @@ def datacite_mapper(xml):
         rights_URI = right.get('rightsURI')
 
         # Query reference data for identifier matching this URI
-        rights_identifier = get_rights_identifier(rights_URI)
+        rights_identifier = get_ref_data('license', 'uri', rights_URI, 'id')
         if rights_identifier is not None:
             package_dict['access_rights'].append({
                 'description': right.text,

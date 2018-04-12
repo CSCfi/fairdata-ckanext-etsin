@@ -138,30 +138,6 @@ def is_uri(string):
     return False
 
 
-# TODO This is probably not the only thing we'll be querying, so we should
-# refactor this to fetch all kinds of reference data instead of just
-# licenses
-def get_rights_identifier(rights_URI):
-    query = dumps({
-        "query": {
-            "match": {
-                "uri": rights_URI
-            },
-        },
-        "size": 1,
-    })
-    response = requests.get(
-        'https://{0}/es/reference_data/license/_search'.format(config.get('metax.host')), data=query)
-    results = loads(response.text)
-    try:
-        identifier = results['hits']['hits'][0]['_source']['id']
-        return identifier
-    except:
-        return None
-
-    return None
-
-
 def set_existing_kata_identifier_to_other_identifier(file_path, search_pid, package_dict):
     """
     Set kata identifier to package dict (metax research dataset) other_identifier by reading a mapping file
