@@ -1,7 +1,9 @@
+# coding=UTF8
 """
 Refine FSD data_dict
 """
 from functionally import first
+import re
 
 from ..utils import (convert_language,
                      get_language_identifier,
@@ -20,6 +22,8 @@ def fsd_refiner(context, data_dict):
     """
     namespaces = {'oai': "http://www.openarchives.org/OAI/2.0/",
                   'ddi': "ddi:codebook:2_5"}
+    LICENSE_ID_A_FSD = 'other-open'
+    LICENSE_ID_BCD_FSD = 'other-closed'
 
     package_dict = data_dict
     xml = context.get('source_data')
@@ -35,12 +39,23 @@ def fsd_refiner(context, data_dict):
     package_dict['language'] = language_list
 
     # Licence
+    if 'access_rights' not in package_dict:
+        package_dict['access_rights'] = {}
     restriction = {}
     for res in cb.findall('ddi:stdyDscr/ddi:dataAccs/ddi:useStmt/ddi:restrctn',
                           namespaces):
         restriction[get_tag_lang(res)] = res.text.strip()
-    if 'access_rights' not in package_dict:
-        package_dict['access_rights'] = {}
-    package_dict['access_rights']['description'] = [restriction]
+
+    if len(restriction.get('en', '')):
+        if re.match(r"The dataset is \([BCD]\)", restriction.get('en', '')):
+            lic_id = LICENSE_ID_BCD_FSD
+        elif re.match(r'The dataset is \(A\)', restriction.get('en', '')):
+            lic_id = LICENSE_ID_A_FSD
+        else:
+            log.error('Unknown licence in dataset')
+            lic_id = 'other'
+        package_dict['access_rights']['license'] = [{
+            'identifier': lic_id,
+            'description': [restriction]}]
 
     return package_dict

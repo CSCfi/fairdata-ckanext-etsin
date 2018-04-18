@@ -1,3 +1,4 @@
+# coding=UTF8
 from ckanext.etsin.refine import refine
 from ckanext.etsin.refiners.kielipankki import kielipankki_refiner
 from ckanext.etsin.refiners.syke import syke_refiner
@@ -102,5 +103,8 @@ class TestFSDRefiner(TestCase):
         assert refined_dict['language'][0] ==\
                {u'identifier': u'http://lexvo.org/id/iso639-3/fin'}
 
-        assert refined_dict['access_rights']['description'][0]['en']\
-            .startswith('The dataset is (B) available for')
+        assert {'identifier': 'other-closed',
+                'description': [{
+                    'en': u'The dataset is (B) available for research, teaching and study.',
+                    'fi': u'Aineisto on käytettävissä (B) tutkimukseen, opetukseen ja opiskeluun.'}]}\
+            in refined_dict['access_rights']['license']
