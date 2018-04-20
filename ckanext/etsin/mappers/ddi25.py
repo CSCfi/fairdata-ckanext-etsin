@@ -138,6 +138,23 @@ def ddi25_mapper(xml):
                        'en': 'Contains the date(s) when the data were collected.'}
                    }]
 
+    # Geographical coverage
+    spatial = [{}]
+    lang_attr = '{http://www.w3.org/XML/1998/namespace}lang'
+    lang_path = "ddi:stdyInfo/ddi:sumDscr/ddi:nation[@{la}='{lt}']"
+    nat_fi = stdy.find(lang_path.format(la=lang_attr, lt='fi'), namespaces)
+    nat_en = stdy.find(lang_path.format(la=lang_attr, lt='en'), namespaces)
+    if nat_en is not None:
+        spatial = [{'geographic_name': nat_en.text.strip()}]
+    if nat_fi is not None:
+        # Assume Finland so search ES for Finnish place names: 'nat_fi'
+        spat_id = get_ref_data('location', 'label.fi', nat_fi.text.strip(),
+                               'code')
+        if spat_id is not None:
+            spatial[0]['place_uri'] = {'identifier': spat_id}
+        if spatial[0].get('geographic_name') is None:
+            spatial[0]['geographic_name'] = nat_fi.text.strip()
+
     package_dict = {
         "preferred_identifier": pref_id,
         "modified": modified,
@@ -149,6 +166,7 @@ def ddi25_mapper(xml):
         "publisher": publisher,
         "temporal": temporal_coverage,
         "provenance": provenance,
+        "spatial": spatial
     }
 
     return package_dict
