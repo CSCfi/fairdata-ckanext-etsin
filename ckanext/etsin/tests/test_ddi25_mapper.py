@@ -58,3 +58,9 @@ class TestMappersDDI25(TestCase):
             == 'Finnish Social Science Data Archive'
         assert self.metax_dict['publisher']['homepage']['identifier']\
             == 'http://www.fsd.uta.fi/'
+
+    def testTemporalCoverage(self):
+        assert self.metax_dict['temporal'][0]['start_date'] == '2015-04-07'
+
+    def testProvenance(self):
+        assert self.metax_dict['provenance'][0]['temporal']['start_date'] == '2015-04-07'

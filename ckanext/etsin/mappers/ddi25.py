@@ -1,3 +1,4 @@
+# coding=UTF8
 from functionally import first
 
 from ..metax_api import get_ref_data
@@ -115,6 +116,28 @@ def ddi25_mapper(xml):
         publisher['name'][get_tag_lang(distr)] = distr.text.strip()
         publisher['homepage']['identifier'] = distr.get('URI')
 
+    # Temporal coverage
+    tpath = "ddi:stdyInfo/ddi:sumDscr/ddi:{tag}[@event='{ev}']"
+    tstart = stdy.find(tpath.format(tag='timePrd', ev='start'), namespaces) or\
+        stdy.find(tpath.format(tag='collDate', ev='start'), namespaces)
+    tend = stdy.find(tpath.format(tag='timePrd', ev='end'), namespaces) or\
+        stdy.find(tpath.format(tag='collDate', ev='end'), namespaces)
+    if tstart is None and tend is None:
+        tstart = stdy.find(tpath.format(tag='timePrd', ev='single'), namespaces) or\
+                 stdy.find(tpath.format(tag='collDate', ev='single'), namespaces)
+        tend = tstart
+    elif tstart is None or tend is None:
+        log.error('No temporal coverage or only start or end date in dataset!')
+    temporal_coverage = [{'start_date': tstart.get('date') if tstart is not None else '',
+                          'end_date': tend.get('date') if tend is not None else ''}]
+
+    # Provenance
+    provenance = [{'title': {'en': 'Collection'},
+                   'temporal': temporal_coverage[0],
+                   'description': {
+                       'en': 'Contains the date(s) when the data were collected.'}
+                   }]
+
     package_dict = {
         "preferred_identifier": pref_id,
         "modified": modified,
@@ -124,10 +147,8 @@ def ddi25_mapper(xml):
         "keywords": keywords,
         "field_of_science": field_of_science,
         "publisher": publisher,
-        "provenance": [{
-            "temporal": {
-                "startDate": "",
-                "endDate": ""}}],
+        "temporal": temporal_coverage,
+        "provenance": provenance,
     }
 
     return package_dict
