@@ -65,6 +65,10 @@ class TestMappersDDI25(TestCase):
     def testProvenance(self):
         assert self.metax_dict['provenance'][0]['temporal']['start_date'] == '2015-04-07'
 
+    def testProduction(self):
+        assert self.metax_dict['provenance'][1]['temporal']['start_date'] == '2016-06-15' and\
+            self.metax_dict['provenance'][1]['title']['en'] == 'Production'
+
     def testSpatialCoverage(self):
         assert self.metax_dict['spatial'][0]['geographic_name'] == 'Finland'
         assert self.metax_dict['spatial'][0]['place_uri']['identifier'] == 'p94426'

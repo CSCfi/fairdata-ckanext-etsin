@@ -137,6 +137,15 @@ def ddi25_mapper(xml):
                    'description': {
                        'en': 'Contains the date(s) when the data were collected.'}
                    }]
+    # Production
+    prod = stdy.find('ddi:citation/ddi:prodStmt/ddi:prodDate', namespaces)
+    if prod is not None:
+        provenance.append(
+            {'title': {'en': 'Production'},
+             'temporal': {'start_date': prod.text.strip(),
+                          'end_date': prod.text.strip()},
+             'description': {'en': 'Date when the data collection were'
+                                   ' produced (not distributed or archived)'}})
 
     # Geographical coverage
     spatial = [{}]
