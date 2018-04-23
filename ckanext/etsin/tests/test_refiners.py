@@ -108,3 +108,5 @@ class TestFSDRefiner(TestCase):
                     'en': u'The dataset is (B) available for research, teaching and study.',
                     'fi': u'Aineisto on käytettävissä (B) tutkimukseen, opetukseen ja opiskeluun.'}]}\
             in refined_dict['access_rights']['license']
+
+        assert refined_dict['access_rights']['description'][0]['en'] == 'Test condition'

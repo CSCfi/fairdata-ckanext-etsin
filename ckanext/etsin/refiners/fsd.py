@@ -45,7 +45,6 @@ def fsd_refiner(context, data_dict):
     for res in cb.findall('ddi:stdyDscr/ddi:dataAccs/ddi:useStmt/ddi:restrctn',
                           namespaces):
         restriction[get_tag_lang(res)] = res.text.strip()
-
     if len(restriction.get('en', '')):
         if re.match(r"The dataset is \([BCD]\)", restriction.get('en', '')):
             lic_id = LICENSE_ID_BCD_FSD
@@ -57,5 +56,12 @@ def fsd_refiner(context, data_dict):
         package_dict['access_rights']['license'] = [{
             'identifier': lic_id,
             'description': [restriction]}]
+
+    conditions = {}
+    for cond in cb.findall('ddi:stdyDscr/ddi:dataAccs/ddi:useStmt/ddi:conditions',
+                           namespaces):
+        conditions[get_tag_lang(cond)] = cond.text.strip()
+    if len(conditions):
+        package_dict['access_rights']['description'] = [conditions]
 
     return package_dict

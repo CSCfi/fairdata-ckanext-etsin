@@ -278,6 +278,8 @@
                 </restrctn>
                 <restrctn xml:lang="fi">Aineisto on käytettävissä (B) tutkimukseen, opetukseen ja opiskeluun.
                 </restrctn>
+                <conditions xml:lang="en">Test condition
+                </conditions>
               </useStmt>
             </dataAccs>
             <othrStdyMat>
