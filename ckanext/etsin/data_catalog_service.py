@@ -138,7 +138,7 @@ def get_data_catalog_filename_for_harvest_source(harvest_source_name):
     if harvest_source_name == 'syke':
         return 'syke_data_catalog.json'
     elif harvest_source_name == 'kielipankki':
-        return 'language_bank_data_catalog.json'
+        return 'kielipankki_data_catalog.json'
     elif harvest_source_name == 'fsd':
         return 'fsd_data_catalog.json'
     else:
