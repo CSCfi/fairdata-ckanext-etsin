@@ -3,11 +3,13 @@
 Refine FSD data_dict
 """
 from functionally import first
+import os
 import re
 
 from ..utils import (convert_language,
                      get_language_identifier,
-                     get_tag_lang)
+                     get_tag_lang,
+                     set_existing_kata_identifier_to_other_identifier)
 
 # For development use
 import logging
@@ -27,7 +29,8 @@ def fsd_refiner(context, data_dict):
 
     package_dict = data_dict
     xml = context.get('source_data')
-    cb = first(xml.xpath('//oai:record/oai:metadata/ddi:codeBook', namespaces=namespaces))
+    cb = first(xml.xpath('//oai:record/oai:metadata/ddi:codeBook',
+                         namespaces=namespaces))
 
     # Language
     languages = [get_tag_lang(fn) for fn in cb.findall(
@@ -63,5 +66,10 @@ def fsd_refiner(context, data_dict):
         conditions[get_tag_lang(cond)] = cond.text.strip()
     if len(conditions):
         package_dict['access_rights']['description'] = [conditions]
+
+    # Add old pid
+    old_pids_path = os.path.dirname(__file__) + '/resources/fsd_pid_to_kata_urn.csv'
+    set_existing_kata_identifier_to_other_identifier(
+        old_pids_path, package_dict['preferred_identifier'], package_dict)
 
     return package_dict

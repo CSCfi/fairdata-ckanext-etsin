@@ -94,7 +94,7 @@ class TestFSDRefiner(TestCase):
 
     def testRefiner(self):
         xml = helpers._get_file_as_lxml('ddi25/ddi25_1.xml')
-        metax_dict = {}
+        metax_dict = {'preferred_identifier': 'urn:nbn:fi:fsd:T-FSD3092'}
         context = {'source_data': xml}
         refined_dict = fsd_refiner(context, metax_dict)
         # Check that refined fields exist
@@ -110,3 +110,6 @@ class TestFSDRefiner(TestCase):
             in refined_dict['access_rights']['license']
 
         assert refined_dict['access_rights']['description'][0]['en'] == 'Test condition'
+
+        assert refined_dict['other_identifier'][0]['notation'] ==\
+            'urn:nbn:fi:csc-kata20160614040245352984'
