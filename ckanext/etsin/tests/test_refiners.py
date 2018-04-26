@@ -109,6 +109,9 @@ class TestFSDRefiner(TestCase):
                     'fi': u'Aineisto on käytettävissä (B) tutkimukseen, opetukseen ja opiskeluun.'}]}\
             in refined_dict['access_rights']['license']
 
+        assert refined_dict['access_rights']['access_type'] ==\
+               {'identifier': 'resticted_access_research_education_studying'}
+
         assert refined_dict['access_rights']['description'][0]['en'] == 'Test condition'
 
         assert refined_dict['other_identifier'][0]['notation'] ==\
