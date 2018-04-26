@@ -8,7 +8,7 @@ from pylons import config
 
 log = logging.getLogger(__name__)
 
-from data_catalog_service import DataCatalogMetaxAPIService, get_data_catalog_filename_for_harvest_source
+from .data_catalog_service import DataCatalogMetaxAPIService, get_data_catalog_filename_for_harvest_source
 
 
 def convert_language(language):
@@ -142,21 +142,63 @@ def set_existing_kata_identifier_to_other_identifier(file_path, search_pid, pack
     """
     Set kata identifier to package dict (metax research dataset) other_identifier by reading a mapping file
     which contains two columns: first column contains values to search for with search_pid and the other is the value
-    that should be set to package_dict other_identifier.
+    that should be set to package_dict.
 
     :param file_path:
     :param search_pid:
     :param package_dict:
     :return:
     """
-    package_dict['other_identifier'] = []
+    row = _find_row_from_mapping_file(file_path, search_pid)
+    if row:
+        set_urn_pid_to_other_identifier(row[1], package_dict)
+
+
+def set_urn_pid_to_other_identifier(pid, package_dict):
+    package_dict['other_identifier'] = package_dict.get('other_identifier', None) or []
+    package_dict['other_identifier'].append({
+        'notation': pid,
+        'type': {
+            'identifier': 'http://purl.org/att/es/reference_data/identifier_type/identifier_type_urn'
+        }
+    })
+
+
+def set_existing_kata_identifier_to_preferred_identifier(file_path, search_pid, package_dict):
+    """
+    Set kata identifier to package dict (metax research dataset) preferred_identifier by reading a mapping file
+    which contains two columns: first column contains values to search for with search_pid and the other is the value
+    that should be set to package_dict.
+
+    :param file_path:
+    :param search_pid:
+    :param package_dict:
+    :return:
+    """
+    row = _find_row_from_mapping_file(file_path, search_pid)
+    if row:
+        package_dict['preferred_identifier'] = row[1]
+
+
+def search_pid_exists_in_mapping_file(file_path, search_pid):
+    """
+    Verify whether a search pid exists in the mapping file which contains two columns, of which the first column
+    is the column where search_pid may be found
+
+    :param file_path:
+    :param search_pid:
+    :return:
+    """
+    if _find_row_from_mapping_file(file_path, search_pid):
+        return True
+
+    return False
+
+
+def _find_row_from_mapping_file(file_path, search_pid):
     with open(file_path, 'rb') as f:
         reader = csv.reader(f, delimiter=',')
         for row in reader:
             if row[0] == search_pid:
-                package_dict['other_identifier'].append({
-                    'notation': row[1],
-                    'type': {
-                         'identifier': 'http://purl.org/att/es/reference_data/identifier_type/identifier_type_urn'
-                    }
-                })
+                return row
+    return None

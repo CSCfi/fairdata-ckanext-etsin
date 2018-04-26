@@ -1,6 +1,7 @@
-'''
+"""
 Action overrides
-'''
+"""
+
 import logging
 
 from requests import HTTPError
@@ -81,6 +82,8 @@ def package_create(context, metax_rd_dict):
         # Refine metax_rd_dict based on organization it belongs to
         try:
             metax_rd_dict = refine(context, metax_rd_dict)
+            if not metax_rd_dict:
+                return False
         except DatasetFieldsMissingError as e:
             log.error(e)
             return False
@@ -125,6 +128,8 @@ def package_update(context, metax_rd_dict):
         # Refine metax_rd_dict based on organization it belongs to
         try:
             metax_rd_dict = refine(context, metax_rd_dict)
+            if not metax_rd_dict:
+                return False
         except DatasetFieldsMissingError as e:
             log.error(e)
             return False

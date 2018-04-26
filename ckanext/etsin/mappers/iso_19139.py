@@ -1,6 +1,6 @@
-'''
+"""
 Map ISO 19139 dicts to Metax values
-'''
+"""
 
 from iso639 import languages
 from ..utils import get_language_identifier,\
@@ -8,6 +8,7 @@ from ..utils import get_language_identifier,\
                     convert_bbox_to_polygon
 
 import logging
+
 log = logging.getLogger(__name__)
 
 
@@ -20,6 +21,9 @@ def iso_19139_mapper(context, data_dict):
 
     iso_values = data_dict['iso_values']
 
+    # Set guid to context for refiner use
+    context['guid'] = data_dict['harvest_object'].guid
+
     # Find out metadata language
     # Use und, if language code not given or isn't valid ISO 639-3
     try:
@@ -31,15 +35,6 @@ def iso_19139_mapper(context, data_dict):
     # Ensure meta_lang exists
     if not meta_lang:
         meta_lang = 'und'
-
-    try:
-        # Use whatever id harvest source gives us
-        package_dict['preferred_identifier'] = data_dict['harvest_object'].guid
-    except KeyError:
-        package_dict['preferred_identifier'] = ''
-
-    # Set guid to context for refiner use
-    context['guid'] = data_dict['harvest_object'].guid
 
     # Find title
     try:
@@ -62,7 +57,41 @@ def iso_19139_mapper(context, data_dict):
     except KeyError:
         pass
 
+    # Field of Science
+    try:
+        if len(iso_values['topic-category']):
+            topic_cat = iso_values['topic-category'][0]
+            if topic_cat == 'environment':
+                package_dict['field_of_science'] = [{'identifier': 'ta1172'}]
+            elif topic_cat == 'planningCadastre':
+                package_dict['field_of_science'] = [{'identifier': 'ta212'}]
+            elif topic_cat == 'transportation':
+                package_dict['field_of_science'] = [{'identifier': 'ta212'}]
+            elif topic_cat == 'economy':
+                package_dict['field_of_science'] = [{'identifier': 'ta5'}]
+            elif topic_cat == 'biota':
+                package_dict['field_of_science'] = [{'identifier': 'ta1181'}, {'identifier': 'ta1183'}]
+            elif topic_cat == 'utilitiesCommunication':
+                package_dict['field_of_science'] = [{'identifier': 'ta218'}, {'identifier': 'ta213'}]
+            elif topic_cat == 'geoscientificInformation':
+                package_dict['field_of_science'] = [{'identifier': 'ta1171'}]
+            elif topic_cat == 'climatologyMeteorologyAtmosphere':
+                package_dict['field_of_science'] = [{'identifier': 'ta1171'}]
+            elif topic_cat == 'farming':
+                package_dict['field_of_science'] = [{'identifier': 'ta412'}, {'identifier': 'ta4111'}]
+            elif topic_cat == 'inlandWaters':
+                package_dict['field_of_science'] = [{'identifier': 'ta1171'}]
+            elif topic_cat == 'health':
+                package_dict['field_of_science'] = [{'identifier': 'ta316'}, {'identifier': 'ta3142'}]
+            elif topic_cat == 'society':
+                package_dict['field_of_science'] = [{'identifier': 'ta8'}]
+            else:
+                package_dict['field_of_science'] = []
+    except KeyError:
+        package_dict['field_of_science'] = []
+
     # Dataset creators
+    # TODO
     package_dict['creator'] = []
     try:
         creators = (org for org in iso_values['responsible-organisation'] if 'originator' in org['role'])
@@ -72,15 +101,8 @@ def iso_19139_mapper(context, data_dict):
         pass
 
     # Dataset curator
-    # TODO: Find out what is the iso_values['metadata-point-of-contact'] w.r.t. iso_values['responsible-organization']
-    # Most of the times they have the same object, but sometimes metadata-point-of-contact is empty
+    # TODO
     package_dict['curator'] = []
-    # try:
-    #     metadata_point_of_contacts = (org for org in iso_values['metadata-point-of-contact'])
-    #     for item in metadata_point_of_contacts:
-    #         _set_agent_details_to_package_dict_field(package_dict, 'curator', item, True, meta_lang)
-    # except KeyError:
-    #     pass
 
     if not len(package_dict['curator']):
         try:
@@ -91,6 +113,7 @@ def iso_19139_mapper(context, data_dict):
             pass
 
     # Use distributor as metax publisher
+    # TODO
     try:
         for org in iso_values['responsible-organisation']:
             if 'distributor' in org['role']:
@@ -100,6 +123,7 @@ def iso_19139_mapper(context, data_dict):
         pass
 
     # If distributor was not found for metax publisher, try publisher role for metax publisher
+    # TODO
     if 'publisher' not in package_dict:
         try:
             for org in iso_values['responsible-organisation']:
@@ -110,6 +134,7 @@ def iso_19139_mapper(context, data_dict):
             pass
 
     # Dataset rights holder
+    # TODO
     try:
         for org in iso_values['responsible-organisation']:
             if 'owner' in org['role']:
@@ -118,13 +143,14 @@ def iso_19139_mapper(context, data_dict):
     except KeyError:
         pass
 
-    # Last known time when a research dataset or metadata about the research dataset has been significantly modified.
-    # TODO: This needs to be verified which field to use in iso19139 metadata:
-    # date-released, metadata-date, dataset-reference-date[0]['value'], date-created, date-updated
+    # modified: Last known time when a research dataset or metadata about the research dataset
+    # has been significantly modified.
+    # date-updated: the date of last revision for the dataset
+    # metadata-date: either creation or update date of metadata
     try:
         package_dict['modified'] = iso_values['date-updated'] or iso_values['metadata-date']
     except KeyError:
-        package_dict['modified'] = ''
+        pass
 
     # Dataset freeform keywords
     package_dict['keyword'] = []
@@ -146,24 +172,23 @@ def iso_19139_mapper(context, data_dict):
 
     # Temporal extent, assumption is same index within temporal-extent-begin and -end are related
     # No dataset have had values on these.
-    package_dict['temporal'] = []
     try:
         if len(iso_values['temporal-extent-begin']) == len(iso_values['temporal-extent-end']) and \
         len(iso_values['temporal-extent-begin']) > 0:
+            package_dict['temporal'] = []
             for idx, val in enumerate(iso_values['temporal-extent-begin']):
                 package_dict['temporal'].append({'start_date': val,
                                                 'end_date': iso_values['temporal-extent-end'][idx]})
     except KeyError:
         pass
 
-    # Date of formal issuance for the dataset
-    # TODO: This needs to be verified which field to use in iso19139 metadata:
-    # date-released, metadata-date, dataset-reference-date[0]['value'], date-created, date-updated
+    # issued: Date of formal issuance for the dataset
+    # date-released: date of publication of dataset
     try:
-        package_dict['issued'] = iso_values['date-released']
+        if iso_values['date-released']:
+            package_dict['issued'] = iso_values['date-released']
     except KeyError:
-        if 'dataset-reference-date' in iso_values and len(iso_values['dataset-reference-date']):
-            package_dict['issued'] = iso_values['dataset-reference-date'][0].get('value', '')
+        pass
 
     # Access rights description as a text
     if 'use-constraints' in iso_values and len(iso_values['use-constraints']):
