@@ -40,7 +40,9 @@ def ddi25_mapper(xml):
     creators = []
     try:
         for i, citation in enumerate(stdy.findall('ddi:citation', namespaces)):
-            for j, author in enumerate(citation.findall('ddi:rspStmt/ddi:AuthEnty', namespaces)):
+            for j, author in enumerate(citation.xpath(
+                    'ddi:rspStmt/ddi:AuthEnty|ddi:rspStmt/ddi:othId',
+                    namespaces=namespaces)):
                 agent_obj = {'name': None}
                 if 'affiliation' in author.keys():
                     org = author.get('affiliation')
@@ -51,6 +53,7 @@ def ddi25_mapper(xml):
                                 'name': {
                                     get_tag_lang(author): org},
                                 '@type': 'Organization'}
+                        # TODO: Check here that othIds are handled correctly
                         agent_obj['name'] = author.text.strip()
                         creators.append(agent_obj)
                     elif org is not None:
@@ -62,6 +65,8 @@ def ddi25_mapper(xml):
                         creators.append(agent_obj)
                     else:
                         creators[j]['name'][get_tag_lang(author)] = author.text.strip()
+                if author.tag.split('}')[1] == 'othId':
+                    log.info('Tag "othId" found, check it is correctly parsed(TODO)!')
     except Exception as e:
         log.error('Error parsing "creators": {0}: {1}. Check that different '
                   'language elements match at the source.'.format(e.__class__.__name__, e))
