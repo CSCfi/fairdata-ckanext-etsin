@@ -132,10 +132,15 @@ def ddi25_mapper(xml):
                           'end_date': tend.get('date') if tend is not None else ''}]
 
     # Provenance
+    universe = {}
+    univ = stdy.findall("ddi:stdyInfo/ddi:sumDscr/ddi:universe", namespaces)
+    for u in univ:
+        universe[get_tag_lang(u)] = u.text.strip()
     provenance = [{'title': {'en': 'Collection'},
                    'temporal': temporal_coverage[0],
                    'description': {
-                       'en': 'Contains the date(s) when the data were collected.'}
+                       'en': 'Contains the date(s) when the data were collected.'},
+                   'variable': [{'pref_label': universe}]
                    }]
     # Production
     prod = stdy.find('ddi:citation/ddi:prodStmt/ddi:prodDate', namespaces)

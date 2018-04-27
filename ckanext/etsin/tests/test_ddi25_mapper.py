@@ -64,6 +64,8 @@ class TestMappersDDI25(TestCase):
 
     def testProvenance(self):
         assert self.metax_dict['provenance'][0]['temporal']['start_date'] == '2015-04-07'
+        assert self.metax_dict['provenance'][0]['variable'][0]['pref_label']['en'] ==\
+               'Students enrolled at the University of Tampere'
 
     def testProduction(self):
         assert self.metax_dict['provenance'][1]['temporal']['start_date'] == '2016-06-15' and\
