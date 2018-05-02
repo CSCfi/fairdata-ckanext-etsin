@@ -3,21 +3,40 @@ import os
 
 from ckanext.etsin.data_catalog_service import DataCatalogMetaxAPIService as DCS
 from ckanext.etsin.exceptions import DatasetFieldsMissingError
-from ckanext.etsin.utils import set_existing_kata_identifier_to_other_identifier
+from ckanext.etsin.utils import search_pid_exists_in_mapping_file, \
+                                set_existing_kata_identifier_to_preferred_identifier, \
+                                set_urn_pid_to_other_identifier
 
 log = logging.getLogger(__name__)
 
 
 # Refines Syke data_dict
 def syke_refiner(context, package_dict):
+    mapping_file_path = os.path.dirname(__file__) + '/resources/syke_guid_to_kata_urn.csv'
+    harvest_object_guid = context.get('guid', None)
+    if not harvest_object_guid:
+        log.error("Harvest object must have guid. Skipping.")
+        return None
+
+    # Special rule, which is to be removed when syke gets their own resolvable identifiers to their datasets:
+    # Do not harvest datasets which do / did not exist in old etsin and set existing kata identifier to dataset
+    # preferred_identifier field
+    if not search_pid_exists_in_mapping_file(mapping_file_path, harvest_object_guid):
+        log.warning("Harvest object guid {0} not found from the mapping file. Skipping harvesting for now..".
+                    format(harvest_object_guid))
+        return None
+
+    set_existing_kata_identifier_to_preferred_identifier(mapping_file_path, harvest_object_guid, package_dict)
+    set_urn_pid_to_other_identifier(harvest_object_guid, package_dict)
+
     data_catalog = DCS.get_data_catalog_from_file('syke_data_catalog.json')['catalog_json']
 
-    # Field of science
-    field_of_science = data_catalog['field_of_science'][0]
-    package_dict['field_of_science'] = [{'identifier': field_of_science['identifier']}]
+    # If Field of science was not set in mapper, fallback here to syke data catalog fos
+    if 'field_of_science' not in package_dict or not len(package_dict.get('field_of_science')):
+        field_of_science = data_catalog['field_of_science'][0]
+        package_dict['field_of_science'] = [{'identifier': field_of_science['identifier']}]
 
     # Fix email addresses
-    # TODO: Verify from syke this is ok
     if 'curator' in package_dict:
         _fix_email_address(package_dict, 'curator')
     if 'creator' in package_dict:
@@ -46,10 +65,6 @@ def syke_refiner(context, package_dict):
         package_dict['access_rights']['access_type'] = {
             'identifier': 'http://purl.org/att/es/reference_data/access_type/access_type_restricted_access'
         }
-
-    if 'guid' in context:
-        set_existing_kata_identifier_to_other_identifier(
-            os.path.dirname(__file__) + '/resources/syke_guid_to_kata_urn.csv', context['guid'], package_dict)
 
     _check_for_required_fields(package_dict)
 

@@ -67,7 +67,8 @@ def _get_valid_iso_values_dict_1():
         'use-constraints': ['joopajoo'],
         'temporal-extent-begin': ['2000-01-01'],
         'temporal-extent-end': ['2001-01-01'],
-        'lineage': 'provenance'
+        'lineage': 'provenance',
+        'topic-category': ['environment']
     }
 
 
