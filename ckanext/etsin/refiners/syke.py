@@ -32,7 +32,7 @@ def syke_refiner(context, package_dict):
     data_catalog = DCS.get_data_catalog_from_file('syke_data_catalog.json')['catalog_json']
 
     # If Field of science was not set in mapper, fallback here to syke data catalog fos
-    if not len(package_dict['field_of_science']):
+    if 'field_of_science' not in package_dict or not len(package_dict.get('field_of_science')):
         field_of_science = data_catalog['field_of_science'][0]
         package_dict['field_of_science'] = [{'identifier': field_of_science['identifier']}]
 

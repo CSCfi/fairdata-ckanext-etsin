@@ -16,7 +16,6 @@ class TestMappersISO19139(TestCase):
     def testMapper(self):
         dict = iso_19139_mapper({}, get_iso_values_dict_1())
         print(dict)
-        eq_(dict['preferred_identifier'], 'M28mitl:')
         eq_(dict['title'], {'fi': 'Testiaineisto'})
         assert {'@type': 'Person', 'email': 'tekija1@testi.fi', 'name': 'tekija1'} in dict['creator']
         assert {'@type': 'Organization', 'email': 'tekija2@testi.fi', 'name': {'fi':'tekija2'}} in dict['creator']

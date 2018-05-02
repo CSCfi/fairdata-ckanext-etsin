@@ -83,8 +83,8 @@ class TestSykeRefiner(TestCase):
 
     def testMissingFields(self):
         test_dict = get_package_dict_1()
-        del test_dict['preferred_identifier']
-        context = {}
+        del test_dict['title']
+        context = {'guid': '{51C9D60D-6D41-44BD-9136-C4933510DB2D}'}
         with self.assertRaises(DatasetFieldsMissingError):
             syke_refiner(context, test_dict)
 
