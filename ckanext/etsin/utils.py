@@ -80,6 +80,17 @@ def get_language_identifier(language):
         return 'http://lexvo.org/id/iso639-3/' + language
 
 
+def get_tag_lang(tag):
+    """Get language of an lxml element
+
+    :param tag: a tag of in an xml tree
+    :type  tag: lxml.etree._Element
+    :return a language string
+    """
+    xml_ns = '{http://www.w3.org/XML/1998/namespace}'
+    return tag.get(xml_ns + 'lang', 'und')
+
+
 def convert_to_metax_catalog_record(data_dict, context, metax_cr_id=None):
     """
     :param data_dict: contains data that has come from harvester, mapped and refined
@@ -125,30 +136,6 @@ def is_uri(string):
         if [url.scheme, url.netloc, url.path]:
             return True
     return False
-
-
-# TODO This is probably not the only thing we'll be querying, so we should
-# refactor this to fetch all kinds of reference data instead of just
-# licenses
-def get_rights_identifier(rights_URI):
-    query = dumps({
-        "query": {
-            "match": {
-                "uri": rights_URI
-            },
-        },
-        "size": 1,
-    })
-    response = requests.get(
-        'https://{0}/es/reference_data/license/_search'.format(config.get('metax.host')), data=query)
-    results = loads(response.text)
-    try:
-        identifier = results['hits']['hits'][0]['_source']['id']
-        return identifier
-    except:
-        return None
-
-    return None
 
 
 def set_existing_kata_identifier_to_other_identifier(file_path, search_pid, package_dict):

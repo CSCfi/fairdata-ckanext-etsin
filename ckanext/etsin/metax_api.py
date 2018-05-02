@@ -7,7 +7,9 @@ import logging
 log = logging.getLogger(__name__)
 
 TIMEOUT = 30
-METAX_DATASETS_BASE_URL = 'https://{0}/rest/datasets'.format(config.get('metax.host'))
+METAX_BASE_URL = 'https://{0}'.format(config.get('metax.host'))
+METAX_DATASETS_BASE_URL = METAX_BASE_URL + '/rest/datasets'
+METAX_REFERENCE_DATA_URL = METAX_BASE_URL + '/es/reference_data/{topic}/_search'
 
 
 def json_or_empty(response):
@@ -92,3 +94,31 @@ def check_catalog_record_exists(metax_cr_id):
     """
     r = requests.head(METAX_DATASETS_BASE_URL + '/{id}'.format(id=metax_cr_id))
     return r.status_code == requests.codes.ok
+
+
+def get_ref_data(topic, field, term, result_field):
+    """ Query MetaX Elastic search API for all kinds of reference data
+
+    :param topic: as one of listed <host>/es/reference_data?pretty eg. 'licese'
+    :type topic: string
+    :param field: of an entry to query, subfield with period eg.'label.fi'
+    :type field: string
+    :param term: to search eg. 'JaaSamoin'
+    :type term: string
+    :return:
+    """
+    query = json.dumps({
+        "query": {
+            "match": {
+                field: term}, },
+        "size": 1, })
+    # response = requests.get(
+    #     'https://{0}/es/reference_data/license/_search'.format(config.get('metax.host')), data=query)
+    response = requests.get(METAX_REFERENCE_DATA_URL.format(topic=topic),
+                            data=query)
+    results = json.loads(response.text)
+    try:
+        result = results['hits']['hits'][0]['_source'][result_field]
+        return result
+    except:
+        return None
