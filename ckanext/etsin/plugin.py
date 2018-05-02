@@ -1,3 +1,14 @@
+# coding=utf-8
+"""
+Set up configurations, actions and interfaces to implement
+
+:author: Meeri Panula
+:author: Juha-Matti Lehtinen
+:author: Juho Lehtonen
+:copyright: 2017-2018  CSC - IT Center for Science Ltd, Finland
+:license: GNU Affero General Public License version 3 (AGPLv3)
+"""
+
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
