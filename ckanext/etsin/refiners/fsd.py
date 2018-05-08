@@ -36,7 +36,7 @@ def fsd_refiner(context, data_dict):
         'access_type': 'restricted_access_research'}, {
         'match': r"The dataset is \(D\)",
         'license': 'other-closed',
-        'access_type': 'restricted_access_permit'}]
+        'access_type': 'restricted_access'}]
 
     package_dict = data_dict
     xml = context.get('source_data')

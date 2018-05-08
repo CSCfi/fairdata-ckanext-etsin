@@ -72,9 +72,9 @@ class KielipankkiRefiner():
         """
 
         if license == cls.LICENSE_CLARIN_ACA or license == cls.LICENSE_CLARIN_ACA_NC:
-            return "restricted_access_permit"
+            return "restricted_access"
         elif license == cls.LICENSE_CLARIN_RES:
-            return "restricted_access_permit"
+            return "restricted_access"
         elif license == cls.LICENSE_CLARIN_PUB or license.startswith(cls.LICENSE_CC_BY):
             return "open_access"
         else:
