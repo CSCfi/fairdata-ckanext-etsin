@@ -138,7 +138,7 @@ def iso_19139_mapper(context, data_dict):
     try:
         for org in iso_values['responsible-organisation']:
             if 'owner' in org['role']:
-                _set_agent_details_to_package_dict_field(package_dict, 'rights_holder', org, False, meta_lang)
+                _set_agent_details_to_package_dict_field(package_dict, 'rights_holder', org, True, meta_lang)
                 break
     except KeyError:
         pass

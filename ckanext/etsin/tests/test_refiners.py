@@ -63,8 +63,8 @@ class TestSykeRefiner(TestCase):
             self.fail("email address invalid: {0}".format(refined_dict['creator'][1]['email']))
         if '@' not in refined_dict['curator'][0]['email']:
             self.fail("email address invalid: {0}".format(refined_dict['curator'][1]['email']))
-        if '@' not in refined_dict['rights_holder']['email']:
-            self.fail("email address invalid: {0}".format(refined_dict['rights_holder']['email']))
+        if '@' not in refined_dict['rights_holder'][0]['email']:
+            self.fail("email address invalid: {0}".format(refined_dict['rights_holder'][0]['email']))
         if '@' not in refined_dict['publisher']['email']:
             self.fail("email address invalid: {0}".format(refined_dict['publisher']['email']))
         if 'identifier' not in refined_dict['field_of_science'][0] or not refined_dict['field_of_science'][0]['identifier']:

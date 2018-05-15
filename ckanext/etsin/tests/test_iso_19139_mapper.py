@@ -19,8 +19,8 @@ class TestMappersISO19139(TestCase):
         eq_(dict['title'], {'fi': 'Testiaineisto'})
         assert {'@type': 'Person', 'email': 'tekija1@testi.fi', 'name': 'tekija1'} in dict['creator']
         assert {'@type': 'Organization', 'email': 'tekija2@testi.fi', 'name': {'fi':'tekija2'}} in dict['creator']
-        self.assertDictEqual({'email': 'omistaja@testi.fi', 'member_of': {'@type': 'Organization', 'name': {'fi':'omistaja_org'}},
-             '@type': 'Person', 'name': 'omistaja'}, dict['rights_holder'])
+        assert {'email': 'omistaja@testi.fi', 'member_of': {'@type': 'Organization', 'name': {'fi':'omistaja_org'}},
+                '@type': 'Person', 'name': 'omistaja'} in dict['rights_holder']
         assert {'@type': 'Organization', 'email': 'jotainmuuta@testi.fi', 'name': {'fi':'jotainmuuta'}} not in dict['creator']
         assert {'@type': 'Organization', 'email': 'tekija1@testi.fi', 'name': {'fi':'tekija1'}} not in dict['curator']
         assert {'@type': 'Organization', 'email': 'tekija2@testi.fi', 'name': {'fi':'tekija2'}} not in dict['curator']

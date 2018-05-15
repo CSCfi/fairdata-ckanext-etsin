@@ -92,7 +92,7 @@ def get_package_dict_1():
             'preferred_identifier': 'M28mitl:',
             'provenance': [{'description': 'provenance'}],
             'publisher': {'@type': 'Organization', 'email': 'jakelija [a] testi.fi', 'name': 'jakelija'},
-            'rights_holder': {'@type': 'Person', 'email': 'omistaja [at] testi.fi', 'name': 'omistaja'},
+            'rights_holder': [{'@type': 'Person', 'email': 'omistaja [at] testi.fi', 'name': 'omistaja'}],
             'spatial': [{
                             'polygon': 'POLYGON((59.880178 21.193932,59.880178 23.154996,60.87458 23.154996,60.87458 21.193932,59.880178 21.193932))'}],
             'temporal': [{'end_date': '2001-01-01', 'start_date': '2000-01-01'}],
