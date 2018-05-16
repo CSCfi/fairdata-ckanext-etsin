@@ -91,57 +91,70 @@ def iso_19139_mapper(context, data_dict):
         package_dict['field_of_science'] = []
 
     # Dataset creators
-    # TODO
     package_dict['creator'] = []
     try:
-        creators = (org for org in iso_values['responsible-organisation'] if 'originator' in org['role'])
-        for creator in creators:
-            _set_agent_details_to_package_dict_field(package_dict, 'creator', creator, True, meta_lang)
+        authors = (org for org in iso_values['responsible-organisation'] if 'author' in org['role'])
+        for author in authors:
+            _set_agent_details_to_package_dict_field(package_dict, 'creator', author, True, meta_lang)
+
+        originators = (org for org in iso_values['responsible-organisation'] if 'originator' in org['role'])
+        for originator in originators:
+            _set_agent_details_to_package_dict_field(package_dict, 'creator', originator, True, meta_lang)
     except KeyError:
         pass
 
     # Dataset curator
-    # TODO
     package_dict['curator'] = []
-
-    if not len(package_dict['curator']):
-        try:
-            curators = (org for org in iso_values['responsible-organisation'] if 'pointOfContact' in org['role'])
-            for curator in curators:
-                _set_agent_details_to_package_dict_field(package_dict, 'curator', curator, True, meta_lang)
-        except KeyError:
-            pass
-
-    # Use distributor as metax publisher
-    # TODO
     try:
-        for org in iso_values['responsible-organisation']:
-            if 'distributor' in org['role']:
-                _set_agent_details_to_package_dict_field(package_dict, 'publisher', org, False, meta_lang)
-                break
+        pocs = (org for org in iso_values['responsible-organisation'] if 'pointOfContact' in org['role'])
+        for poc in pocs:
+            _set_agent_details_to_package_dict_field(package_dict, 'curator', poc, True, meta_lang)
+
+        custodians = (org for org in iso_values['responsible-organisation'] if 'custodian' in org['role'])
+        for custodian in custodians:
+            _set_agent_details_to_package_dict_field(package_dict, 'curator', custodian, True, meta_lang)
     except KeyError:
         pass
 
-    # If distributor was not found for metax publisher, try publisher role for metax publisher
-    # TODO
+    # Dataset publisher / distributor
+    try:
+        distributors = (org for org in iso_values['responsible-organisation'] if 'distributor' in org['role'])
+        for distributor in distributors:
+            _set_agent_details_to_package_dict_field(package_dict, 'publisher', distributor, False, meta_lang)
+            # Only one publisher can be set in target data model
+            break
+    except KeyError:
+        pass
+
+    # If publisher has not been set, try another role for dataset publisher
     if 'publisher' not in package_dict:
         try:
-            for org in iso_values['responsible-organisation']:
-                if 'publisher' in org['role']:
-                    _set_agent_details_to_package_dict_field(package_dict, 'publisher', org, False, meta_lang)
-                    break
+            publishers = (org for org in iso_values['responsible-organisation'] if 'publisher' in org['role'])
+            for publisher in publishers:
+                _set_agent_details_to_package_dict_field(package_dict, 'publisher', publisher, False, meta_lang)
+                # Only one publisher can be set in target data model
+                break
         except KeyError:
             pass
 
     # Dataset rights holder
-    # TODO
     try:
-        for org in iso_values['responsible-organisation']:
-            if 'owner' in org['role']:
-                _set_agent_details_to_package_dict_field(package_dict, 'rights_holder', org, True, meta_lang)
-                break
+        owners = (org for org in iso_values['responsible-organisation'] if 'owner' in org['role'])
+        for owner in owners:
+            _set_agent_details_to_package_dict_field(package_dict, 'rights_holder', owner, True, meta_lang)
     except KeyError:
         pass
+
+    # Dataset contributor
+    try:
+        processors = (org for org in iso_values['responsible-organisation'] if 'processor' in org['role'])
+        for processor in processors:
+            _set_agent_details_to_package_dict_field(package_dict, 'contributor', processor, False, meta_lang)
+            # Only one publisher can be set in target data model
+            break
+    except KeyError:
+        pass
+
 
     # modified: Last known time when a research dataset or metadata about the research dataset
     # has been significantly modified.
