@@ -1,10 +1,8 @@
 import logging
 import csv
-import requests
 from iso639 import languages
 from json import dumps, loads
 from urlparse import urlparse
-from pylons import config
 
 log = logging.getLogger(__name__)
 
@@ -101,12 +99,15 @@ def convert_to_metax_catalog_record(data_dict, context, metax_cr_id=None):
 
     metax_cr = {}
     try:
-        data_catalog_id = DataCatalogMetaxAPIService.get_data_catalog_id_from_file(
-            get_data_catalog_filename_for_harvest_source(context.get('harvest_source_name', '')))
+        data_catalog = DataCatalogMetaxAPIService.get_data_catalog_from_file(
+            get_data_catalog_filename_for_harvest_source(context.get('harvest_source_name', '')))['catalog_json']
+        data_catalog_id = data_catalog.get('identifier', None)
         if not data_catalog_id:
             raise Exception("No data catalog id can be set for metax dict")
 
         metax_cr['data_catalog'] = data_catalog_id
+        metax_cr['metadata_provider_org'] = 'fairdata.fi'
+        metax_cr['metadata_provider_user'] = 'harvest@fairdata.fi'
         if metax_cr_id:
             metax_cr['identifier'] = metax_cr_id
         if data_dict:
