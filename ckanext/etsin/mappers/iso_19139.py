@@ -91,7 +91,6 @@ def iso_19139_mapper(context, data_dict):
         package_dict['field_of_science'] = []
 
     # Dataset creators
-    package_dict['creator'] = []
     try:
         authors = (org for org in iso_values['responsible-organisation'] if 'author' in org['role'])
         for author in authors:
@@ -104,7 +103,6 @@ def iso_19139_mapper(context, data_dict):
         pass
 
     # Dataset curator
-    package_dict['curator'] = []
     try:
         pocs = (org for org in iso_values['responsible-organisation'] if 'pointOfContact' in org['role'])
         for poc in pocs:
@@ -147,11 +145,10 @@ def iso_19139_mapper(context, data_dict):
 
     # Dataset contributor
     try:
-        processors = (org for org in iso_values['responsible-organisation'] if 'processor' in org['role'])
-        for processor in processors:
-            _set_agent_details_to_package_dict_field(package_dict, 'contributor', processor, False, meta_lang)
-            # Only one publisher can be set in target data model
-            break
+        contributors = (org for org in iso_values['responsible-organisation'] if 'processor' in org['role'] or
+                        'user' in org['role'])
+        for contributor in contributors:
+            _set_agent_details_to_package_dict_field(package_dict, 'contributor', contributor, True, meta_lang)
     except KeyError:
         pass
 
@@ -217,12 +214,6 @@ def iso_19139_mapper(context, data_dict):
     except KeyError:
         pass
 
-    if len(package_dict['creator']) == 0:
-        del package_dict['creator']
-
-    if len(package_dict['curator']) == 0:
-        del package_dict['curator']
-
     return package_dict
 
 
@@ -269,5 +260,6 @@ def _set_agent_details_to_package_dict_field(package_dict, field, agent, is_arra
         else:
             package_dict[field] = agent_obj
 
-    except Exception:
+    except Exception as e:
+        log.error(e)
         raise
