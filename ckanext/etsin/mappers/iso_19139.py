@@ -84,7 +84,7 @@ def iso_19139_mapper(context, data_dict):
             elif topic_cat == 'health':
                 package_dict['field_of_science'] = [{'identifier': 'ta316'}, {'identifier': 'ta3142'}]
             elif topic_cat == 'society':
-                package_dict['field_of_science'] = [{'identifier': 'ta8'}]
+                package_dict['field_of_science'] = [{'identifier': 'ta5'}]
             else:
                 package_dict['field_of_science'] = []
     except KeyError:

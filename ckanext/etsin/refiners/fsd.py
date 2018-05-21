@@ -30,7 +30,7 @@ def fsd_refiner(context, data_dict):
         'access_type': 'open_access'}, {
         'match': r"The dataset is \(B\)",
         'license': 'other-closed',
-        'access_type': 'resticted_access_research_education_studying'}, {
+        'access_type': 'restricted_access_research_education_studying'}, {
         'match': r"The dataset is \(C\)",
         'license': 'other-closed',
         'access_type': 'restricted_access_research'}, {

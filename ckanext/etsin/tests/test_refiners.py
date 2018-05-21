@@ -110,7 +110,7 @@ class TestFSDRefiner(TestCase):
             in refined_dict['access_rights']['license']
 
         assert refined_dict['access_rights']['access_type'] ==\
-               {'identifier': 'resticted_access_research_education_studying'}
+               {'identifier': 'restricted_access_research_education_studying'}
 
         assert refined_dict['access_rights']['description'][0]['en'] == 'Test condition'
 
