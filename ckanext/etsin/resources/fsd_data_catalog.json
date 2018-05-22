@@ -51,7 +51,7 @@
       }
     ],
     "research_dataset_schema": "harvester",
-    "logo": "/static/images/tietoarkisto_web_fi_eng_h70.png",
+    "logo": "tietoarkisto_web_fi_eng_h70.png",
     "identifier": "urn:nbn:fi:att:data-catalog-harvest-fsd"
   }
 }

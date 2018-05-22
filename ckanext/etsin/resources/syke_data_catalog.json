@@ -60,7 +60,7 @@
       }
     ],
     "research_dataset_schema": "harvester",
-    "logo": "/static/images/Logo_of_SYKE.svg.png",
+    "logo": "Logo_of_SYKE.svg.png",
     "identifier": "urn:nbn:fi:att:data-catalog-harvest-syke"
   }
 }
