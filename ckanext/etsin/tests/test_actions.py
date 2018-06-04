@@ -1,3 +1,10 @@
+# This file is part of the Etsin harvester service
+#
+# Copyright 2017-2018 Ministry of Education and Culture, Finland
+#
+# :author: CSC - IT Center for Science Ltd., Espoo Finland <servicedesk@csc.fi>
+# :license: GNU Affero General Public License version 3
+
 import ckanext.etsin.actions as actions
 from ckanext.etsin.mappers.cmdi import cmdi_mapper
 from ckan import model

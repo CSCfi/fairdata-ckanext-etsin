@@ -1,13 +1,11 @@
 # coding=utf-8
-"""
-Set up configurations, actions and interfaces to implement
-
-:author: Meeri Panula
-:author: Juha-Matti Lehtinen
-:author: Juho Lehtonen
-:copyright: 2017-2018  CSC - IT Center for Science Ltd, Finland
-:license: GNU Affero General Public License version 3 (AGPLv3)
-"""
+#
+# This file is part of the Etsin harvester service
+#
+# Copyright 2017-2018 Ministry of Education and Culture, Finland
+#
+# :author: CSC - IT Center for Science Ltd., Espoo Finland <servicedesk@csc.fi>
+# :license: GNU Affero General Public License version 3
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit

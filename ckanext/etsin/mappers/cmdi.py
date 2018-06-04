@@ -1,6 +1,10 @@
-'''
-Map CMDI based xml to Metax values
-'''
+# This file is part of the Etsin harvester service
+#
+# Copyright 2017-2018 Ministry of Education and Culture, Finland
+#
+# :author: CSC - IT Center for Science Ltd., Espoo Finland <servicedesk@csc.fi>
+# :license: GNU Affero General Public License version 3
+
 from ckanext.etsin.cmdi_parse_helper import CmdiParseHelper
 
 from ..utils import get_language_identifier, convert_language
@@ -9,11 +13,11 @@ from ..utils import get_language_identifier, convert_language
 import logging
 log = logging.getLogger(__name__)
 
-# Maps Component MetaData Infrastructure to Metax
-
 
 class CmdiMetaxMapper:
-
+    '''
+    Map Component MetaData Infrastructure (CMDI) based xml to Metax values
+    '''
     @staticmethod
     def map(xml):
         """ Convert given XML into MetaX format.
