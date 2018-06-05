@@ -64,7 +64,7 @@ def fsd_refiner(context, data_dict):
             if re.match(ar['match'], restriction.get('en', '')):
                 package_dict['access_rights']['license'] = [{
                     'identifier': ar['license'],
-                    'description': [restriction]}]
+                    'description': restriction}]
                 package_dict['access_rights']['access_type'] = {
                     'identifier': ar['access_type']}
                 break
@@ -76,7 +76,7 @@ def fsd_refiner(context, data_dict):
                            namespaces):
         conditions[get_tag_lang(cond)] = cond.text.strip()
     if len(conditions):
-        package_dict['access_rights']['description'] = [conditions]
+        package_dict['access_rights']['description'] = conditions
 
     # Add old pid
     old_pids_path = os.path.dirname(__file__) + '/resources/fsd_pid_to_kata_urn.csv'

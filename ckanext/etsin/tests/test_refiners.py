@@ -104,15 +104,15 @@ class TestFSDRefiner(TestCase):
                {u'identifier': u'http://lexvo.org/id/iso639-3/fin'}
 
         assert {'identifier': 'other-closed',
-                'description': [{
+                'description': {
                     'en': u'The dataset is (B) available for research, teaching and study.',
-                    'fi': u'Aineisto on käytettävissä (B) tutkimukseen, opetukseen ja opiskeluun.'}]}\
+                    'fi': u'Aineisto on käytettävissä (B) tutkimukseen, opetukseen ja opiskeluun.'}}\
             in refined_dict['access_rights']['license']
 
         assert refined_dict['access_rights']['access_type'] ==\
                {'identifier': 'restricted_access_research_education_studying'}
 
-        assert refined_dict['access_rights']['description'][0]['en'] == 'Test condition'
+        assert refined_dict['access_rights']['description']['en'] == 'Test condition'
 
         assert refined_dict['other_identifier'][0]['notation'] ==\
             'urn:nbn:fi:csc-kata20160614040245352984'

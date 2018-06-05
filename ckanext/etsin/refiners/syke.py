@@ -49,8 +49,8 @@ def syke_refiner(context, package_dict):
     if 'access_rights' not in package_dict:
         package_dict['access_rights'] = {}
 
-    if 'description' in package_dict and len(package_dict.get('description', [])):
-        description = package_dict['description'][0].values()[0]
+    if 'description' in package_dict:
+        description = package_dict['description'].values()[0]
 
         if 'CC BY 4.0' in description:
             package_dict['access_rights']['license'] = [{'identifier': 'CC-BY-4.0'}]

@@ -53,7 +53,7 @@ def iso_19139_mapper(context, data_dict):
 
     # Description
     try:
-        package_dict['description'] = [{meta_lang: iso_values['abstract']}]
+        package_dict['description'] = {meta_lang: iso_values['abstract']}
     except KeyError:
         pass
 
@@ -202,9 +202,10 @@ def iso_19139_mapper(context, data_dict):
 
     # Access rights description as a text
     if 'use-constraints' in iso_values and len(iso_values['use-constraints']):
-        description = []
+        description = {}
         for use_constraint in iso_values['use-constraints']:
-            description.append({meta_lang: use_constraint})
+            description = {meta_lang: use_constraint}
+            break
         package_dict['access_rights'] = {'description': description}
 
     # Use lineage as description for provenance
