@@ -84,7 +84,7 @@ def get_package_dict_1():
                     'name': 'test_org',
                     '@type': 'Organization'
                 }}],
-            'description': [{'fi': 'kuvailuteksti'}],
+            'description': {'fi': 'kuvailuteksti'},
             'issued': '2017-01-01',
             'keyword': ['testiavainsana'],
             'language': [{'identifier': 'http://lexvo.org/id/iso639-3/fin'}],

@@ -33,7 +33,7 @@ class TestMappersISO19139(TestCase):
             'POLYGON((59.880178 21.193932,59.880178 23.154996,60.87458 23.154996,60.87458 21.193932,59.880178 21.193932))',
             dict['spatial'][0]['as_wkt'][0])
         eq_('2017-01-01', dict['issued'])
-        eq_('joopajoo', dict['access_rights']['description'][0]['fi'])
+        eq_('joopajoo', dict['access_rights']['description']['fi'])
         eq_('2000-01-01', dict['temporal'][0]['start_date'])
         eq_('2001-01-01', dict['temporal'][0]['end_date'])
         eq_('2017-06-06', dict['modified'])
