@@ -2,6 +2,8 @@
 Map Datacite 3.1 and 4.0 xml to Metax values
 '''
 
+# NOTE: This mapper should be fixed to work with the data model. Currently would break.
+
 from lxml import objectify
 
 from ..metax_api import get_ref_data

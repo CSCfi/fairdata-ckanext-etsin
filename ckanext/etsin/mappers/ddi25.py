@@ -79,10 +79,10 @@ def ddi25_mapper(xml):
         modified = ver_stmt.get('date')
 
     # Description
-    description = [{}]
+    description = {}
     try:
         for abstract in stdy.findall('ddi:stdyInfo/ddi:abstract', namespaces):
-            description[0][get_tag_lang(abstract)] = unicode(abstract.text).strip()
+            description[get_tag_lang(abstract)] = unicode(abstract.text).strip()
     except Exception as e:
         log.error('Error parsing "description": {0}: {1}'.format(e.__class__.__name__, e))
         raise

@@ -185,12 +185,12 @@ class CmdiParseHelper:
                  [{ language1: description, language2: description },
                   { language1: additional_description, language2: additional_description}]
         """
-        description_list = [{}]
+        descriptions = {}
         for desc in self.xml.xpath("//cmd:identificationInfo/cmd:description", namespaces=CmdiParseHelper.namespaces):
             lang = desc.get(
                 '{http://www.w3.org/XML/1998/namespace}lang', 'und').strip()
-            description_list[0][lang] = unicode(desc.text).strip()
-        return description_list
+            descriptions[lang] = unicode(desc.text).strip()
+        return descriptions
 
     def parse_titles(self):
         """ Find titles in each language
