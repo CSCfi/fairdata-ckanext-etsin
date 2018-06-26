@@ -55,9 +55,20 @@ def _create_catalog_record_to_metax(context, metax_rd_dict):
         except HTTPError as e:
             log.error("Failed to create a CR to MetaX having preferred_identifier {0}, error: {1}"
                       .format(pref_id, repr(e)))
-            return None
+            log.info("Trying to PUT the CR in case it already existed in Metax but not in CKAN database..")
+            metax_cr_id = metax_api.get_catalog_record_identifier_using_preferred_identifier(pref_id)
+            if not metax_cr_id:
+                log.error("Unable to find CR having preferred identifier {0}".format(pref_id))
+                return None
+            metax_api.update_catalog_record(metax_cr_id, convert_to_metax_catalog_record(metax_rd_dict,
+                                                                                         context, metax_cr_id))
+            log.info("PUT operation successful.")
+            return metax_cr_id
         except ReadTimeout as e:
             log.error("Connection timeout: {0}".format(repr(e)))
+            return None
+        except:
+            log.error("Error")
             return None
     else:
         log.error("Package does not have a preferred identifier. Skipping.")

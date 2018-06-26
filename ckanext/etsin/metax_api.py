@@ -28,6 +28,29 @@ def json_or_empty(response):
     return response_json
 
 
+def get_catalog_record_identifier_using_preferred_identifier(metax_pref_id):
+    """
+    Get catalog record identifier for a record from MetaX using preferred identifier.
+
+    :param metax_pref_id: MetaX catalog record preferred identifier
+    :return: catalog record identifier
+    """
+    r = requests.get(METAX_DATASETS_BASE_URL + '?preferred_identifier={0}'.format(metax_pref_id),
+                      headers={
+              'Content-Type': 'application/json',
+            },
+                      auth=(config.get('metax.api_user'), config.get('metax.api_password')),
+                      timeout=TIMEOUT)
+    try:
+        r.raise_for_status()
+    except HTTPError as e:
+        log.error('Failed to get dataset: \npreferred_identifier={metax_pref_id}, \nerror={error}, \njson={json}'.format(
+            metax_pref_id=metax_pref_id, error=repr(e), json=json_or_empty(r)))
+        log.error('Response text: %s', r.text)
+        raise
+    return json.loads(r.text)['identifier']
+
+
 def create_catalog_record(cr_json):
     """
     Create a catalog record in MetaX.
