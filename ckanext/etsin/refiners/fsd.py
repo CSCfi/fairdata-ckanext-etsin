@@ -86,6 +86,11 @@ def fsd_refiner(context, data_dict):
     if len(conditions):
         package_dict['access_rights']['description'] = conditions
 
+    if 'access_type' not in package_dict['access_rights']:
+        package_dict['access_rights']['access_type'] = {
+            'identifier': 'http://purl.org/att/es/reference_data/access_type/access_type_restricted_access'
+        }
+
     # Add old pid
     old_pids_path = os.path.dirname(__file__) + '/resources/fsd_pid_to_kata_urn.csv'
     set_existing_kata_identifier_to_other_identifier(
