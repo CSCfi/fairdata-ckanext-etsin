@@ -48,7 +48,7 @@ class TestCmdiMapper(TestCase):
             '@type': 'Person',
             'email': 'teija@tekija.fi',
             'name': u'Teija Tekij\xe4',
-            'phone': '+358501234567',
+            'telephone': ['+358501234567'],
             'member_of': {
                 '@type': 'Organization',
                 'email': 'registry@utu.fi',
@@ -64,7 +64,7 @@ class TestCmdiMapper(TestCase):
             'email': 'etunim.sukunimi@kotus.fi',
             'homepage': {'identifier': 'http://www.kotus.fi'},
             'name': {'fi': u'Kotimaisten kielten keskus', 'en': u'Institute for the Languages of Finland'},
-            'phone': '+358 295 333 200',
+            'telephone': ['+358 295 333 200']
         } in self.metax_dict['creator']
 
     # Test curators
@@ -80,7 +80,7 @@ class TestCmdiMapper(TestCase):
                 'name': {'en': u'University of Turku'}
             },
             'name': u'Nobufumi Inaba',
-            'phone': '+358 123 456 789',
+            'telephone': ['+358 123 456 789']
         } in self.metax_dict['curator']
 
     def testCuratorPerson2(self):
@@ -102,7 +102,7 @@ class TestCmdiMapper(TestCase):
             'email': 'etunim.sukunimi@kotus.fi',
             'homepage': {'identifier': 'http://www.kotus.fi'},
             'name': {'fi': u'Kotimaisten kielten keskus', 'en': u'Institute for the Languages of Finland'},
-            'phone': '+358 295 333 200',
+            'telephone': ['+358 295 333 200']
         } in self.metax_dict['curator']
 
     def testCuratorOrganization2(self):

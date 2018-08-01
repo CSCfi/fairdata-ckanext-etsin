@@ -111,7 +111,7 @@ class CmdiParseHelper:
         }
 
         if len(person['telephoneNumber']):
-            ret_obj.update({"phone": person['telephoneNumber']})
+            ret_obj.update({"telephone": [person['telephoneNumber']]})
 
         if len(person['url']):
             ret_obj.update({"identifier": person['url']})
@@ -151,7 +151,7 @@ class CmdiParseHelper:
         }
 
         if len(organization['telephoneNumber']):
-            ret_obj.update({"phone": organization['telephoneNumber']})
+            ret_obj.update({"telephone": [organization['telephoneNumber']]})
         if len(organization['url']):
             ret_obj.update({"homepage": {"identifier": organization['url']}})
 

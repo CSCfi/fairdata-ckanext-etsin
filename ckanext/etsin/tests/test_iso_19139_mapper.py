@@ -37,7 +37,7 @@ class TestMappersISO19139(TestCase):
         eq_(dict['language'], [{'identifier': 'http://lexvo.org/id/iso639-3/fin'}])
         assert 'testiavainsana' in dict['keyword']
         eq_(
-            'POLYGON((59.880178 21.193932,59.880178 23.154996,60.87458 23.154996,60.87458 21.193932,59.880178 21.193932))',
+            'POLYGON((21.193932 59.880178,21.193932 60.87458,23.154996 60.87458,23.154996 59.880178,21.193932 59.880178))',
             dict['spatial'][0]['as_wkt'][0])
         eq_('2017-01-01', dict['issued'])
         eq_('joopajoo', dict['access_rights']['description']['fi'])

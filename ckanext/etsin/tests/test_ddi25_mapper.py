@@ -55,7 +55,7 @@ class TestMappersDDI25(TestCase):
         assert self.metax_dict['description'].get('fi').startswith('Aineistossa kartoitetaan')
 
     def testKeywords(self):
-        assert 'talouspolitiikka' in self.metax_dict['keywords']
+        assert 'talouspolitiikka' in self.metax_dict['keyword']
 
     def testFieldOfScience(self):
         assert {'identifier': 'ta5'} in self.metax_dict['field_of_science']

@@ -130,7 +130,7 @@ def convert_to_metax_catalog_record(data_dict, context, metax_cr_id=None):
 
 
 def convert_bbox_to_polygon(north, east, south, west):
-    return 'POLYGON(({s} {w},{s} {e},{n} {e},{n} {w},{s} {w}))'.format(n=north, e=east, s=south, w=west)
+    return 'POLYGON(({w} {s},{w} {n},{e} {n},{e} {s},{w} {s}))'.format(n=north, e=east, s=south, w=west)
 
 
 def is_uri(string):

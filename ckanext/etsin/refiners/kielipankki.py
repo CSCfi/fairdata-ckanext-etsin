@@ -116,8 +116,7 @@ def kielipankki_refiner(context, data_dict):
 
     # Access type
     access_type_identifier = KielipankkiRefiner.access_type_from_license(license_in_source_data)
-    if license_identifier.lower().strip() != 'undernegotiation':
-        package_dict['access_rights'].update({'access_type': {'identifier': access_type_identifier}})
+    package_dict['access_rights'].update({'access_type': {'identifier': access_type_identifier}})
 
     # Preferred identifier
     preferred_identifier = None

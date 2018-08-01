@@ -206,7 +206,7 @@ def datacite_mapper(xml):
             longitude = point.find('.//pointLongitude').text
             latitude = point.find('.//pointLatitude').text
             package_dict['location'].append({
-                "as_wkt": "POINT (" + pointLongitude + " " + pointLatitude + ")"})
+                "as_wkt": "POINT (" + longitude + " " + latitude + ")"})
         box = location.find('.//geoLocationBox')
         if box is not None:
             west = point.find('.//westBoundLongitude').text

@@ -111,8 +111,7 @@ def ddi25_mapper(xml):
     field_of_science = [{'identifier': c} for c in codes ]
     if not len(field_of_science):
         log.debug("No 'field of science' found.")
-        field_of_science.append({'identifier': 'ta5',
-                                 'definition': [{'en': 'Fallback field of science'}]})
+        field_of_science.append({'identifier': 'ta5'})
 
     # Publisher
     publisher = {
@@ -188,7 +187,7 @@ def ddi25_mapper(xml):
         "title": title,
         "creator": creators,
         "description": description,
-        "keywords": keywords,
+        "keyword": keywords,
         "field_of_science": field_of_science,
         "publisher": publisher,
         "temporal": temporal_coverage,
