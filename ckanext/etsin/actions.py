@@ -55,10 +55,11 @@ def _create_catalog_record_to_metax(context, metax_rd_dict):
         except HTTPError as e:
             log.error("Failed to create a CR to MetaX having preferred_identifier {0}, error: {1}"
                       .format(pref_id, repr(e)))
-            log.info("Trying to PUT the CR in case it already existed in Metax but not in CKAN database..")
+            log.info("Trying to PUT the CR in case it already existed in Metax..")
             metax_cr_id = metax_api.get_catalog_record_identifier_using_preferred_identifier(pref_id)
             if not metax_cr_id:
-                log.error("Unable to find CR having preferred identifier {0}".format(pref_id))
+                log.info("Unable to find CR having preferred identifier {0} from Metax".format(pref_id))
+                log.error("Unable to store catalog record to Metax")
                 return None
             metax_api.update_catalog_record(metax_cr_id, convert_to_metax_catalog_record(metax_rd_dict,
                                                                                          context, metax_cr_id))
@@ -173,9 +174,9 @@ def package_update(context, metax_rd_dict):
             # CR does not exist in Metax even though it has been stored to local CKAN database
             # Most likely because the Metax target env has been emptied
             log.warning("CR with identifier {0} was not found from MetaX even though it "
-                        "exists in CKAN database".format(metax_cr_id))
-            log.info("Trying to recreate package to MetaX and update package name into CKAN database with a new "
-                     "MetaX CR identifier value")
+                        "exists in CKAN database with id {1}".format(metax_cr_id, ckan_package_id))
+            log.info("Trying to recreate (or update) package to MetaX and update package name into CKAN database "
+                     "with a new MetaX CR identifier value")
             metax_cr_id = _create_catalog_record_to_metax(context, metax_rd_dict)
             if not metax_cr_id:
                 return False
@@ -227,7 +228,7 @@ def package_delete(context, data_dict):
                 return False
         else:
             log.warning("CR with identifier {0} was not found from MetaX even though it exists in "
-                        "CKAN database".format(metax_cr_id))
+                        "CKAN database with id {1}".format(metax_cr_id, ckan_package_id))
             log.info("Skipping delete operation in MetaX")
 
         package_dict = _get_data_dict_for_ckan_db(ckan_package_id, metax_cr_id)
