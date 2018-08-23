@@ -38,7 +38,7 @@ def get_catalog_record_identifier_using_preferred_identifier(metax_pref_id):
     r = requests.get(METAX_DATASETS_BASE_URL + '?preferred_identifier={0}'.format(metax_pref_id),
                      headers={'Accept': 'application/json'},
                      auth=(config.get('metax.api_user'), config.get('metax.api_password')),
-                     verify=config.get('metax.verify_ssl'),
+                     verify=bool(config.get('metax.verify_ssl')),
                      timeout=TIMEOUT)
     try:
         r.raise_for_status()
@@ -61,7 +61,7 @@ def create_catalog_record(cr_json):
                       headers={'Content-Type': 'application/json'},
                       json=cr_json,
                       auth=(config.get('metax.api_user'), config.get('metax.api_password')),
-                      verify=config.get('metax.verify_ssl'),
+                      verify=bool(config.get('metax.verify_ssl')),
                       timeout=TIMEOUT)
     try:
         r.raise_for_status()
@@ -85,7 +85,7 @@ def update_catalog_record(metax_cr_id, cr_json):
                      headers={'Content-Type': 'application/json'},
                      json=cr_json,
                      auth=(config.get('metax.api_user'), config.get('metax.api_password')),
-                     verify=config.get('metax.verify_ssl'),
+                     verify=bool(config.get('metax.verify_ssl')),
                      timeout=TIMEOUT)
     try:
         r.raise_for_status()
@@ -104,7 +104,7 @@ def delete_catalog_record(metax_cr_id):
     """
     r = requests.delete(METAX_DATASETS_BASE_URL + '/{id}'.format(id=metax_cr_id),
                         auth=(config.get('metax.api_user'), config.get('metax.api_password')),
-                        verify=config.get('metax.verify_ssl'),
+                        verify=bool(config.get('metax.verify_ssl')),
                         timeout=TIMEOUT)
     try:
         r.raise_for_status()
@@ -122,7 +122,7 @@ def check_catalog_record_exists(metax_cr_id):
     :return: True/False
     """
     r = requests.head(METAX_DATASETS_BASE_URL + '/{id}'.format(id=metax_cr_id),
-                      verify=config.get('metax.verify_ssl'))
+                      verify=bool(config.get('metax.verify_ssl')))
     return r.status_code == requests.codes.ok
 
 
@@ -146,7 +146,7 @@ def get_ref_data(topic, field, term, result_field):
     #     'https://{0}/es/reference_data/license/_search'.format(config.get('metax.host')), data=query)
     response = requests.get(METAX_REFERENCE_DATA_URL.format(topic=topic),
                             data=query,
-                            verify=config.get('metax.verify_ssl'))
+                            verify=bool(config.get('metax.verify_ssl')))
     results = json.loads(response.text)
     try:
         result = results['hits']['hits'][0]['_source'][result_field]
