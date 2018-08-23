@@ -76,10 +76,16 @@ class DataCatalogMetaxAPIService:
         return True
 
     def _do_put_request(self, url, data, api_user, api_password):
-        return self._handle_request_response_with_raise(put(url, json=data, auth=(api_user, api_password)))
+        return self._handle_request_response_with_raise(put(url,
+                                                            json=data,
+                                                            auth=(api_user, api_password),
+                                                            verify=bool(config.get('metax.verify_ssl'))))
 
     def _do_post_request(self, url, data, api_user, api_password):
-        return self._handle_request_response_with_raise(post(url, json=data, auth=(api_user, api_password)))
+        return self._handle_request_response_with_raise(post(url,
+                                                             json=data,
+                                                             auth=(api_user, api_password),
+                                                             verify=bool(config.get('metax.verify_ssl'))))
 
     @staticmethod
     def _handle_request_response_with_raise(response):
