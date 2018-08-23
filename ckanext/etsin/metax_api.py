@@ -36,11 +36,10 @@ def get_catalog_record_identifier_using_preferred_identifier(metax_pref_id):
     :return: catalog record identifier
     """
     r = requests.get(METAX_DATASETS_BASE_URL + '?preferred_identifier={0}'.format(metax_pref_id),
-                      headers={
-              'Content-Type': 'application/json',
-            },
-                      auth=(config.get('metax.api_user'), config.get('metax.api_password')),
-                      timeout=TIMEOUT)
+                     headers={'Accept': 'application/json'},
+                     auth=(config.get('metax.api_user'), config.get('metax.api_password')),
+                     verify=config.get('metax.verify_ssl'),
+                     timeout=TIMEOUT)
     try:
         r.raise_for_status()
     except HTTPError as e:
@@ -59,11 +58,10 @@ def create_catalog_record(cr_json):
     :return: catalog record identifier of the created catalog record.
     """
     r = requests.post(METAX_DATASETS_BASE_URL,
-                      headers={
-              'Content-Type': 'application/json',
-            },
+                      headers={'Content-Type': 'application/json'},
                       json=cr_json,
                       auth=(config.get('metax.api_user'), config.get('metax.api_password')),
+                      verify=config.get('metax.verify_ssl'),
                       timeout=TIMEOUT)
     try:
         r.raise_for_status()
@@ -84,11 +82,10 @@ def update_catalog_record(metax_cr_id, cr_json):
     :param cr_json: MetaX catalog record json
     """
     r = requests.put(METAX_DATASETS_BASE_URL + '/{id}'.format(id=metax_cr_id),
-                     headers={
-                'Content-Type': 'application/json'
-            },
+                     headers={'Content-Type': 'application/json'},
                      json=cr_json,
                      auth=(config.get('metax.api_user'), config.get('metax.api_password')),
+                     verify=config.get('metax.verify_ssl'),
                      timeout=TIMEOUT)
     try:
         r.raise_for_status()
@@ -106,7 +103,9 @@ def delete_catalog_record(metax_cr_id):
     :param metax_cr_id: MetaX catalog record identifier
     """
     r = requests.delete(METAX_DATASETS_BASE_URL + '/{id}'.format(id=metax_cr_id),
-                        auth=(config.get('metax.api_user'), config.get('metax.api_password')), timeout=TIMEOUT)
+                        auth=(config.get('metax.api_user'), config.get('metax.api_password')),
+                        verify=config.get('metax.verify_ssl'),
+                        timeout=TIMEOUT)
     try:
         r.raise_for_status()
     except HTTPError as e:
@@ -122,7 +121,8 @@ def check_catalog_record_exists(metax_cr_id):
     :param metax_cr_id: MetaX catalog record identifier
     :return: True/False
     """
-    r = requests.head(METAX_DATASETS_BASE_URL + '/{id}'.format(id=metax_cr_id))
+    r = requests.head(METAX_DATASETS_BASE_URL + '/{id}'.format(id=metax_cr_id),
+                      verify=config.get('metax.verify_ssl'))
     return r.status_code == requests.codes.ok
 
 
@@ -145,7 +145,8 @@ def get_ref_data(topic, field, term, result_field):
     # response = requests.get(
     #     'https://{0}/es/reference_data/license/_search'.format(config.get('metax.host')), data=query)
     response = requests.get(METAX_REFERENCE_DATA_URL.format(topic=topic),
-                            data=query)
+                            data=query,
+                            verify=config.get('metax.verify_ssl'))
     results = json.loads(response.text)
     try:
         result = results['hits']['hits'][0]['_source'][result_field]
