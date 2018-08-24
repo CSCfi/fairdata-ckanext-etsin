@@ -210,3 +210,13 @@ def _find_row_from_mapping_file(file_path, search_pid):
             if row[0] == search_pid:
                 return row
     return None
+
+
+def str_to_bool(s):
+    if s == 'True' or s == 'true':
+        return True
+    elif s == 'False' or s == 'false':
+        return False
+    else:
+        log.error("Unable to convert {0} to Python boolean. Returning False.".format(s))
+        return False

@@ -7,10 +7,13 @@
 
 import os
 import requests
-from requests import exceptions, put, post, delete, head
+from requests import exceptions, put, post, head
 import json
 from pylons import config
 import logging
+
+from ckanext.etsin.utils import str_to_bool
+
 log = logging.getLogger(__name__)
 
 
@@ -23,6 +26,7 @@ class DataCatalogMetaxAPIService:
     def __init__(self):
         self.api_user = config.get('metax.api_user')
         self.api_password = config.get('metax.api_password')
+        self.verify = str_to_bool(config.get('metax.verify_ssl'))
 
     def create_data_catalog(self, data_catalog_json_filename):
         if not data_catalog_json_filename:
@@ -79,13 +83,13 @@ class DataCatalogMetaxAPIService:
         return self._handle_request_response_with_raise(put(url,
                                                             json=data,
                                                             auth=(api_user, api_password),
-                                                            verify=bool(config.get('metax.verify_ssl'))))
+                                                            verify=self.verify))
 
     def _do_post_request(self, url, data, api_user, api_password):
         return self._handle_request_response_with_raise(post(url,
                                                              json=data,
                                                              auth=(api_user, api_password),
-                                                             verify=bool(config.get('metax.verify_ssl'))))
+                                                             verify=self.verify))
 
     @staticmethod
     def _handle_request_response_with_raise(response):

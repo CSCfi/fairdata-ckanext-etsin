@@ -9,15 +9,17 @@ import requests
 from requests import HTTPError, exceptions
 import json
 from pylons import config
-
 import logging
+
+from ckanext.etsin.utils import str_to_bool
+
 log = logging.getLogger(__name__)
 
 TIMEOUT = 30
 METAX_BASE_URL = 'https://{0}'.format(config.get('metax.host'))
 METAX_DATASETS_BASE_URL = METAX_BASE_URL + '/rest/datasets'
 METAX_REFERENCE_DATA_URL = METAX_BASE_URL + '/es/reference_data/{topic}/_search'
-
+VERIFY_SSL = str_to_bool(config.get('metax.verify_ssl'))
 
 def json_or_empty(response):
     response_json = ""
@@ -38,7 +40,7 @@ def get_catalog_record_identifier_using_preferred_identifier(metax_pref_id):
     r = requests.get(METAX_DATASETS_BASE_URL + '?preferred_identifier={0}'.format(metax_pref_id),
                      headers={'Accept': 'application/json'},
                      auth=(config.get('metax.api_user'), config.get('metax.api_password')),
-                     verify=bool(config.get('metax.verify_ssl')),
+                     verify=VERIFY_SSL,
                      timeout=TIMEOUT)
     try:
         r.raise_for_status()
@@ -61,7 +63,7 @@ def create_catalog_record(cr_json):
                       headers={'Content-Type': 'application/json'},
                       json=cr_json,
                       auth=(config.get('metax.api_user'), config.get('metax.api_password')),
-                      verify=bool(config.get('metax.verify_ssl')),
+                      verify=VERIFY_SSL,
                       timeout=TIMEOUT)
     try:
         r.raise_for_status()
@@ -85,7 +87,7 @@ def update_catalog_record(metax_cr_id, cr_json):
                      headers={'Content-Type': 'application/json'},
                      json=cr_json,
                      auth=(config.get('metax.api_user'), config.get('metax.api_password')),
-                     verify=bool(config.get('metax.verify_ssl')),
+                     verify=VERIFY_SSL,
                      timeout=TIMEOUT)
     try:
         r.raise_for_status()
@@ -104,7 +106,7 @@ def delete_catalog_record(metax_cr_id):
     """
     r = requests.delete(METAX_DATASETS_BASE_URL + '/{id}'.format(id=metax_cr_id),
                         auth=(config.get('metax.api_user'), config.get('metax.api_password')),
-                        verify=bool(config.get('metax.verify_ssl')),
+                        verify=VERIFY_SSL,
                         timeout=TIMEOUT)
     try:
         r.raise_for_status()
@@ -122,7 +124,7 @@ def check_catalog_record_exists(metax_cr_id):
     :return: True/False
     """
     r = requests.head(METAX_DATASETS_BASE_URL + '/{id}'.format(id=metax_cr_id),
-                      verify=bool(config.get('metax.verify_ssl')))
+                      verify=VERIFY_SSL)
     return r.status_code == requests.codes.ok
 
 
