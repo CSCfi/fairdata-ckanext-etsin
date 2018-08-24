@@ -71,7 +71,7 @@ class DataCatalogMetaxAPIService:
             return True
         log.info("Checking if data catalog with identifier " + data_catalog_id + " already exists in Metax..")
         try:
-            r = head(self.METAX_DATA_CATALOG_DETAIL_URL.format(id=data_catalog_id))
+            r = head(self.METAX_DATA_CATALOG_DETAIL_URL.format(id=data_catalog_id), verify=self.verify)
             return r.status_code == requests.codes.ok
         except Exception:
             log.error("Checking existence failed for some reason most likely in Metax data catalog API. "
