@@ -12,8 +12,6 @@ import json
 from pylons import config
 import logging
 
-from .utils import str_to_bool
-
 log = logging.getLogger(__name__)
 
 
@@ -26,6 +24,7 @@ class DataCatalogMetaxAPIService:
     def __init__(self):
         self.api_user = config.get('metax.api_user')
         self.api_password = config.get('metax.api_password')
+        from ckanext.etsin.utils import str_to_bool
         self.verify = str_to_bool(config.get('metax.verify_ssl'))
 
     def create_data_catalog(self, data_catalog_json_filename):

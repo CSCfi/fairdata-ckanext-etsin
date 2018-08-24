@@ -11,7 +11,7 @@ import json
 from pylons import config
 import logging
 
-from .utils import str_to_bool
+from ckanext.etsin.utils import str_to_bool
 
 log = logging.getLogger(__name__)
 
