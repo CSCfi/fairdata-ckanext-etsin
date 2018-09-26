@@ -10,7 +10,7 @@
 from functionally import first
 
 from ..metax_api import get_ref_data
-from ..utils import get_tag_lang
+from ..utils import get_tag_lang, get_string_as_valid_datetime_string
 
 # For development use
 import logging
@@ -81,10 +81,10 @@ def ddi25_mapper(xml):
         raise
 
     # Modified
-    modified = ''
+    modified = None
     ver_stmt = stdy.find('ddi:citation/ddi:verStmt/ddi:version', namespaces)
     if ver_stmt is not None:
-        modified = ver_stmt.get('date')
+        modified = get_string_as_valid_datetime_string(ver_stmt.get('date'), '01-01')
 
     # Description
     description = {}
@@ -140,8 +140,21 @@ def ddi25_mapper(xml):
         tend = tstart
     elif tstart is None or tend is None:
         log.error('No temporal coverage or only start or end date in dataset!')
-    temporal_coverage = [{'start_date': tstart.get('date') if tstart is not None else '',
-                          'end_date': tend.get('date') if tend is not None else ''}]
+
+    temporal_coverage_obj_1 = {}
+
+    if tstart is not None:
+        start_dt = get_string_as_valid_datetime_string(tstart.get('date'), '01-01', '00:00:00')
+        if start_dt is None:
+            temporal_coverage_obj_1['temporal_coverage'] = tstart.get('date')
+            if tend is not None:
+                temporal_coverage_obj_1['temporal_coverage'] += ' - ' + tend.get('date')
+        else:
+            temporal_coverage_obj_1['start_date'] = start_dt
+            if tend is not None:
+                end_dt = get_string_as_valid_datetime_string(tend.get('date'), '12-31', '23:59:59')
+                if end_dt is not None:
+                    temporal_coverage_obj_1['end_date'] = end_dt
 
     # Provenance
     universe = {}
@@ -149,20 +162,30 @@ def ddi25_mapper(xml):
     for u in univ:
         universe[get_tag_lang(u)] = u.text.strip()
     provenance = [{'title': {'en': 'Collection'},
-                   'temporal': temporal_coverage[0],
                    'description': {
                        'en': 'Contains the date(s) when the data were collected.'},
                    'variable': [{'pref_label': universe}]
                    }]
+    if temporal_coverage_obj_1:
+        provenance[0]['temporal'] = temporal_coverage_obj_1
+
     # Production
     prod = stdy.find('ddi:citation/ddi:prodStmt/ddi:prodDate', namespaces)
     if prod is not None:
+        temporal_coverage_obj_2 = {}
+        start_dt = get_string_as_valid_datetime_string(prod.text.strip(), '01-01', '00:00:00')
+        if start_dt is None:
+            temporal_coverage_obj_2['temporal_coverage'] = prod.text.strip()
+        else:
+            temporal_coverage_obj_2['start_date'] = start_dt
+            temporal_coverage_obj_2['end_date'] = get_string_as_valid_datetime_string(prod.text.strip(), '12-31',
+                                                                                      '23:59:59')
         provenance.append(
             {'title': {'en': 'Production'},
-             'temporal': {'start_date': prod.text.strip(),
-                          'end_date': prod.text.strip()},
              'description': {'en': 'Date when the data collection were'
                                    ' produced (not distributed or archived)'}})
+        if temporal_coverage_obj_2:
+            provenance[1]['temporal'] = temporal_coverage_obj_2
 
     # Geographical coverage
     spatial = [{}]
@@ -183,16 +206,20 @@ def ddi25_mapper(xml):
 
     package_dict = {
         "preferred_identifier": pref_id,
-        "modified": modified,
         "title": title,
         "creator": creators,
         "description": description,
         "keyword": keywords,
         "field_of_science": field_of_science,
         "publisher": publisher,
-        "temporal": temporal_coverage,
         "provenance": provenance,
         "spatial": spatial
     }
+
+    if modified is not None:
+        package_dict['modified'] = modified
+
+    if temporal_coverage_obj_1:
+        package_dict['temporal'] = [temporal_coverage_obj_1]
 
     return package_dict

@@ -35,8 +35,7 @@ class DataCatalogMetaxAPIService:
         catalog = self.get_data_catalog_from_file(data_catalog_json_filename)
         log.info("Creating data catalog to Metax..")
         try:
-            response_text = self._do_post_request(self.METAX_DATA_CATALOG_API_POST_URL, catalog, self.api_user,
-                                                  self.api_password)
+            response_text = self._do_post_request(self.METAX_DATA_CATALOG_API_POST_URL, catalog)
             data_catalog_id = json.loads(response_text)['catalog_json']['identifier']
             log.info("Data catalog created to Metax with identifier: {0}".format(data_catalog_id))
             return True
@@ -54,8 +53,7 @@ class DataCatalogMetaxAPIService:
         data_catalog = self.get_data_catalog_from_file(data_catalog_json_filename)
         log.info("Updating data catalog to Metax..")
         try:
-            self._do_put_request(self.METAX_DATA_CATALOG_DETAIL_URL.format(id=data_catalog_id), data_catalog,
-                                 self.api_user, self.api_password)
+            self._do_put_request(self.METAX_DATA_CATALOG_DETAIL_URL.format(id=data_catalog_id), data_catalog)
             log.info("Data catalog updated to Metax with identifier: {id}".format(id=data_catalog_id))
         except exceptions.HTTPError as e:
             log.error(e)
@@ -71,23 +69,24 @@ class DataCatalogMetaxAPIService:
             return True
         log.info("Checking if data catalog with identifier " + data_catalog_id + " already exists in Metax..")
         try:
-            r = head(self.METAX_DATA_CATALOG_DETAIL_URL.format(id=data_catalog_id), verify=self.verify)
+            r = head(self.METAX_DATA_CATALOG_DETAIL_URL.format(id=data_catalog_id), verify=self.verify,
+                     auth=(self.api_user, self.api_password))
             return r.status_code == requests.codes.ok
         except Exception:
             log.error("Checking existence failed for some reason most likely in Metax data catalog API. "
                       "Assuming it exists.")
         return True
 
-    def _do_put_request(self, url, data, api_user, api_password):
+    def _do_put_request(self, url, data):
         return self._handle_request_response_with_raise(put(url,
                                                             json=data,
-                                                            auth=(api_user, api_password),
+                                                            auth=(self.api_user, self.api_password),
                                                             verify=self.verify))
 
-    def _do_post_request(self, url, data, api_user, api_password):
+    def _do_post_request(self, url, data):
         return self._handle_request_response_with_raise(post(url,
                                                              json=data,
-                                                             auth=(api_user, api_password),
+                                                             auth=(self.api_user, self.api_password),
                                                              verify=self.verify))
 
     @staticmethod

@@ -12,7 +12,9 @@ Map ISO 19139 dicts to Metax values
 from iso639 import languages
 from ..utils import get_language_identifier,\
                     convert_language_to_6391,\
-                    convert_bbox_to_polygon
+                    convert_bbox_to_polygon, \
+                    get_string_as_valid_datetime_string, \
+                    get_string_as_valid_date_string
 
 import logging
 
@@ -165,7 +167,18 @@ def iso_19139_mapper(context, data_dict):
     # date-updated: the date of last revision for the dataset
     # metadata-date: either creation or update date of metadata
     try:
-        package_dict['modified'] = iso_values['date-updated'] or iso_values['metadata-date']
+        if 'date-updated' in iso_values and iso_values['date-updated']:
+            modified = get_string_as_valid_datetime_string(iso_values['date-updated'])
+            if modified is None:
+                log.error("Unable to interpret date-updated {0} as datetime".format(iso_values['date-updated']))
+            else:
+                package_dict['modified'] = modified
+        elif 'metadata-date' in iso_values and iso_values['metadata-date']:
+            modified = get_string_as_valid_datetime_string(iso_values['metadata-date'])
+            if modified is None:
+                log.error("Unable to interpret metadata-date {0} as datetime".format(iso_values['metadata-date']))
+            else:
+                package_dict['modified'] = modified
     except KeyError:
         pass
 
@@ -193,17 +206,39 @@ def iso_19139_mapper(context, data_dict):
         if len(iso_values['temporal-extent-begin']) == len(iso_values['temporal-extent-end']) and \
         len(iso_values['temporal-extent-begin']) > 0:
             package_dict['temporal'] = []
-            for idx, val in enumerate(iso_values['temporal-extent-begin']):
-                package_dict['temporal'].append({'start_date': val,
-                                                'end_date': iso_values['temporal-extent-end'][idx]})
+            for idx, start_date in enumerate(iso_values['temporal-extent-begin']):
+                end_date = iso_values['temporal-extent-end'][idx]
+                if start_date:
+                    start_dt = get_string_as_valid_datetime_string(start_date, '01-01', '00:00:00')
+                if end_date:
+                    end_dt = get_string_as_valid_datetime_string(end_date, '12-31', '23:59:59')
+
+                temporal_obj = {}
+                if start_date:
+                    if start_dt is None:
+                        temporal_obj['temporal_coverage'] = start_date
+                    else:
+                        temporal_obj['start_date'] = start_dt
+                if end_date:
+                    if end_dt is None:
+                        temporal_obj['temporal_coverage'] += ' - ' + end_date
+                    else:
+                        temporal_obj['end_date'] = end_dt
+
+                if temporal_obj:
+                    package_dict['temporal'].append(temporal_obj)
     except KeyError:
         pass
 
     # issued: Date of formal issuance for the dataset
     # date-released: date of publication of dataset
     try:
-        if iso_values['date-released']:
-            package_dict['issued'] = iso_values['date-released']
+        if 'date-released' in iso_values and iso_values['date-released']:
+            issued = get_string_as_valid_date_string(iso_values['date-released'])
+            if issued is None:
+                log.error("Unable to interpret date-released {0} as date".format(iso_values['date-released']))
+            else:
+                package_dict['issued'] = issued
     except KeyError:
         pass
 
@@ -250,11 +285,14 @@ def _set_agent_details_to_package_dict_field(package_dict, field, agent, is_arra
             name = name
         else:
             name = {meta_lang: name}
+
         agent_obj = {
             '@type': type,
             'name': name,
-            'email': email,
         }
+
+        if email:
+            agent_obj['email'] = email
 
         if member_of:
             agent_obj.update({'member_of': member_of})

@@ -7,7 +7,7 @@
 
 from ckanext.etsin.cmdi_parse_helper import CmdiParseHelper
 
-from ..utils import get_language_identifier, convert_language
+from ..utils import get_language_identifier, convert_language, get_string_as_valid_datetime_string
 
 # For development use
 import logging
@@ -31,24 +31,39 @@ class CmdiMetaxMapper:
 
         description_list = cmdi.parse_descriptions()
         title_list = cmdi.parse_titles()
-        modified = cmdi.parse_modified() or ""
+
+        modified_raw = cmdi.parse_modified()
+        if modified_raw:
+            modified = get_string_as_valid_datetime_string(modified_raw)
+        else:
+            modified = None
 
         temporal_coverage = cmdi.parse_temporal_coverage() or None
-        temporal_coverage_begin = ''
-        temporal_coverage_end = ''
+        temporal_obj = {}
         if temporal_coverage:
             try:
-                temporal_coverage_begin = str(int(temporal_coverage))
-                temporal_coverage_end = str(int(temporal_coverage))
+                int(temporal_coverage)
+                temporal_coverage_begin = get_string_as_valid_datetime_string(temporal_coverage, '01-01', '00:00:00')
+                temporal_coverage_end = get_string_as_valid_datetime_string(temporal_coverage, '12-31', '23:59:59')
+                if temporal_coverage_begin is None:
+                    temporal_obj['temporal_coverage'] = str(int(temporal_coverage))
+                else:
+                    temporal_obj['start_date'] = temporal_coverage_begin
+                    temporal_obj['end_date'] = temporal_coverage_end
             except ValueError:
                 pass
 
-            if not temporal_coverage_begin:
+            if not temporal_obj:
                 split = [item.strip() for item in temporal_coverage.split("-")]
                 if len(split) == 2:
                     try:
-                        temporal_coverage_begin = split[0]
-                        temporal_coverage_end = split[1]
+                        temporal_coverage_begin = get_string_as_valid_datetime_string(split[0], '01-01', '00:00:00')
+                        temporal_coverage_end = get_string_as_valid_datetime_string(split[1], '12-31', '23:59:59')
+                        if temporal_coverage_begin is None:
+                            temporal_obj['temporal_coverage'] = str(int(temporal_coverage))
+                        else:
+                            temporal_obj['start_date'] = temporal_coverage_begin
+                            temporal_obj['end_date'] = temporal_coverage_end
                     except ValueError:
                         pass
 
@@ -62,18 +77,13 @@ class CmdiMetaxMapper:
         # in which case no citation
 
         package_dict = {
-            "modified": modified,
             "title": title_list,
             "description": description_list,
             "language": language_list
         }
 
-        temporal_obj = {}
-        if temporal_coverage_begin:
-            temporal_obj.update({"start_date": temporal_coverage_begin})
-
-        if temporal_coverage_end:
-            temporal_obj.update({"end_date": temporal_coverage_end})
+        if modified is not None:
+            package_dict['modified'] = modified
 
         if temporal_obj:
             package_dict.update({"temporal": [temporal_obj]})

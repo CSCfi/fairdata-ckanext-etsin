@@ -138,7 +138,7 @@ def kielipankki_refiner(context, data_dict):
             os.path.dirname(__file__) + '/resources/kielipankki_pid_to_kata_urn.csv',
             'http://urn.fi/{0}'.format(package_dict['preferred_identifier']), package_dict)
 
-    # TODO: Lanuguage bank metadatas also have some relationInfo/(relationType/relatedResource)
+    # TODO: Language bank metadatas also have some relationInfo/(relationType/relatedResource)
     # If we are interested in enriching it with relation data
 
     return package_dict

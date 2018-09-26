@@ -8,6 +8,7 @@
 import logging
 import csv
 from iso639 import languages
+from dateutil import parser
 from json import dumps, loads
 from urlparse import urlparse
 
@@ -220,3 +221,143 @@ def str_to_bool(s):
     else:
         log.error("Unable to convert {0} to Python boolean. Returning False.".format(s))
         return False
+
+
+def get_string_as_valid_date_string(str_val, month_day_to_add_if_not_present=None):
+    if str_val is None or not str_val:
+        raise Exception("get_string_as_valid_date_string method must have str_val input that is not empty")
+
+    if month_day_to_add_if_not_present is not None:
+        if len(month_day_to_add_if_not_present) != 5 or '-' not in month_day_to_add_if_not_present:
+            log.debug(
+                "Unable to understand month_day_to_add_if_not_present: {0}".format(month_day_to_add_if_not_present))
+        exit(1)
+
+    # For cases e.g. 2010-01-1, 2010-1-01, 2010-1, 2010-1-1
+    # Above example would be transformed into 2010-01-01
+    if 4 < len(str_val) < 10:
+        date_splitted = str_val.split('-', 3)
+        if len(date_splitted) < 3:
+            log.debug("Unable to parse {0}".format(str_val))
+            return None
+        if len(date_splitted[0]) != 4:
+            log.debug("Unable to parse year in {0}".format(date_splitted[0]))
+            return None
+
+        output = date_splitted[0]
+        if len(date_splitted[1]) == 1:
+            output += '0' + date_splitted[1]
+        else:
+            output += date_splitted[1]
+        if len(date_splitted[2]) == 1:
+            output += '0' + date_splitted[2]
+        else:
+            output += date_splitted[2]
+        str_val = output
+
+    try:
+        str_as_datetime = parser.isoparse(str_val)
+    except:
+        log.debug('Unable to parse {0}.'.format(str_val))
+        return None
+
+    if 'T' in str_val or len(str_val) > 10:
+        # Cannot have time
+        log.debug(
+            'Unable to parse {0} as date value accepted by Metax. Contains time, in which case it cannot be reliably '
+            'converted to date.'.format(str_val))
+        return None
+
+    if len(str_val) == 4:
+        try:
+            int(str_val)
+        except ValueError:
+            log.debug("String {0} is not integer".format(str_val))
+            return None
+
+        if month_day_to_add_if_not_present is None:
+            log.debug('Unable to convert {0} to datetime value accepted by Metax, since contains only year info. '
+                      'Must specify MM-DD.'.format(str_val))
+            return None
+        else:
+            str_as_datetime = parser.isoparse(str_val + '-' + month_day_to_add_if_not_present)
+
+    # datetime strftime is not able to parse years before 1900, hence the use of isoformat
+    return str_as_datetime.isoformat().split('T')[0]
+
+
+def get_string_as_valid_datetime_string(str_val, month_day_to_add_if_not_present=None, time_to_add_if_not_present=None):
+    if str_val is None or not str_val:
+        raise Exception("get_string_as_valid_datetime_string method must have str_val input that is not empty")
+
+    if time_to_add_if_not_present is not None:
+        if '+' in time_to_add_if_not_present or '-' in time_to_add_if_not_present or 'Z' in time_to_add_if_not_present:
+            log.debug("No timezone info allowed in time_to_add_if_not_present parameter: {0}".format(
+                time_to_add_if_not_present))
+            raise Exception
+        if len(time_to_add_if_not_present) != 8:
+            log.debug(
+                "Unable to understand time_to_add_if_not_present paremeter: {0}".format(time_to_add_if_not_present))
+            raise Exception
+    if month_day_to_add_if_not_present is not None:
+        if len(month_day_to_add_if_not_present) != 5 or '-' not in month_day_to_add_if_not_present:
+            log.debug(
+                "Unable to understand month_day_to_add_if_not_present: {0}".format(month_day_to_add_if_not_present))
+            raise Exception
+
+    # For cases e.g. 2010-01-1, 2010-1-01, 2010-1, 2010-1-1
+    # Above example would be transformed into 2010-01-01
+    if 4 < len(str_val) < 10:
+        date_splitted = str_val.split('-', 3)
+        if len(date_splitted) < 3:
+            log.debug("Unable to parse {0}".format(str_val))
+            return None
+        if len(date_splitted[0]) != 4:
+            log.debug("Unable to parse year in {0}".format(date_splitted[0]))
+            return None
+
+        output = date_splitted[0]
+        if len(date_splitted[1]) == 1:
+            output += '0' + date_splitted[1]
+        else:
+            output += date_splitted[1]
+        if len(date_splitted[2]) == 1:
+            output += '0' + date_splitted[2]
+        else:
+            output += date_splitted[2]
+        str_val = output
+
+    try:
+        str_as_datetime = parser.isoparse(str_val)
+    except:
+        log.debug('Unable to parse {0}.'.format(str_val))
+        return None
+
+    # If only year is given
+    if len(str_val) == 4:
+        try:
+            int(str_val)
+        except ValueError:
+            log.debug("String {0} is not integer".format(str_val))
+            return None
+
+        if month_day_to_add_if_not_present is None:
+            log.debug(
+                'Unable to convert {0} to datetime value accepted by Metax, since contains only year info. '
+                'Must specify MM-DD. Preferably define also time using time_to_add_if_not_present.'.format(str_val))
+            return None
+        else:
+            str_as_datetime = parser.isoparse(str_val + '-' + month_day_to_add_if_not_present)
+
+    if 'T' not in str_val:
+        # datetime strftime is not able to parse years before 1900, hence the use of isoformat
+        date_as_valid_str = str_as_datetime.isoformat().split('T')[0]
+        if time_to_add_if_not_present is None:
+            return date_as_valid_str + 'T00:00:00-00:00'
+        else:
+            return date_as_valid_str + 'T' + time_to_add_if_not_present + '-00:00'
+    else:
+        str_as_iso_format = str_as_datetime.isoformat()
+        if '+' not in str_as_iso_format and 'Z' not in str_as_iso_format and '-' not in str_as_iso_format.split('T')[1]:
+            str_as_iso_format = str_as_iso_format + '-00:00'
+        return str_as_iso_format

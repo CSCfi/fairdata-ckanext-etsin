@@ -97,24 +97,24 @@ def _fix_email_address(package_dict, agent_role):
 
 
 def _replace_with_at(agent):
-    agent['email'] = agent['email']. \
-        replace('[at]', '@'). \
-        replace('[a]', '@'). \
-        replace(' ', '')
+    if agent and 'email' in agent:
+        agent['email'] = agent['email'].replace(' ', '').replace('[at]', '@').replace('[a]', '@')
 
 
 def _split_multi_email(package_dict, agent_role, agent, choose_first_in_multi_email):
-    multi_email = agent['email'].split(';')
-    if len(multi_email) > 1:
-        if choose_first_in_multi_email:
-            package_dict[agent_role] = {}
-        else:
-            package_dict[agent_role] = []
-
-        for email in multi_email:
-            new_agent = {'@type': agent['@type'], 'name': agent['name'], 'email': email}
+    if agent and 'email' in agent:
+        multi_email = agent['email'].replace(' ', '').split(';')
+        if len(multi_email) > 1:
             if choose_first_in_multi_email:
-                package_dict[agent_role].update(new_agent)
-                break
+                package_dict[agent_role] = {}
             else:
-                package_dict[agent_role].append(new_agent)
+                package_dict[agent_role] = []
+
+            for email in multi_email:
+                if email:
+                    new_agent = {'@type': agent['@type'], 'name': agent['name'], 'email': email}
+                    if choose_first_in_multi_email:
+                        package_dict[agent_role].update(new_agent)
+                        break
+                    else:
+                        package_dict[agent_role].append(new_agent)

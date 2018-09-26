@@ -49,7 +49,7 @@ class TestMappersDDI25(TestCase):
         } in self.metax_dict['creator']
 
     def testModified(self):
-        assert self.metax_dict['modified'] == '2016-05-31'
+        assert self.metax_dict['modified'] == '2016-05-31T00:00:00-00:00'
 
     def testDescription(self):
         assert self.metax_dict['description'].get('fi').startswith('Aineistossa kartoitetaan')
@@ -68,15 +68,15 @@ class TestMappersDDI25(TestCase):
             == 'http://www.fsd.uta.fi/'
 
     def testTemporalCoverage(self):
-        assert self.metax_dict['temporal'][0]['start_date'] == '2015-04-07'
+        assert self.metax_dict['temporal'][0]['start_date'] == '2015-04-07T00:00:00-00:00'
 
     def testProvenance(self):
-        assert self.metax_dict['provenance'][0]['temporal']['start_date'] == '2015-04-07'
+        assert self.metax_dict['provenance'][0]['temporal']['start_date'] == '2015-04-07T00:00:00-00:00'
         assert self.metax_dict['provenance'][0]['variable'][0]['pref_label']['en'] ==\
                'Students enrolled at the University of Tampere'
 
     def testProduction(self):
-        assert self.metax_dict['provenance'][1]['temporal']['start_date'] == '2016-06-15' and\
+        assert self.metax_dict['provenance'][1]['temporal']['start_date'] == '2016-06-15T00:00:00-00:00' and\
             self.metax_dict['provenance'][1]['title']['en'] == 'Production'
 
     def testSpatialCoverage(self):
