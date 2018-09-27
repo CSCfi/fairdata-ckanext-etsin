@@ -168,7 +168,7 @@ def set_urn_pid_to_other_identifier(pid, package_dict):
     package_dict['other_identifier'].append({
         'notation': pid,
         'type': {
-            'identifier': 'http://purl.org/att/es/reference_data/identifier_type/identifier_type_urn'
+            'identifier': 'http://uri.suomi.fi/codelist/fairdata/identifier_type/code/urn'
         }
     })
 

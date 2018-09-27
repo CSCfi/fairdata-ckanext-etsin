@@ -88,7 +88,7 @@ def fsd_refiner(context, data_dict):
 
     if 'access_type' not in package_dict['access_rights']:
         package_dict['access_rights']['access_type'] = {
-            'identifier': 'http://purl.org/att/es/reference_data/access_type/access_type_restricted_access'
+            'identifier': 'http://uri.suomi.fi/codelist/fairdata/access_type/code/restricted_access'
         }
 
     # Add old pid

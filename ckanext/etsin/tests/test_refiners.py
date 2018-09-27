@@ -85,7 +85,7 @@ class TestSykeRefiner(TestCase):
             self.fail("Missing license information")
 
         assert refined_dict['access_rights']['access_type']['identifier'] == \
-               'http://purl.org/att/es/reference_data/access_type/access_type_restricted_access'
+               'http://uri.suomi.fi/codelist/fairdata/access_type/code/restricted_access'
 
         assert refined_dict['access_rights']['license'][0]['identifier'] == 'other'
 
