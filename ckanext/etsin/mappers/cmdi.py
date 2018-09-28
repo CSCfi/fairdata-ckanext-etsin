@@ -63,7 +63,8 @@ class CmdiMetaxMapper:
                             temporal_obj['temporal_coverage'] = temporal_coverage
                         else:
                             temporal_obj['start_date'] = temporal_coverage_begin
-                            temporal_obj['end_date'] = temporal_coverage_end
+                            if temporal_coverage_end is not None:
+                                temporal_obj['end_date'] = temporal_coverage_end
                     except ValueError:
                         pass
                 else:
