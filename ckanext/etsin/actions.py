@@ -10,6 +10,7 @@ Action overrides
 """
 
 import logging
+import uuid
 
 from requests import HTTPError
 from requests.exceptions import ReadTimeout
@@ -61,10 +62,14 @@ def _create_catalog_record_to_metax(context, metax_rd_dict):
                 log.info("Unable to find CR having preferred identifier {0} from Metax".format(pref_id))
                 log.error("Unable to store catalog record to Metax")
                 return None
-            metax_api.update_catalog_record(metax_cr_id, convert_to_metax_catalog_record(metax_rd_dict,
-                                                                                         context, metax_cr_id))
-            log.info("PUT operation successful.")
-            return metax_cr_id
+            try:
+                metax_api.update_catalog_record(metax_cr_id, convert_to_metax_catalog_record(metax_rd_dict,
+                                                                                             context, metax_cr_id))
+                log.info("PUT operation successful.")
+                return metax_cr_id
+            except:
+                log.error("Unable to PUT the CR into Metax")
+                return None
         except ReadTimeout as e:
             log.error("Connection timeout: {0}".format(repr(e)))
             return None
@@ -91,12 +96,8 @@ def package_create(context, metax_rd_dict):
     user = model.User.get(context['user'])
 
     if user.name == "harvest":
-        # Get the package_id for the package dict
-        ckan_package_id = metax_rd_dict.pop('id')
-
-        if not ckan_package_id:
-            log.error("CKAN package ID not found in package_create from data_dict. Aborting..")
-            return False
+        # Create the package_id for the package dict
+        ckan_package_id = unicode(uuid.uuid4())
 
         # Refine metax_rd_dict based on organization it belongs to
         try:
@@ -115,7 +116,18 @@ def package_create(context, metax_rd_dict):
         # Create the package to CKAN database linking ckan_package_id and metax_cr_id together
         context['schema'] = package_schema
         log.info("Trying to create package to CKAN database with ID: %s and name: %s", ckan_package_id, metax_cr_id)
-        output = ckan.logic.action.create.package_create(context, _get_data_dict_for_ckan_db(ckan_package_id, metax_cr_id))
+        data_dict = _get_data_dict_for_ckan_db(ckan_package_id, metax_cr_id)
+        try:
+            output = ckan.logic.action.create.package_create(context, data_dict)
+        except Exception as e:
+            log.error(e)
+            log.error("Unable to package_create package. Trying to package_update..")
+            try:
+                ckan.logic.action.update.package_update(context, data_dict)
+            except Exception as e:
+                log.error(e)
+                log.error("Unable to package_update package. Aborting")
+                return False
         log.info("Created package to CKAN database successfully with ID: %s and name: %s", ckan_package_id, metax_cr_id)
     else:
         output = ckan.logic.action.create.package_create(context, metax_rd_dict)

@@ -46,7 +46,7 @@ class CmdiMetaxMapper:
                 temporal_coverage_begin = get_string_as_valid_datetime_string(temporal_coverage, '01-01', '00:00:00')
                 temporal_coverage_end = get_string_as_valid_datetime_string(temporal_coverage, '12-31', '23:59:59')
                 if temporal_coverage_begin is None:
-                    temporal_obj['temporal_coverage'] = str(int(temporal_coverage))
+                    temporal_obj['temporal_coverage'] = temporal_coverage
                 else:
                     temporal_obj['start_date'] = temporal_coverage_begin
                     temporal_obj['end_date'] = temporal_coverage_end
@@ -60,12 +60,14 @@ class CmdiMetaxMapper:
                         temporal_coverage_begin = get_string_as_valid_datetime_string(split[0], '01-01', '00:00:00')
                         temporal_coverage_end = get_string_as_valid_datetime_string(split[1], '12-31', '23:59:59')
                         if temporal_coverage_begin is None:
-                            temporal_obj['temporal_coverage'] = str(int(temporal_coverage))
+                            temporal_obj['temporal_coverage'] = temporal_coverage
                         else:
                             temporal_obj['start_date'] = temporal_coverage_begin
                             temporal_obj['end_date'] = temporal_coverage_end
                     except ValueError:
                         pass
+                else:
+                    temporal_obj['temporal_coverage'] = temporal_coverage
 
         creators = cmdi.parse_creators()  # creators == owners
         # owners = cmdi.parse_owners()  # implemented but not saved to dict

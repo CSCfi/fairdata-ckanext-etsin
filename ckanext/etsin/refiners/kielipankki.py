@@ -124,7 +124,11 @@ def kielipankki_refiner(context, data_dict):
         if 'urn' in pid and not preferred_identifier:
             preferred_identifier = pid
     if preferred_identifier is None:
-        fbpid = KielipankkiRefiner.urn_pid_enhancement((cmdi.language_bank_fallback_identifier()[0]))
+        fbpid_array = cmdi.language_bank_fallback_identifier()
+        if not fbpid_array or len(fbpid_array) < 1:
+            raise DatasetFieldsMissingError(package_dict, msg="Could not find preferred identifier in the metadata")
+
+        fbpid = KielipankkiRefiner.urn_pid_enhancement(fbpid_array[0])
         if 'urn' in fbpid:
             preferred_identifier = fbpid
         else:

@@ -225,7 +225,7 @@ def str_to_bool(s):
 
 def get_string_as_valid_date_string(str_val, month_day_to_add_if_not_present=None):
     if str_val is None or not str_val:
-        raise Exception("get_string_as_valid_date_string method must have str_val input that is not empty")
+        return None
 
     if month_day_to_add_if_not_present is not None:
         if len(month_day_to_add_if_not_present) != 5 or '-' not in month_day_to_add_if_not_present:
@@ -288,7 +288,7 @@ def get_string_as_valid_date_string(str_val, month_day_to_add_if_not_present=Non
 
 def get_string_as_valid_datetime_string(str_val, month_day_to_add_if_not_present=None, time_to_add_if_not_present=None):
     if str_val is None or not str_val:
-        raise Exception("get_string_as_valid_datetime_string method must have str_val input that is not empty")
+        return None
 
     if time_to_add_if_not_present is not None:
         if '+' in time_to_add_if_not_present or '-' in time_to_add_if_not_present or 'Z' in time_to_add_if_not_present:

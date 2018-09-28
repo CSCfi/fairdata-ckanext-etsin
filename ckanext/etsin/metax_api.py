@@ -48,7 +48,7 @@ def get_catalog_record_identifier_using_preferred_identifier(metax_pref_id):
         log.error('Failed to get dataset: \npreferred_identifier={metax_pref_id}, \nerror={error}, \njson={json}'.format(
             metax_pref_id=metax_pref_id, error=repr(e), json=json_or_empty(r)))
         log.error('Response text: %s', r.text)
-        raise
+        return None
     return json.loads(r.text)['identifier']
 
 

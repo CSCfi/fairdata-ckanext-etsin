@@ -83,7 +83,7 @@ def ddi25_mapper(xml):
     # Modified
     modified = None
     ver_stmt = stdy.find('ddi:citation/ddi:verStmt/ddi:version', namespaces)
-    if ver_stmt is not None:
+    if ver_stmt is not None and ver_stmt.get('date'):
         modified = get_string_as_valid_datetime_string(ver_stmt.get('date'), '01-01')
 
     # Description
@@ -143,15 +143,15 @@ def ddi25_mapper(xml):
 
     temporal_coverage_obj_1 = {}
 
-    if tstart is not None:
+    if tstart is not None and tstart.get('date'):
         start_dt = get_string_as_valid_datetime_string(tstart.get('date'), '01-01', '00:00:00')
         if start_dt is None:
             temporal_coverage_obj_1['temporal_coverage'] = tstart.get('date')
-            if tend is not None:
+            if tend is not None and tend.get('date'):
                 temporal_coverage_obj_1['temporal_coverage'] += ' - ' + tend.get('date')
         else:
             temporal_coverage_obj_1['start_date'] = start_dt
-            if tend is not None:
+            if tend is not None and tend.get('date'):
                 end_dt = get_string_as_valid_datetime_string(tend.get('date'), '12-31', '23:59:59')
                 if end_dt is not None:
                     temporal_coverage_obj_1['end_date'] = end_dt
@@ -173,12 +173,14 @@ def ddi25_mapper(xml):
     prod = stdy.find('ddi:citation/ddi:prodStmt/ddi:prodDate', namespaces)
     if prod is not None:
         temporal_coverage_obj_2 = {}
-        start_dt = get_string_as_valid_datetime_string(prod.text.strip(), '01-01', '00:00:00')
-        if start_dt is None:
-            temporal_coverage_obj_2['temporal_coverage'] = prod.text.strip()
-        else:
-            temporal_coverage_obj_2['start_date'] = start_dt
-            temporal_coverage_obj_2['end_date'] = get_string_as_valid_datetime_string(prod.text.strip(), '12-31',
+
+        if prod.text:
+            start_dt = get_string_as_valid_datetime_string(prod.text.strip(), '01-01', '00:00:00')
+            if start_dt is None:
+                temporal_coverage_obj_2['temporal_coverage'] = prod.text.strip()
+            else:
+                temporal_coverage_obj_2['start_date'] = start_dt
+                temporal_coverage_obj_2['end_date'] = get_string_as_valid_datetime_string(prod.text.strip(), '12-31',
                                                                                       '23:59:59')
         provenance.append(
             {'title': {'en': 'Production'},
