@@ -61,17 +61,13 @@ def syke_refiner(context, package_dict):
 
         if 'CC BY 4.0' in description:
             package_dict['access_rights']['license'] = [{'identifier': 'CC-BY-4.0'}]
-            package_dict['access_rights']['access_type'] = {
-                'identifier': 'http://uri.suomi.fi/codelist/fairdata/access_type/code/open_access'
-            }
+            package_dict['access_rights']['access_type'] = {'identifier': 'open'}
 
     if 'license' not in package_dict['access_rights']:
         package_dict['access_rights']['license'] = [{'identifier': 'other'}]
 
     if 'access_type' not in package_dict['access_rights']:
-        package_dict['access_rights']['access_type'] = {
-            'identifier': 'http://uri.suomi.fi/codelist/fairdata/access_type/code/restricted_access'
-        }
+        package_dict['access_rights']['access_type'] = {'identifier': 'restricted'}
 
     _check_for_required_fields(package_dict)
 

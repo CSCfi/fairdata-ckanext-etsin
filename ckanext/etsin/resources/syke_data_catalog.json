@@ -47,7 +47,7 @@
       },
       "access_type": [
         {
-          "identifier": "http://uri.suomi.fi/codelist/fairdata/access_type/code/open_access"
+          "identifier": "http://uri.suomi.fi/codelist/fairdata/access_type/code/open"
         }
       ],
       "license": [{

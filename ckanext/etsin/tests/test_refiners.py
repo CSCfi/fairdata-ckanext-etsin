@@ -84,8 +84,7 @@ class TestSykeRefiner(TestCase):
                 or 'identifier' not in refined_dict['access_rights']['license'][0]:
             self.fail("Missing license information")
 
-        assert refined_dict['access_rights']['access_type']['identifier'] == \
-               'http://uri.suomi.fi/codelist/fairdata/access_type/code/restricted_access'
+        assert refined_dict['access_rights']['access_type']['identifier'] == 'restricted'
 
         assert refined_dict['access_rights']['license'][0]['identifier'] == 'other'
 
@@ -118,7 +117,14 @@ class TestFSDRefiner(TestCase):
             in refined_dict['access_rights']['license']
 
         assert refined_dict['access_rights']['access_type'] ==\
-               {'identifier': 'restricted_access_research_education_studying'}
+               {'identifier': 'restricted'}
+
+        import pprint
+        pprint.pprint(refined_dict['access_rights']['restriction_grounds'])
+        assert refined_dict['access_rights']['restriction_grounds'] == [
+            {'identifier': 'education'},
+            {'identifier': 'research'}
+        ]
 
         assert refined_dict['access_rights']['description']['en'] == 'Test condition'
 

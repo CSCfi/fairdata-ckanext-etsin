@@ -35,16 +35,18 @@ def fsd_refiner(context, data_dict):
     ACCESS_RIGHTS = [{
         'match': r"The dataset is \(A\)",
         'license': 'other-open',
-        'access_type': 'open_access'}, {
+        'access_type': 'open'}, {
         'match': r"The dataset is \(B\)",
         'license': 'other-closed',
-        'access_type': 'restricted_access_research_education_studying'}, {
+        'access_type': 'restricted',
+        'restriction_grounds': ['education', 'research']}, {
         'match': r"The dataset is \(C\)",
         'license': 'other-closed',
-        'access_type': 'restricted_access_research'}, {
+        'access_type': 'restricted',
+        'restriction_grounds': ['research']}, {
         'match': r"The dataset is \(D\)",
         'license': 'other-closed',
-        'access_type': 'restricted_access'}]
+        'access_type': 'restricted'}]
 
     package_dict = data_dict
     xml = context.get('source_data')
@@ -75,6 +77,13 @@ def fsd_refiner(context, data_dict):
                     'description': restriction}]
                 package_dict['access_rights']['access_type'] = {
                     'identifier': ar['access_type']}
+
+                restriction_grounds = []
+                for rg in ar.get('restriction_grounds', []):
+                    restriction_grounds.append({'identifier': rg})
+                if restriction_grounds:
+                    package_dict['access_rights']['restriction_grounds'] = restriction_grounds
+
                 break
         if package_dict['access_rights'].get('license') is None:
             log.error('Unknown licence in dataset')
@@ -88,7 +97,7 @@ def fsd_refiner(context, data_dict):
 
     if 'access_type' not in package_dict['access_rights']:
         package_dict['access_rights']['access_type'] = {
-            'identifier': 'http://uri.suomi.fi/codelist/fairdata/access_type/code/restricted_access'
+            'identifier': 'http://uri.suomi.fi/codelist/fairdata/access_type/code/restricted'
         }
 
     # Add old pid

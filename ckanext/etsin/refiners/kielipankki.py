@@ -79,13 +79,13 @@ class KielipankkiRefiner():
         """
 
         if license == cls.LICENSE_CLARIN_ACA or license == cls.LICENSE_CLARIN_ACA_NC:
-            return "restricted_access"
+            return "restricted"
         elif license == cls.LICENSE_CLARIN_RES:
-            return "restricted_access"
+            return "restricted"
         elif license == cls.LICENSE_CLARIN_PUB or license.startswith(cls.LICENSE_CC_BY):
-            return "open_access"
+            return "open"
         else:
-            return "restricted_access"
+            return "restricted"
 
     @classmethod
     def urn_pid_enhancement(cls, pid):
@@ -114,10 +114,6 @@ def kielipankki_refiner(context, data_dict):
     license_identifier = KielipankkiRefiner.get_license(license_in_source_data)
     package_dict['access_rights'].update({'license': [{'identifier': license_identifier}]})
 
-    # Access type
-    access_type_identifier = KielipankkiRefiner.access_type_from_license(license_in_source_data)
-    package_dict['access_rights'].update({'access_type': {'identifier': access_type_identifier}})
-
     # Preferred identifier
     preferred_identifier = None
     for pid in [KielipankkiRefiner.urn_pid_enhancement(metadata_pid) for metadata_pid in cmdi.parse_metadata_identifiers()]:
@@ -134,6 +130,10 @@ def kielipankki_refiner(context, data_dict):
         else:
             raise DatasetFieldsMissingError(package_dict, msg="Could not find preferred identifier in the metadata")
     package_dict['preferred_identifier'] = preferred_identifier
+
+    # Access type
+    access_type_identifier = KielipankkiRefiner.access_type_from_license(license_in_source_data)
+    package_dict['access_rights'].update({'access_type': {'identifier': access_type_identifier}})
 
     # Set field of science
     package_dict['field_of_science'] = [{"identifier": "http://www.yso.fi/onto/okm-tieteenala/ta6121"}]
