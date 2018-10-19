@@ -21,6 +21,7 @@ METAX_DATASETS_BASE_URL = METAX_BASE_URL + '/rest/datasets'
 METAX_REFERENCE_DATA_URL = METAX_BASE_URL + '/es/reference_data/{topic}/_search'
 VERIFY_SSL = str_to_bool(config.get('metax.verify_ssl'))
 
+
 def json_or_empty(response):
     response_json = ""
     try:
@@ -68,8 +69,6 @@ def create_catalog_record(cr_json):
     try:
         r.raise_for_status()
     except HTTPError as e:
-        log.error('Failed to create dataset: \ndataset={dataset}, \nerror={error}, \njson={json}'.format(
-            dataset=cr_json, error=repr(e), json=json_or_empty(r)))
         log.error('Response text: %s', r.text)
         raise
     log.debug('Response text: %s', r.text)
@@ -148,7 +147,7 @@ def get_ref_data(topic, field, term, result_field):
     #     'https://{0}/es/reference_data/license/_search'.format(config.get('metax.host')), data=query)
     response = requests.get(METAX_REFERENCE_DATA_URL.format(topic=topic),
                             data=query,
-                            verify=bool(config.get('metax.verify_ssl')))
+                            verify=VERIFY_SSL)
     results = json.loads(response.text)
     try:
         result = results['hits']['hits'][0]['_source'][result_field]

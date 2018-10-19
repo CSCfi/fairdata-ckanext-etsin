@@ -54,8 +54,6 @@ def _create_catalog_record_to_metax(context, metax_rd_dict):
             metax_cr_id = metax_api.create_catalog_record(md)
             log.info("Successfully created a CR to MetaX. Returned CR identifier: %s", metax_cr_id)
         except HTTPError as e:
-            log.error("Failed to create a CR to MetaX having preferred_identifier {0}, error: {1}"
-                      .format(pref_id, repr(e)))
             log.info("Trying to PUT the CR in case it already existed in Metax..")
             metax_cr_id = metax_api.get_catalog_record_identifier_using_preferred_identifier(pref_id)
             if not metax_cr_id:
@@ -63,6 +61,7 @@ def _create_catalog_record_to_metax(context, metax_rd_dict):
                 log.error("Unable to store catalog record to Metax")
                 return None
             try:
+                log.debug("Found Metax CR ID: {0}".format(metax_cr_id))
                 metax_api.update_catalog_record(metax_cr_id, convert_to_metax_catalog_record(metax_rd_dict,
                                                                                              context, metax_cr_id))
                 log.info("PUT operation successful.")
@@ -120,7 +119,6 @@ def package_create(context, metax_rd_dict):
         try:
             output = ckan.logic.action.create.package_create(context, data_dict)
         except Exception as e:
-            log.error(e)
             log.error("Unable to package_create package. Trying to package_update..")
             try:
                 ckan.logic.action.update.package_update(context, data_dict)

@@ -25,7 +25,7 @@ class DataCatalogMetaxAPIService:
         self.api_user = config.get('metax.api_user')
         self.api_password = config.get('metax.api_password')
         from ckanext.etsin.utils import str_to_bool
-        self.verify = str_to_bool(config.get('metax.verify_ssl'))
+        self.verify_ssl = str_to_bool(config.get('metax.verify_ssl'))
 
     def create_data_catalog(self, data_catalog_json_filename):
         if not data_catalog_json_filename:
@@ -69,7 +69,7 @@ class DataCatalogMetaxAPIService:
             return True
         log.info("Checking if data catalog with identifier " + data_catalog_id + " already exists in Metax..")
         try:
-            r = head(self.METAX_DATA_CATALOG_DETAIL_URL.format(id=data_catalog_id), verify=self.verify,
+            r = head(self.METAX_DATA_CATALOG_DETAIL_URL.format(id=data_catalog_id), verify=self.verify_ssl,
                      auth=(self.api_user, self.api_password))
             return r.status_code == requests.codes.ok
         except Exception:
@@ -81,13 +81,13 @@ class DataCatalogMetaxAPIService:
         return self._handle_request_response_with_raise(put(url,
                                                             json=data,
                                                             auth=(self.api_user, self.api_password),
-                                                            verify=self.verify))
+                                                            verify=self.verify_ssl))
 
     def _do_post_request(self, url, data):
         return self._handle_request_response_with_raise(post(url,
                                                              json=data,
                                                              auth=(self.api_user, self.api_password),
-                                                             verify=self.verify))
+                                                             verify=self.verify_ssl))
 
     @staticmethod
     def _handle_request_response_with_raise(response):
@@ -146,6 +146,7 @@ def ensure_data_catalog_ok(harvest_source_name):
         log.error("Data catalog file {0} does not contain identifier. Aborting".format(data_catalog_json_filename))
         return False
 
+    # requests.post('http://localhost/name', verify=True)
     return True
 
 
