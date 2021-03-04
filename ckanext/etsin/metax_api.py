@@ -18,9 +18,9 @@ log = logging.getLogger(__name__)
 TIMEOUT = 30
 METAX_BASE_URL = 'https://{0}'.format(config.get('metax.host'))
 METAX_DATASETS_BASE_URL = METAX_BASE_URL + '/rest/datasets'
-METAX_REFERENCE_DATA_URL = METAX_BASE_URL + '/es/reference_data/{topic}/_search'
+METAX_REFERENCE_DATA_URL = METAX_BASE_URL + 'es/reference_data/_search?size=1'
 VERIFY_SSL = str_to_bool(config.get('metax.verify_ssl'))
-
+HEADERS = {'Content-Type': 'application/json'}
 
 def json_or_empty(response):
     response_json = ""
@@ -140,14 +140,23 @@ def get_ref_data(topic, field, term, result_field):
     """
     query = json.dumps({
         "query": {
-            "match": {
-                field: term}, },
-        "size": 1, })
-    # response = requests.get(
-    #     'https://{0}/es/reference_data/license/_search'.format(config.get('metax.host')), data=query)
-    response = requests.get(METAX_REFERENCE_DATA_URL.format(topic=topic),
-                            data=query,
-                            verify=VERIFY_SSL)
+            "bool": {
+                "must": [
+                    {
+                        "match": {
+                            field: term
+                        }
+                    },
+                    {
+                        "match": {
+                            "type": topic
+                        }
+                    }
+                ]
+            }
+        }
+    })
+    response = requests.get(METAX_REFERENCE_DATA_URL, data=query, verify=VERIFY_SSL, headers=HEADERS)
     results = json.loads(response.text)
     try:
         result = results['hits']['hits'][0]['_source'][result_field]
