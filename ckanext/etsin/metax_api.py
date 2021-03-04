@@ -18,7 +18,7 @@ log = logging.getLogger(__name__)
 TIMEOUT = 30
 METAX_BASE_URL = 'https://{0}'.format(config.get('metax.host'))
 METAX_DATASETS_BASE_URL = METAX_BASE_URL + '/rest/datasets'
-METAX_REFERENCE_DATA_URL = METAX_BASE_URL + 'es/reference_data/_search?size=1'
+METAX_REFERENCE_DATA_URL = METAX_BASE_URL + '/es/reference_data/_search?size=1'
 VERIFY_SSL = str_to_bool(config.get('metax.verify_ssl'))
 HEADERS = {'Content-Type': 'application/json'}
 
