@@ -32,7 +32,7 @@ def ddi25_mapper(xml):
     # Preferred identifier
     pref_id = None
     id_nos = stdy.findall('ddi:citation/ddi:titlStmt/ddi:IDNo', namespaces)
-    id_no = first(filter(lambda x: x.get('agency') == 'Kansalliskirjasto', id_nos))
+    id_no = first(filter(lambda x: x.get('agency') == 'URN', id_nos))
     if id_no is not None:
         pref_id = id_no.text
 
