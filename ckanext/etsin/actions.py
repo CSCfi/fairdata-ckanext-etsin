@@ -170,12 +170,12 @@ def package_update(context, metax_rd_dict):
 
             # Retrieve modified parameter of existing dataset
             pref_id = metax_rd_dict.get('preferred_identifier', None)
-            existing_dataset_modified = metax_api.get_metax_data_using_preferred_identifier(pref_id, 'modified')
+            existing_dataset_modified = metax_api.get_metax_data_using_preferred_identifier(pref_id, 'research_dataset.modified')
             log.info("existing_dataset_modified is %s", existing_dataset_modified)
 
             # Retrieve modified parameter of incoming dataset
             incoming_dataset_modified = metax_rd_dict.get('modified', None)
-            log.info("existing_dataset_modified is %s", incoming_dataset_modified)
+            log.info("incoming_dataset_modified is %s", incoming_dataset_modified)
 
             # Check whether the dataset has been modified
             if (existing_dataset_modified == incoming_dataset_modified):
