@@ -55,7 +55,7 @@ def _create_catalog_record_to_metax(context, metax_rd_dict):
             log.info("Successfully created a CR to MetaX. Returned CR identifier: %s", metax_cr_id)
         except HTTPError as e:
             log.info("Trying to PUT the CR in case it already existed in Metax..")
-            metax_cr_id = metax_api.get_metax_data_using_preferred_identifier(pref_id, 'identifier')
+            metax_cr_id = metax_api.get_catalog_record_identifier_using_preferred_identifier(pref_id)
             if not metax_cr_id:
                 log.info("Unable to find CR having preferred identifier {0} from Metax".format(pref_id))
                 log.error("Unable to store catalog record to Metax")
@@ -170,7 +170,7 @@ def package_update(context, metax_rd_dict):
 
             # Retrieve modified parameter of existing dataset
             pref_id = metax_rd_dict.get('preferred_identifier', None)
-            existing_dataset_modified = metax_api.get_metax_data_using_preferred_identifier(pref_id, 'research_dataset.modified')
+            existing_dataset_modified = metax_api.get_catalog_record_research_dataset_modified_using_preferred_identifier(pref_id)
             log.info("existing_dataset_modified is %s", existing_dataset_modified)
 
             # Retrieve modified parameter of incoming dataset
