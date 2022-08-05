@@ -160,7 +160,8 @@ def ddi25_mapper(xml):
     universe = {}
     univ = stdy.findall("ddi:stdyInfo/ddi:sumDscr/ddi:universe", namespaces)
     for u in univ:
-        universe[get_tag_lang(u)] = u.text.strip()
+        if u.text:
+            universe[get_tag_lang(u)] = u.text.strip()
     provenance = [{'title': {'en': 'Collection'},
                    'description': {
                        'en': 'Contains the date(s) when the data were collected.'},
